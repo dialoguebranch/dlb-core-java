@@ -1,0 +1,121 @@
+plugins {
+	id 'java'
+	id 'java-library'
+	id 'distribution'
+	id 'maven-publish'
+	id 'signing'
+}
+
+group = 'com.dialoguebranch'
+version = '1.0.0'
+sourceCompatibility = 11
+targetCompatibility = 11
+archivesBaseName = 'dlb-core-java'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	api "nl.rrd:rrd-utils:3.0.0"
+	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.13.4'
+	testImplementation 'junit:junit:4.13.2'
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'com.dialoguebranch.parser.DLBParser'
+		attributes 'Class-Path': configurations.compileClasspath.collect({ it.name }).join(' ')
+	}
+}
+
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
+distributions {
+	main {
+		distributionBaseName = archivesBaseName
+		contents {
+			from configurations.compileClasspath
+			from jar
+		}
+	}
+}
+
+[distZip, distTar, installDist]*.dependsOn jar
+
+javadoc {
+	options {
+		links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+		addBooleanOption('Xdoclint:all,-missing,-html', true)
+	}
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			artifactId = archivesBaseName
+			from components.java
+
+			pom {
+				name = 'Dialogue Branch Core Java Library'
+				description = 'DialogueBranch - Creative freedom and full control for branching dialogue...'
+				url = 'https://www.dialoguebranch.com/'
+
+				licenses {
+					license {
+						name = 'MIT License'
+						url = 'https://opensource.org/licenses/MIT'
+					}
+				}
+
+				developers {
+					developer {
+						id = 'hopdenakker'
+						name = 'Harm op den Akker'
+						email = 'hopdenakker@fruittreelabs.com'
+					}
+					developer {
+						id = 'dhofs'
+						name = 'Dennis Hofs'
+						email = 'd.hofs@rrd.nl'
+					}
+					developer {
+						id = 'tbeinema'
+						name = 'Tessa Beinema'
+						email = 't.c.beinema@utwente.nl'
+					}
+				}
+
+				scm {
+					connection = 'scm:git:git://github.com/dialoguebranch/dlb-core-java.git'
+					developerConnection = 'scm:git:ssh://github.com:dialoguebranch/dlb-core-java.git'
+					url = 'https://github.com/dialoguebranch/dlb-core-java/tree/master'
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			def sonatypeUsername = project.properties.ossrhUsername
+			if (!sonatypeUsername)
+				sonatypeUsername = ''
+			def sonatypePassword = project.properties.ossrhPassword
+			if (!sonatypePassword)
+				sonatypePassword = ''
+			def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+			def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+			credentials {
+				username sonatypeUsername
+				password sonatypePassword
+			}
+		}
+	}
+}
+
+signing {
+	sign publishing.publications.mavenJava
+}

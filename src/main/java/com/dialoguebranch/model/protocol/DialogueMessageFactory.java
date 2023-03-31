@@ -1,0 +1,115 @@
+/*
+ *
+ *                   Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
+ *
+ *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
+ *      as outlined below. Based on original source code licensed under the following terms:
+ *
+ *                                            ----------
+ *
+ * Copyright 2019-2022 WOOL Foundation - Licensed under the MIT License:
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+ * associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute,
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or
+ * substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
+ * NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package com.dialoguebranch.model.protocol;
+
+import com.dialoguebranch.model.command.DLBCommand;
+import com.dialoguebranch.execution.ExecuteNodeResult;
+import com.dialoguebranch.model.DLBNode;
+import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.command.DLBActionCommand;
+import com.dialoguebranch.model.command.DLBInputCommand;
+import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
+
+public class DialogueMessageFactory {
+	
+	/**
+	 * Generates a DialogueMessage based on the given executed node. Since the
+	 * node has already been executed, it should not contain variables or "if"
+	 * and "set" commands.
+	 * 
+	 * @param executedNode the executed node
+	 * @return the DialogueMessage
+	 */
+	public static DialogueMessage generateDialogueMessage(
+			ExecuteNodeResult executedNode) {
+		DialogueMessage dialogueMessage = new DialogueMessage();
+		DLBNode node = executedNode.getDLBNode();
+		DLBNodeBody body = node.getBody();
+		dialogueMessage.setDialogue(executedNode.getDialogue()
+				.getDialogueName());
+		dialogueMessage.setNode(node.getTitle());
+		if (executedNode.getLoggedDialogue() != null) {
+			dialogueMessage.setLoggedDialogueId(executedNode.getLoggedDialogue()
+					.getId());
+			dialogueMessage.setLoggedInteractionIndex(
+					executedNode.getInteractionIndex());
+		}
+		dialogueMessage.setSpeaker(node.getHeader().getSpeaker());
+		dialogueMessage.setStatement(generateDialogueStatement(body));
+		for (DLBReply reply : body.getReplies()) {
+			dialogueMessage.addReply(generateDialogueReply(reply));
+		}
+		return dialogueMessage;
+	}
+	
+	private static DialogueStatement generateDialogueStatement(
+			DLBNodeBody body) {
+		DialogueStatement statement = new DialogueStatement();
+		for (DLBNodeBody.Segment segment : body.getSegments()) {
+			if (segment instanceof DLBNodeBody.TextSegment) {
+				DLBNodeBody.TextSegment textSegment =
+						(DLBNodeBody.TextSegment)segment;
+				String text = textSegment.getText().evaluate(null);
+				statement.addTextSegment(text);
+			} else {
+				DLBNodeBody.CommandSegment cmdSegment =
+						(DLBNodeBody.CommandSegment)segment;
+				DLBCommand cmd = cmdSegment.getCommand();
+				if (cmd instanceof DLBActionCommand) {
+					statement.addActionSegment((DLBActionCommand)cmd);
+				} else if (cmd instanceof DLBInputCommand) {
+					statement.addInputSegment((DLBInputCommand)cmd);
+				}
+			}
+		}
+		return statement;
+	}
+	
+	private static ReplyMessage generateDialogueReply(DLBReply reply) {
+		ReplyMessage replyMsg = new ReplyMessage();
+		replyMsg.setReplyId(reply.getReplyId());
+		if (reply.getStatement() != null) {
+			replyMsg.setStatement(generateDialogueStatement(
+					reply.getStatement()));
+		}
+		if (reply.getNodePointer() instanceof DLBNodePointerInternal) {
+			DLBNodePointerInternal pointer =
+					(DLBNodePointerInternal)reply.getNodePointer();
+			if (pointer.getNodeId().equalsIgnoreCase("end"))
+				replyMsg.setEndsDialogue(true);
+		}
+		for (DLBCommand cmd : reply.getCommands()) {
+			if (!(cmd instanceof DLBActionCommand))
+				continue;
+			DLBActionCommand actionCmd = (DLBActionCommand)cmd;
+			replyMsg.addAction(new DialogueAction(actionCmd));
+		}
+		return replyMsg;
+	}
+}
