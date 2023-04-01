@@ -284,8 +284,11 @@ public class DLBProjectParser {
 	}
 
 	private String fileNameToDialogueName(String fileName) {
-		if (fileName.endsWith(".dlb") || fileName.endsWith(".json"))
+		if (fileName.endsWith(".dlb")) {
+			return fileName.substring(0,fileName.length() - 4);
+		} else if(fileName.endsWith(".json")) {
 			return fileName.substring(0, fileName.length() - 5);
+		}
 		else
 			return fileName;
 	}
