@@ -32,32 +32,32 @@ import java.io.Reader;
 import java.util.List;
 
 /**
- * A DialogueBranch file loader is used by a {@link DLBProjectParser}
- * to list and open DialogueBranch dialogue files (.dlb) and translation files (.json)
- * within a DialogueBranch project. The default implementation is {@link
- * DLBResourceFileLoader}, which can load files from
+ * A DialogueBranch file loader is used by a {@link DLBProjectParser} to list and open
+ * DialogueBranch dialogue files (.dlb) and translation files (.json) within a DialogueBranch
+ * project. The default implementation is {@link DLBResourceFileLoader}, which can load files from
  * resources on the classpath.
  *
  * @author Dennis Hofs (RRD)
+ * @author Harm op den Akker (Fruit Tree Labs - hopdenakker@fruittreelabs.com)
  */
 public interface DLBFileLoader {
 
 	/**
-	 * Lists all DialogueBranch files in the project. The files should be dialogue files
-	 * (.dlb) or translation files (.json).
+	 * Lists all DialogueBranch files in the project. The files should be dialogue files (.dlb) or
+	 * translation files (.json).
 	 *
-	 * @return the files
+	 * @return the List of files as {@link DLBFileDescription}s.
 	 * @throws IOException if a reading error occurs
 	 */
 	List<DLBFileDescription> listDialogueBranchFiles() throws IOException;
 
 	/**
-	 * Opens the specified DialogueBranch file. This should be a dialogue file (.dlb)
-	 * or a translation file (.json).
+	 * Opens the specified DialogueBranch file. This should be a dialogue file (.dlb) or a
+	 * translation file (.json).
 	 *
-	 * @param descr the file description
-	 * @return the reader for the file
-	 * @throws IOException if the file cannot be opened
+	 * @param fileDescription the {@link DLBFileDescription} object.
+	 * @return the {@link Reader} for the file.
+	 * @throws IOException if the file cannot be opened.
 	 */
-	Reader openFile(DLBFileDescription descr) throws IOException;
+	Reader openFile(DLBFileDescription fileDescription) throws IOException;
 }

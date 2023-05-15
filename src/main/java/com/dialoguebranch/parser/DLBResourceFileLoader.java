@@ -175,9 +175,9 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	@Override
-	public Reader openFile(DLBFileDescription descr) throws IOException {
-		String path = resourcePath + "/" + descr.getLanguage() + "/" +
-				descr.getFilePath();
+	public Reader openFile(DLBFileDescription fileDescription) throws IOException {
+		String path = resourcePath + "/" + fileDescription.getLanguage() + "/" +
+				fileDescription.getFilePath();
 		return new InputStreamReader(getClass().getClassLoader()
 				.getResourceAsStream(path), StandardCharsets.UTF_8);
 	}
