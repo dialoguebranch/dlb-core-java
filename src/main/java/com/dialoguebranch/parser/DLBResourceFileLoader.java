@@ -27,6 +27,8 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.model.DLBFileDescription;
+import com.dialoguebranch.model.DLBFileType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.io.FileUtils;
@@ -171,13 +173,19 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 			throw new ParseException(
 					"File does not have extension .dlb or .json: " + path);
 		}
-		files.add(new DLBFileDescription(language, path));
+		DLBFileType fileType = null;
+		if(entry.endsWith(".dlb")) {
+			fileType = DLBFileType.SCRIPT;
+		} else {
+			fileType = DLBFileType.TRANSLATION;
+		}
+		files.add(new DLBFileDescription(language, path, fileType));
 	}
 
 	@Override
-	public Reader openFile(DLBFileDescription descr) throws IOException {
-		String path = resourcePath + "/" + descr.getLanguage() + "/" +
-				descr.getFilePath();
+	public Reader openFile(DLBFileDescription fileDescription) throws IOException {
+		String path = resourcePath + "/" + fileDescription.getLanguage() + "/" +
+				fileDescription.getFilePath();
 		return new InputStreamReader(getClass().getClassLoader()
 				.getResourceAsStream(path), StandardCharsets.UTF_8);
 	}

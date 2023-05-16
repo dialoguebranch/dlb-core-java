@@ -2,12 +2,13 @@
  *
  *                   Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
+ *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
- *      as outlined below. Based on original source code licensed under the following terms:
+ *                                        as outlined below.
  *
  *                                            ----------
  *
- * Copyright 2019-2022 WOOL Foundation - Licensed under the MIT License:
+ * Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -25,41 +26,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.dialoguebranch.parser;
-
-import com.dialoguebranch.model.DLBFileDescription;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.util.List;
+package com.dialoguebranch.exception;
 
 /**
- * A DialogueBranch file loader is used by a {@link DLBProjectParser} to list and open
- * DialogueBranch dialogue files (.dlb) and translation files (.json) within a DialogueBranch
- * project. The default implementation is {@link DLBResourceFileLoader}, which can load files from
- * resources on the classpath.
+ * Exception that may be thrown whenever the user is providing invalid input in any Dialogue Branch
+ * related context.
  *
- * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs - hopdenakker@fruittreelabs.com)
  */
-public interface DLBFileLoader {
+public class DLBInvalidInputException extends Exception {
+
+	private String languageCode;
 
 	/**
-	 * Lists all DialogueBranch files in the project. The files should be dialogue files (.dlb) or
-	 * translation files (.json).
+	 * Creates an instance of a {@link DLBInvalidInputException} with a given message.
 	 *
-	 * @return the List of files as {@link DLBFileDescription}s.
-	 * @throws IOException if a reading error occurs
+	 * @param message the error message describing which input was invalid.
 	 */
-	List<DLBFileDescription> listDialogueBranchFiles() throws IOException;
+	public DLBInvalidInputException(String message) {
+		super(message);
+	}
 
-	/**
-	 * Opens the specified DialogueBranch file. This should be a dialogue file (.dlb) or a
-	 * translation file (.json).
-	 *
-	 * @param fileDescription the {@link DLBFileDescription} object.
-	 * @return the {@link Reader} for the file.
-	 * @throws IOException if the file cannot be opened.
-	 */
-	Reader openFile(DLBFileDescription fileDescription) throws IOException;
 }

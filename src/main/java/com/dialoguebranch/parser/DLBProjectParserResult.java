@@ -39,15 +39,15 @@ import java.util.Map;
  * DLBProjectParser}.
  *
  * @author Dennis Hofs (RRD)
+ * @author Harm op den Akker (Fruit Tree Labs - www.fruittreelabs.com)
  */
 public class DLBProjectParserResult {
 	private DLBProject project = null;
-	private Map<String,List<ParseException>> parseErrors =
-			new LinkedHashMap<>();
+	private Map<String,List<ParseException>> parseErrors = new LinkedHashMap<>();
 	private Map<String,List<String>> warnings = new LinkedHashMap<>();
 
 	/**
-	 * Returns the project if parsing succeeded. Otherwise it returns null.
+	 * Returns the project if parsing succeeded. Otherwise, it returns null.
 	 *
 	 * @return the project or null
 	 */
@@ -65,8 +65,8 @@ public class DLBProjectParserResult {
 	}
 
 	/**
-	 * Returns the parse errors. The keys are the paths to files with parse
-	 * errors. A value should be a list with 1 or more errors.
+	 * Returns the parse errors. The keys are the paths to files with parse errors. A value should
+	 * be a list with 1 or more errors.
 	 *
 	 * @return the parse errors
 	 */
@@ -75,8 +75,8 @@ public class DLBProjectParserResult {
 	}
 
 	/**
-	 * Sets the parse errors. The keys are the paths to files with parse errors.
-	 * A value should be a list with 1 or more errors.
+	 * Sets the parse errors. The keys are the paths to files with parse errors. A value should be a
+	 * list with 1 or more errors.
 	 *
 	 * @param parseErrors the parse errors
 	 */
@@ -85,8 +85,8 @@ public class DLBProjectParserResult {
 	}
 
 	/**
-	 * Returns the warnings. They keys are the paths to files with warnings. A
-	 * value should be a list with 1 or more warnings.
+	 * Returns the warnings. The keys are the paths to files with warnings. A value should be a list
+	 * with 1 or more warnings.
 	 *
 	 * @return the warnings
 	 */
@@ -95,8 +95,8 @@ public class DLBProjectParserResult {
 	}
 
 	/**
-	 * Sets the warnings. They keys are the paths to files with warnings. A
-	 * value should be a list with 1 or more warnings.
+	 * Sets the warnings. The keys are the paths to files with warnings. A value should be a list
+	 * with 1 or more warnings.
 	 *
 	 * @param warnings the warnings
 	 */

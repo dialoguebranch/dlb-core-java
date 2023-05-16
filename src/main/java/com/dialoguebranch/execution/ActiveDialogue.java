@@ -52,7 +52,7 @@ import java.util.Map;
  */
 public class ActiveDialogue {
 
-	private DLBDialogueDescription dialogueDescription;
+	private DLBFileDescription dialogueDescription;
 	private DLBDialogue dialogueDefinition;
 	private DLBNode currentNode;
 	private DLBVariableStore dlbVariableStore;
@@ -61,12 +61,12 @@ public class ActiveDialogue {
 
 	/**
 	 * Creates an instance of an {@link ActiveDialogue} with a given {@link
-	 * DLBDialogueDescription} and {@link DLBDialogue}.
+	 * DLBFileDescription} and {@link DLBDialogue}.
 	 *
 	 * @param dialogueDescription the dialogue description
 	 * @param dialogueDefinition the dialogue definition
 	 */
-	public ActiveDialogue(DLBDialogueDescription dialogueDescription,
+	public ActiveDialogue(DLBFileDescription dialogueDescription,
 						  DLBDialogue dialogueDefinition) {
 		this.dialogueDescription = dialogueDescription;
 		this.dialogueDefinition = dialogueDefinition;
@@ -74,7 +74,7 @@ public class ActiveDialogue {
 	
 	// ---------- Getters:
 
-	public DLBDialogueDescription getDialogueDescription() {
+	public DLBFileDescription getDialogueDescription() {
 		return dialogueDescription;
 	}
 
