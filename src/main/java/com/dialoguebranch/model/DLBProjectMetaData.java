@@ -44,11 +44,11 @@ import java.util.List;
 /**
  * The {@link DLBProjectMetaData} class is the object representation of a DialogueBranch
  * metadata .xml file. This object can be serialized into an XML file using an {@link XMLWriter} or
- * be constructed from an XML file using a {@link SimpleSAXHandler}. Additionally contains methods
+ * be constructed from an XML file using a {@link SimpleSAXHandler}. Additionally, contains methods
  * for dynamically modifying the contents of a {@link DLBProjectMetaData} specification while
  * maintaining certain constraints.
  *
- * @author Harm op den Akker (Innovation Sprint)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBProjectMetaData {
 

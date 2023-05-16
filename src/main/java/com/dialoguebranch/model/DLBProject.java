@@ -27,12 +27,7 @@
 
 package com.dialoguebranch.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 import com.dialoguebranch.i18n.DLBContextTranslation;
 import com.dialoguebranch.i18n.DLBTranslationContext;
@@ -40,11 +35,33 @@ import com.dialoguebranch.i18n.DLBTranslator;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.DLBTranslatable;
 
+/**
+ * A {@link DLBProject} or Dialogue Branch Project is the top-level element of the Dialogue Branch
+ * model.
+ *
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 public class DLBProject {
+	private DLBProjectMetaData metaData;
 	private Map<DLBFileDescription, DLBDialogue> dialogues = new LinkedHashMap<>();
 	private Map<DLBFileDescription, DLBDialogue> sourceDialogues = new LinkedHashMap<>();
 	private Map<DLBFileDescription,
 			Map<DLBTranslatable,List<DLBContextTranslation>>> translations = new LinkedHashMap<>();
+
+	// ---------------------------------------------------------------------------------------------
+	// -------------------- Constructor(s) ---------------------------------------------------------
+	// ---------------------------------------------------------------------------------------------
+
+	public DLBProject() { }
+
+	public DLBProject(DLBProjectMetaData metaData) {
+		this.metaData = metaData;
+	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns all available dialogues in this project. This includes source dialogues as well as
@@ -62,8 +79,7 @@ public class DLBProject {
 	 *
 	 * @param dialogues the available dialogues (source and translations with default context)
 	 */
-	public void setDialogues(
-			Map<DLBFileDescription, DLBDialogue> dialogues) {
+	public void setDialogues(Map<DLBFileDescription, DLBDialogue> dialogues) {
 		this.dialogues = dialogues;
 	}
 
@@ -81,8 +97,7 @@ public class DLBProject {
 	 *
 	 * @param sourceDialogues the source dialogues (no translations)
 	 */
-	public void setSourceDialogues(
-			Map<DLBFileDescription, DLBDialogue> sourceDialogues) {
+	public void setSourceDialogues(Map<DLBFileDescription, DLBDialogue> sourceDialogues) {
 		this.sourceDialogues = sourceDialogues;
 	}
 
@@ -113,6 +128,43 @@ public class DLBProject {
 			Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>>
 					translations) {
 		this.translations = translations;
+	}
+
+	/**
+	 * Returns the {@link DLBProjectMetaData} associated with this {@link DLBProject}, or
+	 * {@code null} if no metadata is associated with this project.
+	 * @return the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
+	 */
+	public DLBProjectMetaData getMetaData() {
+		return metaData;
+	}
+
+	/**
+	 * Sets the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
+	 * @param metaData the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
+	 */
+	public void setMetaData(DLBProjectMetaData metaData) {
+		this.metaData = metaData;
+	}
+
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
+
+	/**
+	 * Returns a list of all supported languages in this {@link DLBProject}. In the case of a
+	 * "simple" Dialogue Branch project (i.e. a folder with .dlb and possibly .json files without a
+	 * specific metadata file), this list is derived from the list of {@link DLBFileDescription}s in
+	 * this {@link DLBProject}. If a {@link DLBProjectMetaData} has been set (and a language map has
+	 * been defined therein), this information will be used instead.
+	 * @return a list of all supported languages in this {@link DLBProject}.
+	 */
+	public List<String> getLanguages() {
+		if(metaData == null || metaData.getDLBLanguageMap() == null) {
+			return null; //TODO: Implement
+		} else {
+			return null; //TODO: Implement.
+		}
 	}
 
 	/**
