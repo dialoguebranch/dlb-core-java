@@ -27,18 +27,26 @@
 
 package com.dialoguebranch.model;
 
-public class DLBDialogueDescription {
+import java.io.File;
+import java.util.Objects;
+
+/**
+ * A {@link DLBFileDescription}
+ */
+public class DLBFileDescription {
 	
 	private String language;
-	private String dialogueName;
+	private String filePath;
+	private DLBFileType fileType;
 	
 	// -------------------- Constructors
 
-	public DLBDialogueDescription() {	}
+	public DLBFileDescription() {	}
 
-	public DLBDialogueDescription(String language, String dialogueName) {
+	public DLBFileDescription(String language, String filePath, DLBFileType fileType) {
 		this.setLanguage(language);
-		this.setDialogueName(dialogueName);
+		this.setFilePath(filePath);
+		this.fileType = fileType;
 	}
 	
 	// -------------------- Getters
@@ -47,8 +55,29 @@ public class DLBDialogueDescription {
 		return this.language;
 	}
 	
+	public String getFilePath() {
+		return this.filePath;
+	}
+
+	public DLBFileType getFileType() {
+		return fileType;
+	}
+
+	/**
+	 * Returns the "Dialogue Name" associated with this {@link DLBFileDescription}, which is the
+	 * relative path of the dialogue file (relative to the language folder), including the file
+	 * name, without the extension. For example, for a .dlb script file located at /project-folder/
+	 * en/subfolder/script.dlb, this method will return "subfolder/script".
+	 * @return the uniquely identifying dialogue name.
+	 */
 	public String getDialogueName() {
-		return this.dialogueName;
+		if (filePath.endsWith(".dlb")) {
+			return filePath.substring(0,filePath.length() - 4);
+		} else if(filePath.endsWith(".json")) {
+			return filePath.substring(0, filePath.length() - 5);
+		}
+		else
+			return filePath;
 	}
 	
 	// -------------------- Setters
@@ -57,15 +86,17 @@ public class DLBDialogueDescription {
 		this.language = language;
 	}
 
-	public void setDialogueName(String dialogueName) {
-		this.dialogueName = dialogueName;
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public void setFileType(DLBFileType fileType) {
+		this.fileType = fileType;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = language.hashCode();
-		result = 31 * result + dialogueName.hashCode();
-		return result;
+		return Objects.hash(language, filePath, fileType);
 	}
 
 	@Override
@@ -74,16 +105,19 @@ public class DLBDialogueDescription {
 			return true;
 		if (obj == null || obj.getClass() != getClass())
 			return false;
-		DLBDialogueDescription other = (DLBDialogueDescription)obj;
+		DLBFileDescription other = (DLBFileDescription)obj;
 		if (!language.equals(other.language))
 			return false;
-		if (!dialogueName.equals(other.dialogueName))
+		if (!filePath.equals(other.filePath))
+			return false;
+		if(!fileType.equals(fileType))
 			return false;
 		return true;
 	}
 
 	public String toString() {
-		return "Dialogue '" + this.dialogueName + "' in language '" +
-				this.language + "'.";
+		return "DialogueBranch File '" + this.getDialogueName() + "' in language '"
+				+ this.getLanguage() + "' (" + this.getLanguage() + File.separator
+				+ this.getFilePath() +").";
 	}
 }

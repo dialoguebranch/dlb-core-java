@@ -27,6 +27,8 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.model.DLBFileDescription;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.List;

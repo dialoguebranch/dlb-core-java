@@ -41,35 +41,29 @@ import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.DLBTranslatable;
 
 public class DLBProject {
-	private Map<DLBDialogueDescription, DLBDialogue> dialogues =
-			new LinkedHashMap<>();
-	private Map<DLBDialogueDescription, DLBDialogue> sourceDialogues =
-			new LinkedHashMap<>();
-	private Map<DLBDialogueDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
-			new LinkedHashMap<>();
+	private Map<DLBFileDescription, DLBDialogue> dialogues = new LinkedHashMap<>();
+	private Map<DLBFileDescription, DLBDialogue> sourceDialogues = new LinkedHashMap<>();
+	private Map<DLBFileDescription,
+			Map<DLBTranslatable,List<DLBContextTranslation>>> translations = new LinkedHashMap<>();
 
 	/**
-	 * Returns all available dialogues in this project. This includes source
-	 * dialogues as well as translated dialogues with the default {@link
-	 * DLBTranslationContext}.
+	 * Returns all available dialogues in this project. This includes source dialogues as well as
+	 * translated dialogues with the default {@link DLBTranslationContext}.
 	 *
-	 * @return the available dialogues (source and translations with default
-	 * context)
+	 * @return the available dialogues (source and translations with default context)
 	 */
-	public Map<DLBDialogueDescription, DLBDialogue> getDialogues() {
+	public Map<DLBFileDescription, DLBDialogue> getDialogues() {
 		return dialogues;
 	}
 
 	/**
-	 * Sets all available dialogues in this project. This includes source
-	 * dialogues as well as translated dialogues with the default {@link
-	 * DLBTranslationContext}.
+	 * Sets all available dialogues in this project. This includes source dialogues as well as
+	 * translated dialogues with the default {@link DLBTranslationContext}.
 	 *
-	 * @param dialogues the available dialogues (source and translations with
-	 * default context)
+	 * @param dialogues the available dialogues (source and translations with default context)
 	 */
 	public void setDialogues(
-			Map<DLBDialogueDescription, DLBDialogue> dialogues) {
+			Map<DLBFileDescription, DLBDialogue> dialogues) {
 		this.dialogues = dialogues;
 	}
 
@@ -78,7 +72,7 @@ public class DLBProject {
 	 *
 	 * @return the source dialogues (no translations)
 	 */
-	public Map<DLBDialogueDescription, DLBDialogue> getSourceDialogues() {
+	public Map<DLBFileDescription, DLBDialogue> getSourceDialogues() {
 		return sourceDialogues;
 	}
 
@@ -88,84 +82,84 @@ public class DLBProject {
 	 * @param sourceDialogues the source dialogues (no translations)
 	 */
 	public void setSourceDialogues(
-			Map<DLBDialogueDescription, DLBDialogue> sourceDialogues) {
+			Map<DLBFileDescription, DLBDialogue> sourceDialogues) {
 		this.sourceDialogues = sourceDialogues;
 	}
 
 	/**
-	 * Returns the translations of all phrases per dialogue. This method returns
-	 * a map from a dialogue key to a translation map.
+	 * Returns the translations of all phrases per dialogue. This method returns a map from a
+	 * dialogue key to a translation map.
 	 *
-	 * <p>A translation map is a map from a source phrase to a list of
-	 * translated phrases, with different contexts.</p>
+	 * <p>A translation map is a map from a source phrase to a list of translated phrases, with
+	 * different contexts.</p>
 	 *
 	 * @return the translations
 	 */
-	public Map<DLBDialogueDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> getTranslations() {
+	public Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>>
+	getTranslations() {
 		return translations;
 	}
 
 	/**
-	 * Sets the translations of all phrases per dialogue. This method returns a
-	 * map from a dialogue key to a translation map.
+	 * Sets the translations of all phrases per dialogue. This method returns a map from a dialogue
+	 * key to a translation map.
 	 *
-	 * <p>A translation map is a map from a source phrase to a list of
-	 * translated phrases, with different contexts.</p>
+	 * <p>A translation map is a map from a source phrase to a list of translated phrases,
+	 * with different contexts.</p>
 	 *
 	 * @param translations the translations
 	 */
-	public void setTranslations(Map<DLBDialogueDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations) {
+	public void setTranslations(
+			Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>>
+					translations) {
 		this.translations = translations;
 	}
 
 	/**
-	 * Returns a translated dialogue for the specified translation context.
-	 * This method first searches a source dialogue for the specified
-	 * description (name and language). If found, no translation is needed and
-	 * the source dialogue is returned. Otherwise it searches a source dialogue
-	 * with the specified dialogue name and a translation set for the specified
-	 * language. If found, it translates the dialogue with the translation
-	 * context, and then returns the translated dialogue.
+	 * Returns a translated dialogue for the specified translation context. This method first
+	 * searches a source dialogue for the specified description (name and language). If found, no
+	 * translation is needed and the source dialogue is returned. Otherwise, it searches a source
+	 * dialogue with the specified dialogue name and a translation set for the specified language.
+	 * If found, it translates the dialogue with the translation context, and then returns the
+	 * translated dialogue.
 	 *
-	 * <p>If no source dialogue or translation is found, this method returns
-	 * null.</p>
+	 * <p>If no source dialogue or translation is found, this method returns null.</p>
 	 *
-	 * @param descr the dialogue description (name and language)
+	 * @param dialogueDescription the dialogue description (name and language)
 	 * @param context the translation context
 	 * @return the translated dialogue or null
 	 */
-	public DLBDialogue getTranslatedDialogue(DLBDialogueDescription descr,
+	public DLBDialogue getTranslatedDialogue(DLBFileDescription dialogueDescription,
 											 DLBTranslationContext context) {
-		DLBDialogue dialogue = sourceDialogues.get(descr);
+		DLBDialogue dialogue = sourceDialogues.get(dialogueDescription);
 		if (dialogue != null)
 			return dialogue;
 		Map<DLBTranslatable,List<DLBContextTranslation>> translations =
-				this.translations.get(descr);
+				this.translations.get(dialogueDescription);
 		if (translations == null)
 			return null;
-		dialogue = findSourceDialogue(descr.getDialogueName());
+		dialogue = findSourceDialogue(dialogueDescription.getFilePath());
 		if (dialogue == null)
 			return null;
 		DLBTranslator translator = new DLBTranslator(context, translations);
 		return translator.translate(dialogue);
 	}
 
-	private DLBDialogue findSourceDialogue(String dlgName) {
-		List<DLBDialogueDescription> matches = new ArrayList<>();
-		for (DLBDialogueDescription descr : sourceDialogues.keySet()) {
-			if (descr.getDialogueName().equals(dlgName))
-				matches.add(descr);
+	private DLBDialogue findSourceDialogue(String dialogueName) {
+		List<DLBFileDescription> matches = new ArrayList<>();
+		for (DLBFileDescription description : sourceDialogues.keySet()) {
+			if (description.getFilePath().equals(dialogueName))
+				matches.add(description);
 		}
 		if (matches.isEmpty())
 			return null;
 		if (matches.size() == 1)
 			return dialogues.get(matches.get(0));
-		Map<String, DLBDialogueDescription> lngMap = new HashMap<>();
-		for (DLBDialogueDescription match : matches) {
+		Map<String, DLBFileDescription> lngMap = new HashMap<>();
+		for (DLBFileDescription match : matches) {
 			lngMap.put(match.getLanguage(), match);
 		}
-		I18nLanguageFinder finder = new I18nLanguageFinder(new ArrayList<>(
-				lngMap.keySet()));
+		I18nLanguageFinder finder = new I18nLanguageFinder(new ArrayList<>(lngMap.keySet()));
 		finder.setUserLocale(Locale.ENGLISH);
 		String language = finder.find();
 		if (language == null)

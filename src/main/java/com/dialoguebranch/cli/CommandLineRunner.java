@@ -29,8 +29,11 @@
 package com.dialoguebranch.cli;
 
 import com.dialoguebranch.exception.DLBInvalidInputException;
+import com.dialoguebranch.i18n.DLBContextTranslation;
+import com.dialoguebranch.i18n.DLBTranslatable;
 import com.dialoguebranch.model.DLBDialogue;
-import com.dialoguebranch.model.DLBDialogueDescription;
+import com.dialoguebranch.model.DLBFileDescription;
+import com.dialoguebranch.model.DLBProject;
 import com.dialoguebranch.parser.DLBDirectoryFileLoader;
 import com.dialoguebranch.parser.DLBFileLoader;
 import com.dialoguebranch.parser.DLBProjectParser;
@@ -119,7 +122,10 @@ public class CommandLineRunner {
 			return;
 		}
 
+		// If there are any errors, print them and stop the program.
 		if (!readResult.getParseErrors().isEmpty()) {
+			System.err.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
+					"the following errors:");
 			for (String key : readResult.getParseErrors().keySet()) {
 				System.err.println("ERROR: Failed to parse file: " + key);
 				List<ParseException> errors = readResult.getParseErrors().get(key);
@@ -131,21 +137,44 @@ public class CommandLineRunner {
 			return;
 		}
 
-		for (String key : readResult.getWarnings().keySet()) {
-			System.err.println("WARNING: " + key);
-			List<String> errors = readResult.getWarnings().get(key);
-			for (String error : errors) {
-				System.err.println(error);
+		// If there are any warnings, print them and continue.
+		if(!readResult.getWarnings().isEmpty()) {
+			System.out.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
+					"the following warnings:");
+			for (String key : readResult.getWarnings().keySet()) {
+				System.out.println("WARNING: " + key);
+				List<String> errors = readResult.getWarnings().get(key);
+				for (String error : errors) {
+					System.out.println(error);
+				}
 			}
 		}
+
 		System.out.println("Finished parsing DialogueBranch project from directory: " +
 				rootDirectory.getAbsolutePath());
 
-		Map<DLBDialogueDescription, DLBDialogue> dialogues = readResult.getProject().getDialogues();
+		DLBProject project = readResult.getProject();
+		System.out.println("Project Summary:");
+		System.out.println("Path: "+rootDirectory);
 
-		for (DLBDialogueDescription dialogue : dialogues.keySet()) {
+		Map<DLBFileDescription, DLBDialogue> sourceDialogues = project.getSourceDialogues();
+		System.out.println("Number of Dialogue Scripts: "+sourceDialogues.size());
+		for(DLBFileDescription dialogueDescription : sourceDialogues.keySet()) {
+			System.out.println("  - " +dialogueDescription);
+		}
+
+		Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
+				project.getTranslations();
+		System.out.println("Number of Translation Scripts: "+translations.size());
+		for(DLBFileDescription dialogueDescription : translations.keySet()) {
+			System.out.println("  - " +dialogueDescription);
+		}
+
+		Map<DLBFileDescription, DLBDialogue> dialogues = readResult.getProject().getDialogues();
+
+		for (DLBFileDescription dialogue : dialogues.keySet()) {
 			System.out.println("----------");
-			System.out.println("DIALOGUE " + dialogue.getDialogueName() +
+			System.out.println("DIALOGUE " + dialogue.getFilePath() +
 					" (" + dialogue.getLanguage() + ")");
 			System.out.println(dialogues.get(dialogue));
 		}

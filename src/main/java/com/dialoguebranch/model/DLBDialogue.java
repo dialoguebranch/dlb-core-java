@@ -39,8 +39,9 @@ import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 import com.dialoguebranch.model.nodepointer.DLBNodePointerExternal;
 
 /**
- * Object representation of a DialogueBranch Dialogue definition. A {@link DLBDialogue} has a name and an
- * (unordered) list of {@link DLBNode}s. One of these {@link DLBNode}s should have as title "Start".
+ * Object representation of a DialogueBranch Dialogue definition. A {@link DLBDialogue} has a name
+ * and an (unordered) list of {@link DLBNode}s. One of these {@link DLBNode}s should have as title
+ * "Start".
  * 
  * @author Harm op den Akker (Roessingh Research and Development)
  */
@@ -71,8 +72,8 @@ public class DLBDialogue {
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBDialogue}, instantiated with the contents of the given {@code other}
-	 * {@link DLBDialogue}.
+	 * Creates an instance of a {@link DLBDialogue}, instantiated with the contents of the given
+	 * {@code other} {@link DLBDialogue}.
 	 *
 	 * @param other the {@link DLBDialogue} with which to instantiate this {@link DLBDialogue}
 	 */
@@ -233,7 +234,8 @@ public class DLBDialogue {
 	}
 	
 	/**
-	 * Returns a human readable multi-line summary string, representing the contents of this {@link DLBDialogue}.
+	 * Returns a human-readable multi-line summary string, representing the contents of this
+	 * {@link DLBDialogue}.
 	 */
 	public String toString() {
 		String summaryString = "";
