@@ -58,6 +58,7 @@ import com.dialoguebranch.model.command.DLBActionCommand;
  * </ul></p>
  * 
  * @author Dennis Hofs (RRD)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBReply {
 	private int replyId;
@@ -248,7 +249,7 @@ public class DLBReply {
 	public String toString() {
 		StringBuilder result = new StringBuilder("[[");
 		if (statement != null)
-			result.append(statement + "|");
+			result.append(statement).append("|");
 		result.append(nodePointer.toString());
 		if (!commands.isEmpty()) {
 			result.append("|");

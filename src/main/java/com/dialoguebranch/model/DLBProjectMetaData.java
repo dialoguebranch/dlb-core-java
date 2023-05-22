@@ -33,9 +33,6 @@ import nl.rrd.utils.xml.SimpleSAXHandler;
 import nl.rrd.utils.xml.XMLWriter;
 import com.dialoguebranch.exception.DLBDuplicateLanguageCodeException;
 import com.dialoguebranch.exception.DLBUnknownLanguageCodeException;
-import com.dialoguebranch.model.language.DLBLanguage;
-import com.dialoguebranch.model.language.DLBLanguageMap;
-import com.dialoguebranch.model.language.DLBLanguageSet;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -56,9 +53,11 @@ public class DLBProjectMetaData {
 	private String basePath;
 	private String description;
 	private String version;
-	private DLBLanguageMap languageMap;
+	private LanguageMap languageMap;
 
-	// ----- Constructors
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Creates an instance of an empty {@link DLBProjectMetaData} object.
@@ -67,13 +66,15 @@ public class DLBProjectMetaData {
 
 	/**
 	 * Creates an instance of a {@link DLBProjectMetaData} object with the given parameters.
+	 *
 	 * @param name a descriptive name of the DialogueBranch project.
 	 * @param basePath the folder in which this DialogueBranch project is stored.
 	 * @param description a textual description of this DialogueBranch project.
 	 * @param version free-form version information (e.g. v0.1.0).
 	 * @param languageMap contains all the languages supported by this DialogueBranch project.
 	 */
-	public DLBProjectMetaData(String name, String basePath, String description, String version, DLBLanguageMap languageMap) {
+	public DLBProjectMetaData(String name, String basePath, String description, String version,
+							  LanguageMap languageMap) {
 		this.name = name;
 		this.basePath = basePath;
 		this.description = description;
@@ -81,7 +82,9 @@ public class DLBProjectMetaData {
 		this.languageMap = languageMap;
 	}
 
-	// ----- Getters
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns the name of this {@link DLBProject} as a String.
@@ -89,6 +92,14 @@ public class DLBProjectMetaData {
 	 */
 	public String getName() {
 		return name;
+	}
+
+	/**
+	 * Sets the name of this DialogueBranch project.
+	 * @param name the name of this DialogueBranch project.
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	/**
@@ -100,47 +111,19 @@ public class DLBProjectMetaData {
 	}
 
 	/**
+	 * Sets the base path for this DialogueBranch project as a {@link String}.
+	 * @param basePath the base path for this DialogueBranch project as a {@link String}.
+	 */
+	public void setBasePath(String basePath) {
+		this.basePath = basePath;
+	}
+
+	/**
 	 * Returns the description of this {@link DLBProject}.
 	 * @return the description of this {@link DLBProject}.
 	 */
 	public String getDescription() {
 		return description;
-	}
-
-	/**
-	 * Returns the version of this {@link DLBProject}.
-	 * @return the version of this {@link DLBProject}.
-	 */
-	public String getVersion() {
-		return version;
-	}
-
-	/**
-	 * Returns the {@link DLBLanguageMap} that contains a description of all
-	 * languages supported in this {@link DLBProject} and their mapping from source-
-	 * to translation languages.
-	 * @return the {@link DLBLanguageMap} for this {@link DLBProjectMetaData}.
-	 */
-	public DLBLanguageMap getDLBLanguageMap() {
-		return languageMap;
-	}
-
-	// ----- Setters
-
-	/**
-	 * Sets the name of this DialogueBranch project.
-	 * @param name the name of this DialogueBranch project.
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * Sets the the base path for this DialogueBranch project as a {@link String}.
-	 * @param basePath the the base path for this DialogueBranch project as a {@link String}.
-	 */
-	public void setBasePath(String basePath) {
-		this.basePath = basePath;
 	}
 
 	/**
@@ -152,6 +135,14 @@ public class DLBProjectMetaData {
 	}
 
 	/**
+	 * Returns the version of this {@link DLBProject}.
+	 * @return the version of this {@link DLBProject}.
+	 */
+	public String getVersion() {
+		return version;
+	}
+
+	/**
 	 * Sets the version string for this DialogueBranch project.
 	 * @param version the version string for this DialogueBranch project.
 	 */
@@ -160,77 +151,104 @@ public class DLBProjectMetaData {
 	}
 
 	/**
-	 * Sets the {@link DLBLanguageMap} for this DialogueBranch project, containing a mapping of all
-	 * supported source- and translation languages.
-	 * @param languageMap the {@link DLBLanguageMap} for this DialogueBranch project.
+	 * Returns the {@link LanguageMap} that contains a description of all
+	 * languages supported in this {@link DLBProject} and their mapping from source-
+	 * to translation languages.
+	 * @return the {@link LanguageMap} for this {@link DLBProjectMetaData}.
 	 */
-	public void setDLBLanguageMap(DLBLanguageMap languageMap) {
+	public LanguageMap getDLBLanguageMap() {
+		return languageMap;
+	}
+
+	/**
+	 * Sets the {@link LanguageMap} for this DialogueBranch project, containing a mapping of all
+	 * supported source- and translation languages.
+	 * @param languageMap the {@link LanguageMap} for this DialogueBranch project.
+	 */
+	public void setDLBLanguageMap(LanguageMap languageMap) {
 		this.languageMap = languageMap;
 	}
 
-	// ----- Methods
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 
 	/**
 	 * Attempts to set a new language with the given {@code name} and {@code code} to the given
-	 * {@link DLBLanguageSet} as the source language in this DialogueBranch project. This methods will succeed
-	 * and return {@code true} if and only if a language with the given {@code code} does not exist yet
-	 * in the {@link DLBLanguageMap} of this DialogueBranch project.
+	 * {@link LanguageSet} as the source language in this DialogueBranch project. This method
+	 * will succeed and return {@code true} if and only if a language with the given {@code code}
+	 * does not exist yet in the {@link LanguageMap} of this DialogueBranch project.
 	 *
 	 * @param name the name of the source language to add.
 	 * @param code the code of the source language to add.
-	 * @param DLBLanguageSet the language set to which to add the language
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code} already exists in this DialogueBranch project.
+	 * @param languageSet the language set to which to add the language
+	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 *                                           already exists in this DialogueBranch project.
 	 */
-	public void setSourceLanguage(String name, String code, DLBLanguageSet DLBLanguageSet) throws DLBDuplicateLanguageCodeException {
-		if(languageExists(code)) throw new DLBDuplicateLanguageCodeException("A language with the given language code '"+code+"' is already defined in this DialogueBranch project.",code);
+	public void setSourceLanguage(String name, String code, LanguageSet languageSet)
+			throws DLBDuplicateLanguageCodeException {
+		if(languageExists(code))
+			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
-		DLBLanguageSet.setSourceLanguage(new DLBLanguage(name,code));
+		languageSet.setSourceLanguage(new Language(name,code));
 	}
 
 	/**
-	 * Attempts to add a new source language to this DialogueBranch project with the given {@code name} and {@code code} by
-	 * creating a new {@link DLBLanguageSet} for it. This method will fail with a {@link DLBDuplicateLanguageCodeException}
-	 * if a language with the given {@code code} already exists in this DialogueBranch project. Otherwise, it will return a pointer
-	 * to the newly created {@link DLBLanguageSet}.
+	 * Attempts to add a new source language to this DialogueBranch project with the given
+	 * {@code name} and {@code code} by creating a new {@link LanguageSet} for it. This method
+	 * will fail with a {@link DLBDuplicateLanguageCodeException} if a language with the given
+	 * {@code code} already exists in this DialogueBranch project. Otherwise, it will return a
+	 * pointer to the newly created {@link LanguageSet}.
+	 *
 	 * @param name the name of the source language to add.
 	 * @param code the code of the source language to add.
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code} already exists in this DialogueBranch project.
-	 * @return the newly created {@link DLBLanguageSet}
+	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 *                                           already exists in this DialogueBranch project.
+	 * @return the newly created {@link LanguageSet}
 	 */
-	public DLBLanguageSet addSourceLanguage(String name, String code) throws DLBDuplicateLanguageCodeException {
-		if(languageExists(code)) throw new DLBDuplicateLanguageCodeException("A language with the given language code '"+code+"' is already defined in this DialogueBranch project.",code);
+	public LanguageSet addSourceLanguage(String name, String code)
+			throws DLBDuplicateLanguageCodeException {
+		if(languageExists(code))
+			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
-		DLBLanguageSet wls = new DLBLanguageSet(new DLBLanguage(name, code));
-		languageMap.addLanguageSet(wls);
-		return wls;
+		LanguageSet languageSet = new LanguageSet(new Language(name, code));
+		languageMap.addLanguageSet(languageSet);
+		return languageSet;
 	}
 
 	/**
 	 * Attempts to add a new language with the given {@code name} and {@code code} to the given
-	 * {@link DLBLanguageSet} as a translation language. This methods will succeed and return
+	 * {@link LanguageSet} as a translation language. This method will succeed and return
 	 * {@code true} if and only if a language with the given {@code code} does not exist yet
-	 * in this {@link DLBLanguageMap}.
+	 * in this {@link LanguageMap}.
 	 *
 	 * @param name the name of the language to add.
 	 * @param code the code of the language to add.
-	 * @param DLBLanguageSet the language set to which to add the language
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code} already exists in this DialogueBranch project.
+	 * @param languageSet the language set to which to add the language
+	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 *                                           already exists in this DialogueBranch project.
 	 */
-	public void addTranslationLanguage(String name, String code, DLBLanguageSet DLBLanguageSet) throws DLBDuplicateLanguageCodeException {
-		if(languageExists(code)) throw new DLBDuplicateLanguageCodeException("A language with the given language code '"+code+"' is already defined in this DialogueBranch project.",code);
+	public void addTranslationLanguage(String name, String code, LanguageSet languageSet)
+			throws DLBDuplicateLanguageCodeException {
+		if(languageExists(code))
+			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
-		DLBLanguageSet.addTranslationLanguage(new DLBLanguage(name,code));
+		languageSet.addTranslationLanguage(new Language(name,code));
 	}
 
 	/**
-	 * Checks whether a language with the given {@code languageCode} exists in this {@link DLBLanguageMap}.
+	 * Checks whether a language with the given {@code languageCode} exists in this
+	 * {@link LanguageMap}.
 	 * @param languageCode the language code to search for
 	 * @return true if the given {@code languageCode} exists, false otherwise
 	 */
 	public boolean languageExists(String languageCode) {
-		for(DLBLanguageSet DLBLanguageSet : languageMap.getLanguageSets()) {
-			if(DLBLanguageSet.getSourceLanguage().getCode().equals(languageCode)) return true;
-			for(DLBLanguage dlbTranslationLanguage : DLBLanguageSet.getTranslationLanguages()) {
+		for(LanguageSet languageSet : languageMap.getLanguageSets()) {
+			if(languageSet.getSourceLanguage().getCode().equals(languageCode)) return true;
+			for(Language dlbTranslationLanguage : languageSet.getTranslationLanguages()) {
 				if(dlbTranslationLanguage.getCode().equals(languageCode)) return true;
 			}
 		}
@@ -238,18 +256,23 @@ public class DLBProjectMetaData {
 	}
 
 	/**
-	 * Returns the {@link DLBLanguageSet} in this DialogueBranch project for which the source language code
-	 * matches the given {@code code}.
-	 * @param sourceLanguageCode the language code of the source language for which to lookup its {@link DLBLanguageSet}.
-	 * @return the {@link DLBLanguageSet} with a source language with the given {@code code} or throws an
-	 * {@link DLBUnknownLanguageCodeException} if no such {@link DLBLanguageSet} exists.
-	 * @throws DLBUnknownLanguageCodeException if no language set exists with the given source language code.
+	 * Returns the {@link LanguageSet} in this DialogueBranch project for which the source
+	 * language code matches the given {@code code}.
+	 *
+	 * @param sourceLanguageCode the language code of the source language for which to look up its
+	 *                           {@link LanguageSet}.
+	 * @return the {@link LanguageSet} with a source language with the given {@code code}.
+	 * @throws DLBUnknownLanguageCodeException if no language set exists with the given source
+	 *                                         language code.
 	 */
-	public DLBLanguageSet getLanguageSetForSourceLanguage(String sourceLanguageCode) throws DLBUnknownLanguageCodeException {
-		for(DLBLanguageSet wls : languageMap.getLanguageSets()) {
-			if(wls.getSourceLanguage().getCode().equals(sourceLanguageCode)) return wls;
+	public LanguageSet getLanguageSetForSourceLanguage(String sourceLanguageCode)
+			throws DLBUnknownLanguageCodeException {
+		for(LanguageSet languageSet : languageMap.getLanguageSets()) {
+			if(languageSet.getSourceLanguage().getCode().equals(sourceLanguageCode))
+				return languageSet;
 		}
-		throw new DLBUnknownLanguageCodeException("No language set found with source language '"+sourceLanguageCode+"'.",sourceLanguageCode);
+		throw new DLBUnknownLanguageCodeException("No language set found with source language '"
+				+sourceLanguageCode+"'.",sourceLanguageCode);
 	}
 
 	public String toString() {
@@ -264,10 +287,13 @@ public class DLBProjectMetaData {
 		return result;
 	}
 
-	// ----- XML Handling
+	// ------------------------------------------------------
+	// -------------------- XML Handling --------------------
+	// ------------------------------------------------------
 
 	/**
 	 * Writes this {@link DLBProjectMetaData} to file using the given {@link XMLWriter}.
+	 *
 	 * @param writer the XML writer
 	 * @throws IOException if a writing error occurs
 	 */
@@ -289,6 +315,7 @@ public class DLBProjectMetaData {
 	/**
 	 * Returns a {@link SimpleSAXHandler} that is able to parse the contents of an .xml file
 	 * to a {@link DLBProjectMetaData} object.
+	 *
 	 * @return the XMl handler
 	 */
 	public static SimpleSAXHandler<DLBProjectMetaData> getXMLHandler() {
@@ -304,23 +331,23 @@ public class DLBProjectMetaData {
 		private DLBProjectMetaData result;
 		private int rootLevel = 0;
 		private boolean inDescription = false;
-		private SimpleSAXHandler<DLBLanguageMap> languageMapHandler = null;
+		private SimpleSAXHandler<LanguageMap> languageMapHandler = null;
 
 		@Override
-		public void startElement(String name, Attributes atts, List<String> parents) throws ParseException {
+		public void startElement(String name, Attributes attributes, List<String> parents) throws ParseException {
 
 			if(rootLevel == 0) {
 				if(!name.equals("dlb-project")) {
 					throw new ParseException("Expected element 'dlb-project' while parsing DialogueBranch project metadata, found '"+name+"'.");
 				} else {
 					result = new DLBProjectMetaData();
-					if(atts.getValue("name") == null) {
+					if(attributes.getValue("name") == null) {
 						throw new ParseException("Missing attribute 'name' in element 'dlb-project' while parsing DialogueBranch project metadata.");
 					} else {
-						result.setName(atts.getValue("name"));
+						result.setName(attributes.getValue("name"));
 					}
-					if(atts.getValue("version") != null) {
-						result.setVersion(atts.getValue("version"));
+					if(attributes.getValue("version") != null) {
+						result.setVersion(attributes.getValue("version"));
 					} else {
 						result.setVersion("");
 					}
@@ -330,11 +357,11 @@ public class DLBProjectMetaData {
 				if(name.equals("description")) {
 					inDescription = true;
 				} else if(name.equals("language-map")) {
-					languageMapHandler = DLBLanguageMap.getXMLHandler();
-					languageMapHandler.startElement(name,atts,parents);
+					languageMapHandler = LanguageMap.getXMLHandler();
+					languageMapHandler.startElement(name,attributes,parents);
 				} else {
 					if(languageMapHandler != null) {
-						languageMapHandler.startElement(name,atts,parents);
+						languageMapHandler.startElement(name,attributes,parents);
 					} else {
 						throw new ParseException("Unexpected element while parsing DialogueBranch project metadata: '"+name+"'");
 					}
@@ -348,7 +375,7 @@ public class DLBProjectMetaData {
 				languageMapHandler.endElement(name,parents);
 			} else if (name.equals("description")) inDescription = false;
 
-			if(name.equals("language-map")) {
+			if(name.equals("language-map") && languageMapHandler != null) {
 				result.setDLBLanguageMap(languageMapHandler.getObject());
 			}
 		}

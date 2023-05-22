@@ -56,14 +56,15 @@ import com.dialoguebranch.model.DLBProject;
  * files and ".json" translation files.
  *
  * @author Dennis Hofs (RRD)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBProjectParser {
-	private DLBFileLoader fileLoader;
+	private final DLBFileLoader fileLoader;
 
-	private Map<DLBFileDescription, DLBDialogue> dialogues = new LinkedHashMap<>();
-	private Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
-			new LinkedHashMap<>();
-	private Map<DLBFileDescription, DLBDialogue> translatedDialogues = new LinkedHashMap<>();
+	private final Map<DLBFileDescription, DLBDialogue> dialogues = new LinkedHashMap<>();
+	private final Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>>
+			translations = new LinkedHashMap<>();
+	private final Map<DLBFileDescription, DLBDialogue> translatedDialogues = new LinkedHashMap<>();
 
 	public DLBProjectParser(DLBFileLoader fileLoader) {
 		this.fileLoader = fileLoader;
@@ -114,8 +115,8 @@ public class DLBProjectParser {
 	 * @param readResult the read result
 	 * @throws IOException if a reading error occurs
 	 */
-	private void parseFiles(List<DLBFileDescription> fileDescriptions, DLBProjectParserResult readResult)
-			throws IOException {
+	private void parseFiles(List<DLBFileDescription> fileDescriptions,
+							DLBProjectParserResult readResult) throws IOException {
 		Set<DLBFileDescription> fileDescriptionsSet = new HashSet<>();
 		List<DLBFileDescription> dialogueFiles = new ArrayList<>();
 		List<DLBFileDescription> translationFiles = new ArrayList<>();
@@ -142,11 +143,11 @@ public class DLBProjectParser {
 
 		if (readResult.getParseErrors().isEmpty()) {
 			// validate referenced dialogues in external node pointers
-			for (DLBFileDescription descr : dialogues.keySet()) {
-				DLBDialogue dlg = dialogues.get(descr);
+			for (DLBFileDescription fileDescription : dialogues.keySet()) {
+				DLBDialogue dlg = dialogues.get(fileDescription);
 				for (String refName : dlg.getDialoguesReferenced()) {
 					if (!dialogueNames.contains(refName)) {
-						getParseErrors(readResult, descr).add(
+						getParseErrors(readResult, fileDescription).add(
 							new ParseException(String.format(
 							"Found external node pointer in dialogue %s to unknown dialogue %s",
 							dlg.getDialogueName(), refName)));
@@ -177,8 +178,8 @@ public class DLBProjectParser {
 	}
 
 	private List<ParseException> getParseErrors(DLBProjectParserResult readResult,
-												DLBFileDescription descr) {
-		String path = fileDescriptionToPath(descr);
+												DLBFileDescription fileDescription) {
+		String path = fileDescriptionToPath(fileDescription);
 		List<ParseException> errors = readResult.getParseErrors().get(path);
 		if (errors != null)
 			return errors;
@@ -187,8 +188,9 @@ public class DLBProjectParser {
 		return errors;
 	}
 
-	private List<String> getWarnings(DLBProjectParserResult readResult, DLBFileDescription descr) {
-		String path = fileDescriptionToPath(descr);
+	private List<String> getWarnings(DLBProjectParserResult readResult,
+									 DLBFileDescription fileDescription) {
+		String path = fileDescriptionToPath(fileDescription);
 		List<String> warnings = readResult.getWarnings().get(path);
 		if (warnings != null)
 			return warnings;
@@ -228,10 +230,10 @@ public class DLBProjectParser {
 
 	private DLBDialogue findSourceDialogue(String dlgName) {
 		List<DLBFileDescription> matches = new ArrayList<>();
-		for (DLBFileDescription descr : dialogues.keySet()) {
-			String currDlgName = descr.getDialogueName();
+		for (DLBFileDescription fileDescription : dialogues.keySet()) {
+			String currDlgName = fileDescription.getDialogueName();
 			if (currDlgName.equals(dlgName))
-				matches.add(descr);
+				matches.add(fileDescription);
 		}
 		if (matches.isEmpty())
 			return null;
@@ -267,7 +269,7 @@ public class DLBProjectParser {
 		}
 	}
 
-	private String fileDescriptionToPath(DLBFileDescription descr) {
-		return descr.getLanguage() + "/" + descr.getFilePath();
+	private String fileDescriptionToPath(DLBFileDescription fileDescription) {
+		return fileDescription.getLanguage() + "/" + fileDescription.getFilePath();
 	}
 }

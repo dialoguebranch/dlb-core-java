@@ -59,14 +59,20 @@ import java.util.List;
  *         </ul>
  *     </ul>
  * </ul>
+ *
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBDirectoryFileLoader implements DLBFileLoader {
 
 	private final File rootDirectory;
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
 	/**
-	 * Creates an instance of a {@link DLBDirectoryFileLoader} with the given root
-	 * {@code directory}.
+	 * Creates an instance of a {@link DLBDirectoryFileLoader} with the given {@code rootDirectory}.
 	 * @param rootDirectory the directory in which to look for languages folders with .dlb and/or
 	 *                      .json files.
 	 */
@@ -74,15 +80,29 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 		this.rootDirectory = rootDirectory;
 	}
 
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
+	/**
+	 * Returns the root directory for this {@link DLBDirectoryFileLoader}.
+	 * @return the root directory for this {@link DLBDirectoryFileLoader}.
+	 */
+	public File getRootDirectory() {
+		return rootDirectory;
+	}
+
 	@Override
 	public List<DLBFileDescription> listDialogueBranchFiles() {
 		List<DLBFileDescription> result = new ArrayList<>();
 		File[] children = rootDirectory.listFiles();
-		for (File child : children) {
-			if (!child.isDirectory() || child.getName().startsWith("."))
-				continue;
-			String language = child.getName();
-			result.addAll(listDir(language, "", child));
+		if(children != null) {
+			for (File child : children) {
+				if (!child.isDirectory() || child.getName().startsWith("."))
+					continue;
+				String language = child.getName();
+				result.addAll(listDir(language, "", child));
+			}
 		}
 		return result;
 	}
@@ -103,16 +123,18 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	private List<DLBFileDescription> listDir(String language, String pathName, File directory) {
 		List<DLBFileDescription> result = new ArrayList<>();
 		File[] children = directory.listFiles();
-		for (File child : children) {
-			if (child.isDirectory() && !child.getName().startsWith(".")) {
-				result.addAll(listDir(language, pathName + child.getName() + "/", child));
-			} else if (child.isFile()) {
-				if(child.getName().endsWith(".dlb")) {
-					result.add(new DLBFileDescription(
-							language, pathName + child.getName(), DLBFileType.SCRIPT));
-				} else if(child.getName().endsWith(".json")) {
-					result.add(new DLBFileDescription(
-							language, pathName + child.getName(), DLBFileType.TRANSLATION));
+		if(children != null) {
+			for (File child : children) {
+				if (child.isDirectory() && !child.getName().startsWith(".")) {
+					result.addAll(listDir(language, pathName + child.getName() + "/", child));
+				} else if (child.isFile()) {
+					if (child.getName().endsWith(".dlb")) {
+						result.add(new DLBFileDescription(
+								language, pathName + child.getName(), DLBFileType.SCRIPT));
+					} else if (child.getName().endsWith(".json")) {
+						result.add(new DLBFileDescription(
+								language, pathName + child.getName(), DLBFileType.TRANSLATION));
+					}
 				}
 			}
 		}

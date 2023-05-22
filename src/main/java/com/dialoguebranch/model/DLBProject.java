@@ -49,9 +49,9 @@ public class DLBProject {
 	private Map<DLBFileDescription,
 			Map<DLBTranslatable,List<DLBContextTranslation>>> translations = new LinkedHashMap<>();
 
-	// ---------------------------------------------------------------------------------------------
-	// -------------------- Constructor(s) ---------------------------------------------------------
-	// ---------------------------------------------------------------------------------------------
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	public DLBProject() { }
 
@@ -160,11 +160,21 @@ public class DLBProject {
 	 * @return a list of all supported languages in this {@link DLBProject}.
 	 */
 	public List<String> getLanguages() {
+		List<String> result = new ArrayList<>();
+
+		// If no metaData has been defined, scrape languages from the set of available dialogues
 		if(metaData == null || metaData.getDLBLanguageMap() == null) {
-			return null; //TODO: Implement
+			for(DLBFileDescription fileDescription : dialogues.keySet()) {
+				if(!result.contains(fileDescription.getLanguage()))
+					result.add(fileDescription.getLanguage());
+			}
+
+		// If there is metadata, obtain the list of languages from there
 		} else {
 			return null; //TODO: Implement.
 		}
+
+		return result;
 	}
 
 	/**

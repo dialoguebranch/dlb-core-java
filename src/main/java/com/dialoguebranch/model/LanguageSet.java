@@ -25,7 +25,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.dialoguebranch.model.language;
+package com.dialoguebranch.model;
 
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
@@ -38,61 +38,70 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A {@link LanguageSet} is a mapping from a single source {@link Language} to a list of translation
+ * {@link Language}s.
  *
- * @author Harm op den Akker
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBLanguageSet {
+public class LanguageSet {
 
-	private DLBLanguage sourceLanguage;
-	private List<DLBLanguage> translationLanguages;
+	private Language sourceLanguage;
+	private List<Language> translationLanguages;
 
-	// ----- Constructors
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
-	public DLBLanguageSet() {
-		this.translationLanguages = new ArrayList<DLBLanguage>();
+	public LanguageSet() {
+		this.translationLanguages = new ArrayList<>();
 	}
 
-	public DLBLanguageSet(DLBLanguage sourceLanguage) {
+	public LanguageSet(Language sourceLanguage) {
 		this.sourceLanguage = sourceLanguage;
-		this.translationLanguages = new ArrayList<DLBLanguage>();
+		this.translationLanguages = new ArrayList<>();
 	}
 
-	// ----- Getters
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
-	public DLBLanguage getSourceLanguage() {
+	public Language getSourceLanguage() {
 		return sourceLanguage;
 	}
 
-	public List<DLBLanguage> getTranslationLanguages() {
-		return translationLanguages;
-	}
-
-	// ----- Setters
-
-	public void setSourceLanguage(DLBLanguage sourceLanguage) {
+	public void setSourceLanguage(Language sourceLanguage) {
 		this.sourceLanguage = sourceLanguage;
 	}
 
-	public void setTranslationLanguages(List<DLBLanguage> translationLanguages) {
+	public List<Language> getTranslationLanguages() {
+		return translationLanguages;
+	}
+
+	public void setTranslationLanguages(List<Language> translationLanguages) {
 		this.translationLanguages = translationLanguages;
 	}
 
-	// ----- Methods
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 
-	public void addTranslationLanguage(DLBLanguage translationLanguage) {
+	public void addTranslationLanguage(Language translationLanguage) {
 		translationLanguages.add(translationLanguage);
 	}
 
+	@Override
 	public String toString() {
-		String result = "DLBLanguageSet: \n";
-		result += "[SourceLanguage:"+sourceLanguage.toString()+"]\n";
-		for(DLBLanguage DLBLanguage : translationLanguages) {
-			result += DLBLanguage.toString()+"\n";
+		StringBuilder result = new StringBuilder("LanguageSet: \n");
+		result.append("[SourceLanguage:").append(sourceLanguage.toString()).append("]\n");
+		for(Language language : translationLanguages) {
+			result.append(language.toString()).append("\n");
 		}
-		return result;
+		return result.toString();
 	}
 
-	// ----- XML Handling
+	// ------------------------------------------------------
+	// -------------------- XML Handling --------------------
+	// ------------------------------------------------------
 
 	public void writeXML(XMLWriter writer) throws IOException {
 		writer.writeStartElement("language-set");
@@ -102,7 +111,7 @@ public class DLBLanguageSet {
 		writer.writeAttribute("code",sourceLanguage.getCode());
 		writer.writeEndElement(); // source-language
 
-		for(DLBLanguage language : translationLanguages) {
+		for(Language language : translationLanguages) {
 			writer.writeStartElement("translation-language");
 			writer.writeAttribute("name",language.getName());
 			writer.writeAttribute("code",language.getCode());
@@ -112,36 +121,37 @@ public class DLBLanguageSet {
 		writer.writeEndElement(); // language-set
 	}
 
-	public static SimpleSAXHandler<DLBLanguageSet> getXMLHandler() {
+	public static SimpleSAXHandler<LanguageSet> getXMLHandler() {
 		return new XMLHandler();
 	}
 
-	private static class XMLHandler extends AbstractSimpleSAXHandler<DLBLanguageSet> {
+	private static class XMLHandler extends AbstractSimpleSAXHandler<LanguageSet> {
 
-		private DLBLanguageSet result;
-		private SimpleSAXHandler<DLBLanguage> languageHandler = null;
+		private LanguageSet result;
+		private SimpleSAXHandler<Language> languageHandler = null;
 
 		@Override
-		public void startElement(String name, Attributes atts, List<String> parents) throws ParseException {
+		public void startElement(String name, Attributes attributes, List<String> parents)
+				throws ParseException {
 			if(name.equals("language-set")) {
-				result = new DLBLanguageSet();
+				result = new LanguageSet();
 			} else if(name.equals("source-language") || name.equals("translation-language")) {
-				languageHandler = DLBLanguage.getXMLHandler();
-				languageHandler.startElement(name,atts,parents);
+				languageHandler = Language.getXMLHandler();
+				languageHandler.startElement(name,attributes,parents);
 			} else {
-				if(languageHandler != null) languageHandler.startElement(name,atts,parents);
+				if(languageHandler != null) languageHandler.startElement(name,attributes,parents);
 			}
 		}
 
 		@Override
 		public void endElement(String name, List<String> parents) throws ParseException {
 			if(languageHandler != null) languageHandler.endElement(name,parents);
-			if(name.equals("source-language")) {
-				DLBLanguage sourceLanguage = languageHandler.getObject();
+			if(name.equals("source-language") && languageHandler != null) {
+				Language sourceLanguage = languageHandler.getObject();
 				result.setSourceLanguage(sourceLanguage);
 				languageHandler = null;
-			} else if(name.equals("translation-language")) {
-				DLBLanguage translationLanguage = languageHandler.getObject();
+			} else if(name.equals("translation-language") && languageHandler != null) {
+				Language translationLanguage = languageHandler.getObject();
 				result.addTranslationLanguage(translationLanguage);
 				languageHandler = null;
 			}
@@ -153,7 +163,7 @@ public class DLBLanguageSet {
 		}
 
 		@Override
-		public DLBLanguageSet getObject() {
+		public LanguageSet getObject() {
 			return result;
 		}
 	}
