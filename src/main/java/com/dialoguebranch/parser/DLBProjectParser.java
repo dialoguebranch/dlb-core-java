@@ -52,8 +52,8 @@ import com.dialoguebranch.model.DLBFileDescription;
 import com.dialoguebranch.model.DLBProject;
 
 /**
- * This class can read an entire DialogueBranch project consisting of ".dlb" dialogue
- * files and ".json" translation files.
+ * This class can read an entire DialogueBranch project consisting of ".dlb" dialogue files and
+ * ".json" translation files as provided through the given {@link DLBFileLoader} implementation.
  *
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -66,12 +66,26 @@ public class DLBProjectParser {
 			translations = new LinkedHashMap<>();
 	private final Map<DLBFileDescription, DLBDialogue> translatedDialogues = new LinkedHashMap<>();
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
+	/**
+	 * Creates an instance of a {@link DLBProjectParser} with a given {@link DLBFileLoader} that is
+	 * used to retrieve a complete set of files (".dlb" and ".json") to use in this parser.
+	 * @param fileLoader the {@link DLBFileLoader} implementation.
+	 */
 	public DLBProjectParser(DLBFileLoader fileLoader) {
 		this.fileLoader = fileLoader;
 	}
 
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
+
 	public DLBProjectParserResult parse() throws IOException {
-		DLBProjectParserResult projectParserResult = new DLBProjectParserResult();
+		DLBProjectParserResult projectParserResult = new DLBProjectParserResult(fileLoader);
+
 		List<DLBFileDescription> files = fileLoader.listDialogueBranchFiles();
 
 		parseFiles(files, projectParserResult);

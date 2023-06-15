@@ -27,6 +27,10 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.i18n.DLBContextTranslation;
+import com.dialoguebranch.i18n.DLBTranslatable;
+import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.DLBFileDescription;
 import nl.rrd.utils.exception.ParseException;
 import com.dialoguebranch.model.DLBProject;
 
@@ -39,12 +43,49 @@ import java.util.Map;
  * DLBProjectParser}.
  *
  * @author Dennis Hofs (RRD)
- * @author Harm op den Akker (Fruit Tree Labs - www.fruittreelabs.com)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBProjectParserResult {
+
+	private DLBFileLoader fileLoader;
 	private DLBProject project = null;
 	private Map<String,List<ParseException>> parseErrors = new LinkedHashMap<>();
 	private Map<String,List<String>> warnings = new LinkedHashMap<>();
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
+	/**
+	 * Creates an empty instance of a {@link DLBProjectParserResult}.
+	 */
+	public DLBProjectParserResult() { }
+
+	/**
+	 * Creates an instance of a {@link DLBProjectParserResult} with a given {@code fileLoader},
+	 * indicating which {@link DLBFileLoader} was used in the creation of these results.
+	 * @param fileLoader the {@link DLBFileLoader} implementation.
+	 */
+	public DLBProjectParserResult(DLBFileLoader fileLoader) {
+		this.fileLoader = fileLoader;
+	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
+	/**
+	 * Returns the {@link DLBFileLoader} implementation that was used for generating this
+	 * {@link DLBProjectParserResult}.
+	 * @return the {@link DLBFileLoader} implementation.
+	 */
+	public DLBFileLoader getFileLoader() {
+		return fileLoader;
+	}
+
+	public void setFileLoader(DLBFileLoader fileLoader) {
+		this.fileLoader = fileLoader;
+	}
 
 	/**
 	 * Returns the project if parsing succeeded. Otherwise, it returns null.
@@ -103,4 +144,105 @@ public class DLBProjectParserResult {
 	public void setWarnings(Map<String, List<String>> warnings) {
 		this.warnings = warnings;
 	}
+
+	/**
+	 * Generates a human-readable summary {@link String} of this {@link DLBProjectParserResult}.
+	 * @return human-readable summary {@link String} of this {@link DLBProjectParserResult}.
+	 */
+	public String generateSummaryString() {
+		StringBuilder result = new StringBuilder();
+
+		result.append("===== Summary of Results for Parsing DialogueBranch Project =====\n");
+
+		// Get a string description of the project location (depending on the file loader used)
+		String projectLocationDescription = "unknown";
+		if(fileLoader instanceof ProjectFileLoader) {
+			projectLocationDescription =
+					((ProjectFileLoader)fileLoader).getProjectMetaData().getBasePath();
+		} else if(fileLoader instanceof DLBDirectoryFileLoader) {
+			projectLocationDescription =
+					((DLBDirectoryFileLoader)fileLoader).getRootDirectory().toString();
+		}
+
+		// In case of parse errors, print them and then return
+		if(!this.getParseErrors().isEmpty()) {
+			result.append("DialogueBranch project at ")
+					.append(projectLocationDescription)
+					.append(" contains ")
+					.append("the following errors.\n");
+			for (String key : this.getParseErrors().keySet()) {
+				result.append("ERROR: Failed to parse file: ")
+						.append(key)
+						.append("\n");
+				List<ParseException> parseExceptions = this.getParseErrors().get(key);
+				for (ParseException parseException : parseExceptions) {
+					result.append("  - ")
+							.append(parseException.getMessage())
+							.append("\n");
+				}
+			}
+			return result.toString();
+		}
+
+		// In case there are no errors, first list all warnings
+		if(!this.getWarnings().isEmpty()) {
+			result.append("DialogueBranch project at ")
+					.append(projectLocationDescription)
+					.append(" contains ")
+					.append("the following warnings.\n");
+			for (String key : this.getWarnings().keySet()) {
+				result.append("WARNING: ")
+						.append(key)
+						.append("\n");
+				List<String> warningStrings = this.getWarnings().get(key);
+				for (String warningString : warningStrings) {
+					result.append("  - ")
+							.append(warningString)
+							.append("\n");
+				}
+			}
+		}
+
+		DLBProject project = this.getProject();
+		result.append("Project Summary:\n");
+		result.append("Location: ")
+				.append(projectLocationDescription)
+				.append("\n");
+
+		Map<DLBFileDescription, DLBDialogue> sourceDialogues = project.getSourceDialogues();
+		result.append("Number of Dialogue Scripts: ")
+				.append(sourceDialogues.size())
+				.append("\n");
+		for(DLBFileDescription dialogueDescription : sourceDialogues.keySet()) {
+			result.append("  - ")
+					.append(dialogueDescription)
+					.append("\n");
+		}
+
+		Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
+				project.getTranslations();
+		result.append("Number of Translation Scripts: ")
+				.append(translations.size())
+				.append("\n");
+		for(DLBFileDescription dialogueDescription : translations.keySet()) {
+			result.append("  - ")
+					.append(dialogueDescription)
+					.append("\n");
+		}
+
+		Map<DLBFileDescription, DLBDialogue> dialogues = this.getProject().getDialogues();
+
+		for (DLBFileDescription dialogue : dialogues.keySet()) {
+			result.append("----------");
+			result.append("DIALOGUE ")
+					.append(dialogue.getFilePath())
+					.append(" (")
+					.append(dialogue.getLanguage())
+					.append(")\n");
+			result.append(dialogues.get(dialogue)).append("\n");
+		}
+
+		return result.toString();
+	}
+
 }

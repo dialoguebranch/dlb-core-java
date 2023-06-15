@@ -29,19 +29,11 @@
 package com.dialoguebranch.cli;
 
 import com.dialoguebranch.exception.DLBInvalidInputException;
-import com.dialoguebranch.i18n.DLBContextTranslation;
-import com.dialoguebranch.i18n.DLBTranslatable;
-import com.dialoguebranch.model.DLBDialogue;
-import com.dialoguebranch.model.DLBFileDescription;
-import com.dialoguebranch.model.DLBProject;
-import com.dialoguebranch.model.DLBProjectMetaData;
 import com.dialoguebranch.parser.*;
 import nl.rrd.utils.exception.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -53,15 +45,6 @@ import java.util.Scanner;
  */
 public class CommandLineRunner {
 
-	private static void showUsage() {
-		System.out.println("Usage:");
-		System.out.println("java " + DLBProjectParser.class.getName() + " [options] <projectdir>");
-		System.out.println("    Parse DialogueBranch project directory and print a summary of each dialogue");
-		System.out.println("\nOptions:");
-		System.out.println("-h -? --help");
-		System.out.println("    Print this usage message");
-	}
-
 	public static void main(String... args) {
 		System.out.println("Welcome to the DialogueBranch Command Line Runner.\n\n"+
 			"This command line tool can be used for a number of different scenarios.\n"+
@@ -70,14 +53,14 @@ public class CommandLineRunner {
 
 		System.out.println("The following scenarios are currently supported:\n");
 		System.out.println("  1. Open a DialogueBranch Folder and generate a summary.");
-		System.out.println("  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.");
+		System.out.println("  2. Open a DialogueBranch Project (from metadata.xml) and generate " +
+				           "a summary.");
 
 		Scanner userInputScanner = new Scanner(System.in);
 		System.out.print("\nChoose scenario: ");
 
-		String scenario = userInputScanner.nextLine();  // Read user input
+		String scenario = userInputScanner.nextLine();
 		switch(scenario) {
-
 			case "1":
 				generateProjectSummaryFromFolder();
 				break;
@@ -90,8 +73,6 @@ public class CommandLineRunner {
 				System.exit(0);
 		}
 	}
-
-	
 
 	private static void generateProjectSummaryFromFolder() {
 
@@ -120,63 +101,7 @@ public class CommandLineRunner {
 			return;
 		}
 
-		// If there are any errors, print them and stop the program.
-		if (!readResult.getParseErrors().isEmpty()) {
-			System.err.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
-					"the following errors:");
-			for (String key : readResult.getParseErrors().keySet()) {
-				System.err.println("ERROR: Failed to parse file: " + key);
-				List<ParseException> errors = readResult.getParseErrors().get(key);
-				for (ParseException ex : errors) {
-					System.err.println(ex.getMessage());
-				}
-			}
-			System.exit(0);
-			return;
-		}
-
-		// If there are any warnings, print them and continue.
-		if(!readResult.getWarnings().isEmpty()) {
-			System.out.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
-					"the following warnings:");
-			for (String key : readResult.getWarnings().keySet()) {
-				System.out.println("WARNING: " + key);
-				List<String> errors = readResult.getWarnings().get(key);
-				for (String error : errors) {
-					System.out.println(error);
-				}
-			}
-		}
-
-		System.out.println("Finished parsing DialogueBranch project from directory: " +
-				rootDirectory.getAbsolutePath());
-
-		DLBProject project = readResult.getProject();
-		System.out.println("Project Summary:");
-		System.out.println("Path: "+rootDirectory);
-
-		Map<DLBFileDescription, DLBDialogue> sourceDialogues = project.getSourceDialogues();
-		System.out.println("Number of Dialogue Scripts: "+sourceDialogues.size());
-		for(DLBFileDescription dialogueDescription : sourceDialogues.keySet()) {
-			System.out.println("  - " +dialogueDescription);
-		}
-
-		Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
-				project.getTranslations();
-		System.out.println("Number of Translation Scripts: "+translations.size());
-		for(DLBFileDescription dialogueDescription : translations.keySet()) {
-			System.out.println("  - " +dialogueDescription);
-		}
-
-		Map<DLBFileDescription, DLBDialogue> dialogues = readResult.getProject().getDialogues();
-
-		for (DLBFileDescription dialogue : dialogues.keySet()) {
-			System.out.println("----------");
-			System.out.println("DIALOGUE " + dialogue.getFilePath() +
-					" (" + dialogue.getLanguage() + ")");
-			System.out.println(dialogues.get(dialogue));
-		}
-
+		System.out.println(readResult.generateSummaryString());
 	}
 
 	private static void generateProjectSummaryFromXML() {
@@ -185,7 +110,8 @@ public class CommandLineRunner {
 
 		// Get a pointer to the projectMetadataFile (dlb-project.xml file)
 		while(!projectMetadataFileValid) {
-			System.out.println("Please provide the project metadata (.xml) file of the DialogueBranch project:");
+			System.out.println("Please provide the project metadata (.xml) file of the " +
+					"DialogueBranch project:");
 			try {
 				projectMetadataFile = askUserInputXMLFile();
 				projectMetadataFileValid = true;
@@ -195,11 +121,8 @@ public class CommandLineRunner {
 		}
 
 		DLBProjectParserResult readResult;
-		String rootDirectory;
 		try {
 			ProjectFileLoader fileLoader = new ProjectFileLoader(projectMetadataFile);
-			DLBProjectMetaData projectMetaData = fileLoader.getProjectMetaData();
-			rootDirectory = projectMetaData.getBasePath();
 			DLBProjectParser parser = new DLBProjectParser(fileLoader);
 			readResult = parser.parse();
 		} catch (IOException ex) {
@@ -213,66 +136,7 @@ public class CommandLineRunner {
 			return;
 		}
 
-		// If there are any errors, print them and stop the program.
-		if (!readResult.getParseErrors().isEmpty()) {
-			System.err.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
-					"the following errors:");
-			for (String key : readResult.getParseErrors().keySet()) {
-				System.err.println("ERROR: Failed to parse file: " + key);
-				List<ParseException> errors = readResult.getParseErrors().get(key);
-				for (ParseException ex : errors) {
-					System.err.println(ex.getMessage());
-				}
-			}
-			System.exit(0);
-			return;
-		}
-
-		// If there are any warnings, print them and continue.
-		if(!readResult.getWarnings().isEmpty()) {
-			System.out.println("DialogueBranch project in directory '"+rootDirectory+"' contains " +
-					"the following warnings:");
-			for (String key : readResult.getWarnings().keySet()) {
-				System.out.println("WARNING: " + key);
-				List<String> errors = readResult.getWarnings().get(key);
-				for (String error : errors) {
-					System.out.println(error);
-				}
-			}
-		}
-
-		System.out.println("Finished parsing DialogueBranch project from directory: " +
-				rootDirectory);
-
-		DLBProject project = readResult.getProject();
-		System.out.println("Project Summary:");
-		System.out.println("Path: "+rootDirectory);
-
-		Map<DLBFileDescription, DLBDialogue> sourceDialogues = project.getSourceDialogues();
-		System.out.println("Number of Dialogue Scripts: "+sourceDialogues.size());
-		for(DLBFileDescription dialogueDescription : sourceDialogues.keySet()) {
-			System.out.println("  - " +dialogueDescription);
-		}
-
-		Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
-				project.getTranslations();
-		System.out.println("Number of Translation Scripts: "+translations.size());
-		for(DLBFileDescription dialogueDescription : translations.keySet()) {
-			System.out.println("  - " +dialogueDescription);
-		}
-
-		Map<DLBFileDescription, DLBDialogue> dialogues = readResult.getProject().getDialogues();
-
-		for (DLBFileDescription dialogue : dialogues.keySet()) {
-			System.out.println("----------");
-			System.out.println("DIALOGUE " + dialogue.getFilePath() +
-					" (" + dialogue.getLanguage() + ")");
-			System.out.println(dialogues.get(dialogue));
-		}
-
-
-
-
+		System.out.println(readResult.generateSummaryString());
 	}
 
 	// ----------------------------------------------------------
@@ -361,7 +225,6 @@ public class CommandLineRunner {
 		} catch(IndexOutOfBoundsException e) {
 			throw new DLBInvalidInputException("The given input is not an .xml file.");
 		}
-
 	}
 
 }
