@@ -36,6 +36,7 @@ import com.dialoguebranch.exception.DLBUnknownLanguageCodeException;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -273,6 +274,42 @@ public class DLBProjectMetaData {
 		}
 		throw new DLBUnknownLanguageCodeException("No language set found with source language '"
 				+sourceLanguageCode+"'.",sourceLanguageCode);
+	}
+
+	/**
+	 * Returns a list of language codes representing all the supported languages in this Dialogue
+	 * Branch project.
+	 * @return the list of all language codes in this project.
+	 */
+	public List<String> getSupportedLanguages() {
+		List<String> result = new ArrayList<>();
+
+		if(languageMap != null) {
+			List<LanguageSet> languageSets = languageMap.getLanguageSets();
+			if(languageSets != null) {
+				for(LanguageSet languageSet : languageSets) {
+					Language sourceLanguage = languageSet.getSourceLanguage();
+					if(sourceLanguage != null) {
+						String sourceLanguageCode = sourceLanguage.getCode();
+						if(sourceLanguageCode != null) {
+							if (!result.contains(sourceLanguageCode))
+								result.add(sourceLanguageCode);
+						}
+					}
+					List<Language> translationLanguages = languageSet.getTranslationLanguages();
+					if(translationLanguages != null) {
+						for(Language translationLanguage : translationLanguages) {
+							String translationLanguageCode = translationLanguage.getCode();
+							if(translationLanguageCode != null) {
+								if (!result.contains(translationLanguageCode))
+									result.add(translationLanguageCode);
+							}
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	public String toString() {

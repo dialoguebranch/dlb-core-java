@@ -2,12 +2,13 @@
  *
  *                   Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
+ *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
- *      as outlined below. Based on original source code licensed under the following terms:
+ *                                        as outlined below.
  *
  *                                            ----------
  *
- * Copyright 2019-2022 WOOL Foundation - Licensed under the MIT License:
+ * Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -29,55 +30,35 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.DLBFileDescription;
 import com.dialoguebranch.model.DLBFileType;
+import com.dialoguebranch.model.DLBProjectMetaData;
+import nl.rrd.utils.exception.ParseException;
+import nl.rrd.utils.xml.SimpleSAXHandler;
+import nl.rrd.utils.xml.SimpleSAXParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * An implementation of a {@link DLBFileLoader} that can generate a list of
- * {@link DLBFileDescription}s by finding all .dlb and .json files in a given directory. The
- * directory provided when creating this {@link DLBDirectoryFileLoader} is assumed to have one or
- * many subdirectories, representing different languages, that contain .dlb and/or .json files. For
- * example:
- * <br/>
- * <ul>
- *     <li>/directory/</li>
- *     <ul>
- *         <li>en/</li>
- *         <ul>
- *             <li>script1.dlb</li>
- *             <li>script2.dlb</li>
- *             <li>...</li>
- *         </ul>
- *         <li>pt/</li>
- *         <ul>
- *             <li>script1.json</li>
- *             <li>script2.json</li>
- *             <li>...</li>
- *         </ul>
- *     </ul>
- * </ul>
- *
- * @author Dennis Hofs (Roessingh Research and Development)
- * @author Harm op den Akker (Fruit Tree Labs)
- */
-public class DLBDirectoryFileLoader implements DLBFileLoader {
+public class ProjectFileLoader implements DLBFileLoader {
 
-	private final File rootDirectory;
+	private final File projectMetadataFile;
+	private final DLBProjectMetaData projectMetaData;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link DLBDirectoryFileLoader} with the given {@code rootDirectory}.
-	 * @param rootDirectory the directory in which to look for languages folders with .dlb and/or
-	 *                      .json files.
+	 * Creates an instance of a {@link ProjectFileLoader} with a given pointer to a project metadata
+	 * xml file, which is immediately parsed into a {@link DLBProjectMetaData} object.
+	 * @param projectMetadataFile the Dialogue Branch project metadata .xml file
+	 * @throws IOException in case of a read error when parsing the project metadata file.
+	 * @throws ParseException in case of a parse error when parsing the project metadata file.
 	 */
-	public DLBDirectoryFileLoader(File rootDirectory) {
-		this.rootDirectory = rootDirectory;
+	public ProjectFileLoader(File projectMetadataFile) throws IOException, ParseException {
+		this.projectMetadataFile = projectMetadataFile;
+		this.projectMetaData = loadProjectMetaDataFile(projectMetadataFile);
 	}
 
 	// -----------------------------------------------------------
@@ -85,11 +66,21 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the root directory for this {@link DLBDirectoryFileLoader}.
-	 * @return the root directory for this {@link DLBDirectoryFileLoader}.
+	 * Returns the Dialogue Branch project metadata (.xml) {@link File} from which this
+	 * {@link ProjectFileLoader} can load its resource files.
+	 * @return the Dialogue Branch project metadata (.xml) {@link File}.
 	 */
-	public File getRootDirectory() {
-		return rootDirectory;
+	public File getProjectMetadataFile() {
+		return projectMetadataFile;
+	}
+
+	/**
+	 * Returns the Dialogue Branch project metadata object from which this {@link ProjectFileLoader}
+	 * can load its resource files.
+	 * @return the Dialogue Branch Project MetaData {@link DLBProjectMetaData} object.
+	 */
+	public DLBProjectMetaData getProjectMetaData() {
+		return projectMetaData;
 	}
 
 	// -------------------------------------------------------------------
@@ -97,15 +88,23 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// -------------------------------------------------------------------
 
 	@Override
-	public List<DLBFileDescription> listDialogueBranchFiles() {
+	public List<DLBFileDescription> listDialogueBranchFiles() throws IOException {
 		List<DLBFileDescription> result = new ArrayList<>();
+
+		// Get a list of all the language folders
+		List<String> supportedLanguages = projectMetaData.getSupportedLanguages();
+
+		File rootDirectory = new File(projectMetaData.getBasePath());
+
 		File[] children = rootDirectory.listFiles();
 		if(children != null) {
 			for (File child : children) {
 				if (!child.isDirectory() || child.getName().startsWith("."))
 					continue;
 				String language = child.getName();
-				result.addAll(listDir(language, "", child));
+				if(supportedLanguages.contains(language)) {
+					result.addAll(listDir(language, "", child));
+				}
 			}
 		}
 		return result;
@@ -113,7 +112,7 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 
 	@Override
 	public Reader openFile(DLBFileDescription fileDescription) throws IOException {
-		File file = new File(rootDirectory, fileDescription.getLanguage() + File.separator +
+		File file = new File(new File(projectMetaData.getBasePath()), fileDescription.getLanguage() + File.separator +
 				fileDescription.getFilePath());
 		return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
 	}
@@ -121,6 +120,14 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// ---------------------------------------------------------
 	// -------------------- Other Functions --------------------
 	// ---------------------------------------------------------
+
+	public static DLBProjectMetaData loadProjectMetaDataFile(File metaDataFile) throws IOException, ParseException {
+		SimpleSAXHandler<DLBProjectMetaData> xmlHandler = DLBProjectMetaData.getXMLHandler();
+		SimpleSAXParser<DLBProjectMetaData> parser = new SimpleSAXParser<>(xmlHandler);
+		DLBProjectMetaData result = parser.parse(metaDataFile);
+		result.setBasePath(metaDataFile.getParent());
+		return result;
+	}
 
 	/**
 	 * Recursively generates a list of {@link DLBFileDescription} objects from all .dlb and/or .json

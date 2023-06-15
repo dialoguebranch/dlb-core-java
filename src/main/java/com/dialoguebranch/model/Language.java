@@ -37,7 +37,9 @@ import java.util.List;
  * A {@link Language} defines a language used in a DialogueBranch project with a given name and
  * language code. The 'code' is preferably a specific ISO3 code, an ISO1 code, or for languages that
  * don't actually exist (e.g. "Klingon", "Orcish") a made up code that is not assigned to any
- * existing language. These codes must be unique within a given DialogueBranch project.
+ * existing language.
+ *
+ * <p>Language codes *must* be unique within a given DialogueBranch project.</p>
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */

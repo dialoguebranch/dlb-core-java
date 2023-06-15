@@ -60,9 +60,8 @@ public class LanguageMap {
 	}
 
 	/**
-	 * Creates an instance of a {@link LanguageMap} with a given {@link LanguageSet}.
-	 * @param languageSets a list of {@link LanguageSet}s contained in this
-	 *                     {@link LanguageMap}.
+	 * Creates an instance of a {@link LanguageMap} with a given list of {@link LanguageSet}s.
+	 * @param languageSets a list of {@link LanguageSet}s contained in this {@link LanguageMap}.
 	 */
 	public LanguageMap(List<LanguageSet> languageSets) {
 		this.languageSets = languageSets;

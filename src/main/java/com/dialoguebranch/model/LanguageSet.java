@@ -52,31 +52,68 @@ public class LanguageSet {
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
+	/**
+	 * Creates an instance of an empty {@link LanguageSet}.
+	 */
 	public LanguageSet() {
 		this.translationLanguages = new ArrayList<>();
 	}
 
+	/**
+	 * Creates an instance of a {@link LanguageSet} with a given defined {@code sourceLanguage}, but
+	 * no translation language.
+	 * @param sourceLanguage the source {@link Language} of this {@link LanguageSet}.
+	 */
 	public LanguageSet(Language sourceLanguage) {
 		this.sourceLanguage = sourceLanguage;
 		this.translationLanguages = new ArrayList<>();
+	}
+
+	/**
+	 * Creates an instance of a {@link LanguageSet} with a given {@code sourceLanguage} and list of
+	 * {@code translationLanguages}.
+	 * @param sourceLanguage the source {@link Language} of this {@link LanguageSet}.
+	 * @param translationLanguages a list of translation {@link Language}s mapped to the given
+	 *                             {@code sourceLanguage}.
+	 */
+	public LanguageSet(Language sourceLanguage, List<Language> translationLanguages) {
+		this.sourceLanguage = sourceLanguage;
+		this.translationLanguages = translationLanguages;
 	}
 
 	// -----------------------------------------------------------
 	// -------------------- Getters & Setters --------------------
 	// -----------------------------------------------------------
 
+	/**
+	 * Returns the source language of this {@link LanguageMap}.
+	 * @return the source language of this {@link LanguageMap}.
+	 */
 	public Language getSourceLanguage() {
 		return sourceLanguage;
 	}
 
+	/**
+	 * Sets the source language for this {@link LanguageMap}.
+	 * @param sourceLanguage the source language for this {@link LanguageMap}.
+	 */
 	public void setSourceLanguage(Language sourceLanguage) {
 		this.sourceLanguage = sourceLanguage;
 	}
 
+	/**
+	 * Returns the {@link List} of translation {@link Language}s for this {@link LanguageSet}.
+	 * @return the {@link List} of translation {@link Language}s for this {@link LanguageSet}.
+	 */
 	public List<Language> getTranslationLanguages() {
 		return translationLanguages;
 	}
 
+	/**
+	 * Sets the {@link List} of translation {@link Language}s for this {@link LanguageSet}.
+	 * @param translationLanguages the {@link List} of translation {@link Language}s for this
+	 *                             {@link LanguageSet}.
+	 */
 	public void setTranslationLanguages(List<Language> translationLanguages) {
 		this.translationLanguages = translationLanguages;
 	}
@@ -85,6 +122,11 @@ public class LanguageSet {
 	// -------------------- Other Methods --------------------
 	// -------------------------------------------------------
 
+	/**
+	 * Add the given {@code translationLanguage} to the {@link List} of translation
+	 * {@link Language}s for this {@link LanguageSet}.
+	 * @param translationLanguage the translation {@link Language} to add.
+	 */
 	public void addTranslationLanguage(Language translationLanguage) {
 		translationLanguages.add(translationLanguage);
 	}
