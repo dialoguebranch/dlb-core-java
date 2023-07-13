@@ -44,14 +44,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This DialogueBranch file loader can load files from resources on the classpath. The
- * files should be organized as language/path/to/dialogue-name.dlb or
- * language/path/to/dialogue-name.json. Languages should be encoded with ISO
- * codes like "en" or "en_GB". Example: en_GB/robin/intro.dlb</p>
+ * <p>This DialogueBranch file loader can load files from resources on the classpath. The files
+ * should be organized as language/path/to/dialogue-name.dlb or language/path/to/dialogue-name.json.
+ * Languages should be encoded with ISO codes like "en" or "en_GB". Example:
+ * en_GB/robin/intro.dlb</p>
  *
- * <p>The files should be specified in file "dialogues.json" in the root
- * directory. This can automatically be generated at build time. It should be
- * structured like:<br />
+ * <p>The files should be specified in file "dialogues.json" in the root directory. This can
+ * automatically be generated at build time. It should be structured like:</p>
+ *
  *<pre>{
  *    "en_GB": [
  *        { "path": [
@@ -62,7 +62,7 @@ import java.util.Map;
  *            ]},
  *        ]}
  *    }
- *}</pre></p>
+ *}</pre>
  *
  * <p>The file contains a JSON object where the keys are ISO language codes.
  * The value is an array with directory or file entries.<br />

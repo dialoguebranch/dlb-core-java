@@ -46,10 +46,11 @@ import java.util.Scanner;
 public class CommandLineRunner {
 
 	public static void main(String... args) {
-		System.out.println("Welcome to the DialogueBranch Command Line Runner.\n\n"+
-			"This command line tool can be used for a number of different scenarios.\n"+
-			"Since you haven't provided command line arguments, we will take you through an " +
-			"interactive menu to determine your desired scenario and parameters.");
+		System.out.println("""
+				Welcome to the DialogueBranch Command Line Runner.
+
+				This command line tool can be used for a number of different scenarios.
+				Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.""");
 
 		System.out.println("The following scenarios are currently supported:\n");
 		System.out.println("  1. Open a DialogueBranch Folder and generate a summary.");
@@ -60,17 +61,14 @@ public class CommandLineRunner {
 		System.out.print("\nChoose scenario: ");
 
 		String scenario = userInputScanner.nextLine();
-		switch(scenario) {
-			case "1":
-				generateProjectSummaryFromFolder();
-				break;
-			case "2":
-				generateProjectSummaryFromXML();
-				break;
-			default:
-				System.out.println("Unknown scenario '"+scenario+"', please provide a valid " +
-					"number from the list provided above.");
+		switch (scenario) {
+			case "1" -> generateProjectSummaryFromFolder();
+			case "2" -> generateProjectSummaryFromXML();
+			default -> {
+				System.out.println("Unknown scenario '" + scenario + "', please provide a valid " +
+						"number from the list provided above.");
 				System.exit(0);
+			}
 		}
 	}
 

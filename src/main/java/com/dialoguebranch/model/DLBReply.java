@@ -46,16 +46,15 @@ import com.dialoguebranch.model.command.DLBActionCommand;
  * but a node may have at most one reply without a statement, which is known as
  * an auto-forward reply.
  * 
- * <p>The statement may contain a {@link DLBInputCommand} (see
- * {@link DLBNodeBody}).</p>
+ * <p>The statement may contain a {@link DLBInputCommand} (see {@link DLBNodeBody}).</p>
  * 
  * <p>The reply may also have commands that should be performed when the reply
  * is chosen. This can be:</p>
  * 
- * <p><ul>
- * <li>{@link DLBActionCommand}</li>
- * <li>{@link DLBSetCommand}</li>
- * </ul></p>
+ * <ul>
+ *   <li>{@link DLBActionCommand}</li>
+ *   <li>{@link DLBSetCommand}</li>
+ * </ul>
  * 
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)

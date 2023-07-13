@@ -38,23 +38,21 @@ import java.util.List;
  * web service protocol. It mirrors the class {@link DLBReply}. The
  * differences are:
  *
- * <p><ul>
- * <li>The statement (if available) has been converted from a {@link
- * DLBNodeBody} to a {@link DialogueStatement}
- * where variables have been resolved and set commands have been executed. The
- * statement only contains text segments and input segments.</li>
+ * <ul>
+ *   <li>The statement (if available) has been converted from a {@link DLBNodeBody} to a {@link
+ *   DialogueStatement} where variables have been resolved and set commands have been executed. The
+ *   statement only contains text segments and input segments.</li>
  *
- * <li>The commands in a {@link DLBReply} can be action commands or
- * set commands. Since only action commands are relevant to the client, this
- * class does not contain set commands. They will be handled on the server when
- * the user selects the reply. Action commands have been converted to {@link
- * DialogueAction DialogueAction}s where variables have been resolved.</li>
+ *   <li>The commands in a {@link DLBReply} can be action commands or set commands. Since only action
+ *   commands are relevant to the client, this class does not contain set commands. They will be
+ *   handled on the server when the user selects the reply. Action commands have been converted to
+ *   {@link DialogueAction DialogueAction}s where variables have been resolved.</li>
  *
- * <li>This class does not have a node pointer, because that is not relevant for
- * the client. It is handled by the server when the user selects this reply.
- * Instead of that, this class indicates whether this reply ends the
- * dialogue. This is set if the reply has a pointer to the end node.</li>
- * </ul></p>
+ *   <li>This class does not have a node pointer, because that is not relevant for the client. It is
+ *   handled by the server when the user selects this reply. Instead of that, this class indicates
+ *   whether this reply ends the dialogue. This is set if the reply has a pointer to the end node.
+ *   </li>
+ * </ul>
  *
  * @author Dennis Hofs (RRD)
  */

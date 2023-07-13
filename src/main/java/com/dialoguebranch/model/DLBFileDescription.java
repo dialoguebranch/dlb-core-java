@@ -35,11 +35,13 @@ import java.util.Objects;
  * A {@link DLBFileDescription} contains metadata for a Dialogue Branch file that can either be a
  * Script file (.dlb) or a Translation file (.json). It has three properties:
  * <ul>
- *     <li>{@code language} - the name of the language folder in which the file was found</li>
- *     <li>{@code filePath} - the complete path to the file, relative to the language folder,
- *     including the file extension</li>
- *     <li>{@code fileType} - either {@link DLBFileType#SCRIPT} or
- *     {@link DLBFileType#TRANSLATION}</li> indicating the type of the file
+ *   <li>{@code language} - the name of the language folder in which the file was found</li>
+ *
+ *   <li>{@code filePath} - the complete path to the file, relative to the language folder,
+ *   including the file extension</li>
+ *
+ *   <li>{@code fileType} - either {@link DLBFileType#SCRIPT} or {@link DLBFileType#TRANSLATION}
+ *   indicating the type of the file</li>
  * </ul>
  *
  * Additionally, one can obtain the unique "dialogue identifier" by calling

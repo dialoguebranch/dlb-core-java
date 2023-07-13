@@ -43,21 +43,27 @@ import java.util.List;
  * example:
  * <br/>
  * <ul>
- *     <li>/directory/</li>
+ *   <li>/directory/</li>
+ *   <li>
  *     <ul>
- *         <li>en/</li>
+ *       <li>en/</li>
+ *       <li>
  *         <ul>
- *             <li>script1.dlb</li>
- *             <li>script2.dlb</li>
- *             <li>...</li>
+ *           <li>script1.dlb</li>
+ *           <li>script2.dlb</li>
+ *           <li>...</li>
  *         </ul>
- *         <li>pt/</li>
+ *       </li>
+ *       <li>pt/</li>
+ *       <li>
  *         <ul>
- *             <li>script1.json</li>
- *             <li>script2.json</li>
- *             <li>...</li>
+ *           <li>script1.json</li>
+ *           <li>script2.json</li>
+ *           <li>...</li>
  *         </ul>
+ *      </li>
  *     </ul>
+ *   </li>
  * </ul>
  *
  * @author Dennis Hofs (Roessingh Research and Development)

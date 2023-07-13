@@ -54,16 +54,15 @@ import java.util.Map;
  * been resolved and "if" and "set" commands have been executed. There are three
  * types of segments:
  *
- * <p><ul>
- * <li>{@link TextSegment TextSegment}: Corresponds to a {@link
- * DLBNodeBody.TextSegment} with variables
- * resolved.</li>
- * <li>{@link ActionSegment}: Contains a {@link DialogueAction
- * DialogueAction}, which corresponds to a {@link DLBActionCommand} with variables resolved. Action segments should not occur
- * in statements that are part of a {@link ReplyMessage ReplyMessage}.</li>
- * <li>{@link InputSegment InputSegment}: Corresponds to a {@link
- * DLBInputCommand} with variables resolved.</li>
- * </ul></p>
+ * <ul>
+ *   <li>{@link TextSegment TextSegment}: Corresponds to a {@link DLBNodeBody.TextSegment} with
+ *   variables resolved.</li>
+ *   <li>{@link ActionSegment}: Contains a {@link DialogueAction DialogueAction}, which corresponds
+ *   to a {@link DLBActionCommand} with variables resolved. Action segments should not occur in
+ *   statements that are part of a {@link ReplyMessage ReplyMessage}.</li>
+ *   <li>{@link InputSegment InputSegment}: Corresponds to a {@link DLBInputCommand} with variables
+ *   resolved.</li>
+ * </ul>
  *
  * @author Dennis Hofs (RRD)
  */

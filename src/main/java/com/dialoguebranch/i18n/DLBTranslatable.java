@@ -41,7 +41,7 @@ import java.util.List;
  * CommandSegment}s where the command is a {@link DLBInputCommand
  * DLBInputCommand}.</p>
  *
- * <p></p>Instances of this class can be obtained from {@link
+ * <p>Instances of this class can be obtained from {@link
  * DLBTranslatableExtractor DLBTranslatableExtractor} or {@link
  * DLBTranslationParser WDLBTranslationParser}.</p>
  *

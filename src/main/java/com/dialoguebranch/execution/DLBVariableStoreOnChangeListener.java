@@ -31,8 +31,8 @@ import java.util.List;
 
 /**
  * Interface for listeners that can be registered at a {@link DLBVariableStore}. Whenever the
- * DLBVariableStore object is changed, that listener's {@link DLBVariableStoreOnChangeListener
- * #onChange(DLBVariableStore,List<DLBVariableStoreChange>)} method will be called.
+ * DLBVariableStore object is changed, that listener's
+ * {@link DLBVariableStoreOnChangeListener#onChange(DLBVariableStore,List)} method will be called.
  *
  * @author Dennis Hofs
  * @author Harm op den Akker

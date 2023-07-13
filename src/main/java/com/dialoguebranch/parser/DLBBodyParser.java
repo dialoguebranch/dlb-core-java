@@ -55,13 +55,13 @@ public class DLBBodyParser {
 	}
 
 	/**
-	 * Parse the specified tokens until a subclause of a command is found. There
+	 * Parse the specified tokens until a sub-clause of a command is found. There
 	 * are two commands that can have subclauses:
 	 *
-	 * <p><ul>
-	 * <li>if: has subclauses "elseif", "else" and "endif"</li>
-	 * <li>random: has subclauses "or" and "endrandom"</li>
-	 * </ul></p>
+	 * <ul>
+	 *   <li>if: has subclauses "elseif", "else" and "endif"</li>
+	 *   <li>random: has subclauses "or" and "endrandom"</li>
+	 * </ul>
 	 *
 	 * <p>If any command token is found that is not in "validCommands" or in
 	 * "validCommandClauses", then this method throws a parse exception.</p>

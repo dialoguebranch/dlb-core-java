@@ -47,15 +47,14 @@ import java.util.*;
  * JSON object with key-value pairs as exported by POEditor. There are two types
  * of key-value pairs:
  *
- * <p><ul>
- * <li>Key and value are strings. The key is a translatable in one language,
- * and the value is a translatable in another language. A translatable should be
- * the string representation of a {@link DLBTranslatable}.
- * That is a text that may include variables and &lt;&lt;input&gt;&gt;
- * commands.</li>
- * <li>The key is a string the value is a JSON object. In this case the key is
- * a context string, and the value contains translatable key-value pairs.</li>
- * </ul></p>
+ * <ul>
+ *   <li>Key and value are strings. The key is a translatable in one language, and the value is a
+ *   translatable in another language. A translatable should be the string representation of a
+ *   {@link DLBTranslatable}. That is a text that may include variables and &lt;&lt;input&gt;&gt;
+ *   commands.</li>
+ *   <li>The key is a string the value is a JSON object. In this case the key is a context string,
+ *   and the value contains translatable key-value pairs.</li>
+ * </ul>
  *
  * <p>This parser ignores context strings and returns a flat map of
  * translatables. This means that it does not support different translations of
