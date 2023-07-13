@@ -4,12 +4,11 @@ plugins {
 	id 'distribution'
 	id 'maven-publish'
 	id 'signing'
+	id 'idea'
 }
 
 group = 'com.dialoguebranch'
-version = '1.0.0'
-sourceCompatibility = 11
-targetCompatibility = 11
+version = '1.1.0'
 archivesBaseName = 'dlb-core-java'
 
 repositories {
@@ -30,6 +29,8 @@ jar {
 }
 
 java {
+	sourceCompatibility = 17
+	targetCompatibility = 17
 	withJavadocJar()
 	withSourcesJar()
 }
@@ -47,75 +48,7 @@ distributions {
 [distZip, distTar, installDist]*.dependsOn jar
 
 javadoc {
-	options {
-		links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
-		addBooleanOption('Xdoclint:all,-missing,-html', true)
-	}
-}
-
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifactId = archivesBaseName
-			from components.java
-
-			pom {
-				name = 'Dialogue Branch Core Java Library'
-				description = 'DialogueBranch - Creative freedom and full control for branching dialogue...'
-				url = 'https://www.dialoguebranch.com/'
-
-				licenses {
-					license {
-						name = 'MIT License'
-						url = 'https://opensource.org/licenses/MIT'
-					}
-				}
-
-				developers {
-					developer {
-						id = 'hopdenakker'
-						name = 'Harm op den Akker'
-						email = 'hopdenakker@fruittreelabs.com'
-					}
-					developer {
-						id = 'dhofs'
-						name = 'Dennis Hofs'
-						email = 'd.hofs@rrd.nl'
-					}
-					developer {
-						id = 'tbeinema'
-						name = 'Tessa Beinema'
-						email = 't.c.beinema@utwente.nl'
-					}
-				}
-
-				scm {
-					connection = 'scm:git:git://github.com/dialoguebranch/dlb-core-java.git'
-					developerConnection = 'scm:git:ssh://github.com:dialoguebranch/dlb-core-java.git'
-					url = 'https://github.com/dialoguebranch/dlb-core-java/tree/master'
-				}
-			}
-		}
-	}
-	repositories {
-		maven {
-			def sonatypeUsername = project.properties.ossrhUsername
-			if (!sonatypeUsername)
-				sonatypeUsername = ''
-			def sonatypePassword = project.properties.ossrhPassword
-			if (!sonatypePassword)
-				sonatypePassword = ''
-			def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-			def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
-			url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-			credentials {
-				username sonatypeUsername
-				password sonatypePassword
-			}
-		}
-	}
-}
-
-signing {
-	sign publishing.publications.mavenJava
+	destinationDir = file("${buildDir}/docs/javadoc")
+	include 'com/dialoguebranch/**'
+	options.source = "17"
 }
