@@ -39,7 +39,7 @@ import java.io.Serial;
 public class DLBException extends Exception {
 
 	@Serial
-	private static final long serialVersionUID = -8591019315920219483L;
+	private static final long serialVersionUID = 1L;
 
 	public enum Type {
 		AGENT_NOT_FOUND,

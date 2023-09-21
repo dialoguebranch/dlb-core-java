@@ -45,11 +45,19 @@ import java.util.Scanner;
  */
 public class CommandLineRunner {
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
 	/**
 	 * Creates an instance of a CommandLineRunner, which serves no purpose as the CommandLineRunner
 	 * class is a collection of static methods.
 	 */
 	public CommandLineRunner() { }
+
+	// -----------------------------------------------------
+	// -------------------- Main Method --------------------
+	// -----------------------------------------------------
 
 	/**
 	 * Execute the command line runner, either without parameters ("interactive mode"), or by
@@ -83,6 +91,10 @@ public class CommandLineRunner {
 			}
 		}
 	}
+
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 
 	private static void generateProjectSummaryFromFolder() {
 
@@ -148,10 +160,6 @@ public class CommandLineRunner {
 
 		System.out.println(readResult.generateSummaryString());
 	}
-
-	// ----------------------------------------------------------
-	// -------------------- Helper Functions --------------------
-	// ----------------------------------------------------------
 
 	/**
 	 * Open the command line for user input and check whether the given value is a valid directory.

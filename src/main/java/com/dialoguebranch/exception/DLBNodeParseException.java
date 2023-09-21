@@ -40,7 +40,7 @@ import java.io.Serial;
 public class DLBNodeParseException extends ParseException {
 
 	@Serial
-	private static final long serialVersionUID = 5095774410463182542L;
+	private static final long serialVersionUID = 1L;
 
 	private final String nodeTitle;
 

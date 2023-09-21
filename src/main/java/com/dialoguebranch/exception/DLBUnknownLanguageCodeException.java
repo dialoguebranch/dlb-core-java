@@ -27,7 +27,12 @@
 
 package com.dialoguebranch.exception;
 
+import java.io.Serial;
+
 public class DLBUnknownLanguageCodeException extends Exception {
+
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	private final String languageCode;
 

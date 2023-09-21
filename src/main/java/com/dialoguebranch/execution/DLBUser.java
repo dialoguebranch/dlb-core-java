@@ -34,12 +34,16 @@ import java.time.ZoneId;
  * can be used to log events (dialogue history and the stored update times for DialogueBranch
  * variables).
  *
- * @author Harm op den Akker
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBUser {
 
 	private String id;
 	private ZoneId timeZone;
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Creates an instance of a {@link DLBUser} in the system's default time zone.
@@ -50,30 +54,51 @@ public class DLBUser {
 		this.timeZone = ZoneId.systemDefault();
 	}
 
+	/**
+	 * Creates an instance of a {@link DLBUser} with a given {@code id} and {@code timeZone}.
+	 * @param id the username or identifier of the {@link DLBUser}
+	 * @param timeZone the timezone (as {@link ZoneId}) in which the user currently resides.
+	 */
 	public DLBUser(String id, ZoneId timeZone) {
 		this.id = id;
 		this.timeZone = timeZone;
 	}
 
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
+	/**
+	 * Returns the identifier of this {@link DLBUser} as a {@link String}.
+	 * @return the identifier of this {@link DLBUser} as a {@link String}.
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the identifier of this {@link DLBUser} as a {@link String}.
+	 * @param id the identifier of this {@link DLBUser} as a {@link String}.
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
 
 	/**
-	 * Returns the latest known time zone for this user as one of {@code TimeZone.getAvailableIDs()} (IANA Codes).
-	 * @return the latest known time zone for this user as one of {@code TimeZone.getAvailableIDs()} (IANA Codes).
+	 * Returns the latest known time zone for this user as one of the IANA Codes defined in
+	 * {@link java.util.TimeZone#getAvailableIDs()}.
+	 * @return the latest known time zone for this user as one of the IANA Codes defined in
+	 *         {@link java.util.TimeZone#getAvailableIDs()}.
 	 */
 	public ZoneId getTimeZone() {
 		return timeZone;
 	}
 
 	/**
-	 * Sets the latest known time zone for this user as one of {@code TimeZone.getAvailableIDs()} (IANA Codes).
-	 * @param timeZone the latest known time zone for this user as one of {@code TimeZone.getAvailableIDs()} (IANA Codes).
+	 * Sets the latest known time zone for this user as one of the IANA Codes defined in
+	 * {@link java.util.TimeZone#getAvailableIDs()}.
+	 * @param timeZone the latest known time zone for this user as one of the IANA Codes defined in
+	 *        {@link java.util.TimeZone#getAvailableIDs()}.
 	 */
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;

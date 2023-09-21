@@ -27,6 +27,8 @@
 
 package com.dialoguebranch.exception;
 
+import java.io.Serial;
+
 /**
  * This exception can be thrown when the content of the variable store is not as
  * expected. It can mean that a variable is not defined or its value is invalid.
@@ -35,6 +37,8 @@ package com.dialoguebranch.exception;
  *
  */
 public class DLBVariableException extends RuntimeException {
+
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

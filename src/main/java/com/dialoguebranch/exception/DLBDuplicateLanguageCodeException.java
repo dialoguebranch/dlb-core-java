@@ -27,6 +27,8 @@
 
 package com.dialoguebranch.exception;
 
+import java.io.Serial;
+
 /**
  * An exception that indicates that a DialogueBranch project is trying to define two languages with
  * the same language code, or similar errors.
@@ -34,6 +36,9 @@ package com.dialoguebranch.exception;
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBDuplicateLanguageCodeException extends Exception {
+
+	@Serial
+	private static final long serialVersionUID = 1L;
 
 	private final String languageCode;
 

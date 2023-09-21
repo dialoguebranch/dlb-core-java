@@ -38,12 +38,14 @@ import java.time.ZonedDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DLBVariable {
 
-	private String name;
-	private Object value;
-	private Long updatedTime;
-	private String updatedTimeZone;
+	private final String name;
+	private final Object value;
+	private final Long updatedTime;
+	private final String updatedTimeZone;
 
-	// ----- Constructors
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	public DLBVariable(
 			@JsonProperty("name")
@@ -111,7 +113,7 @@ public class DLBVariable {
 	public ZonedDateTime getZonedUpdatedTime() {
 		ZoneId timeZone;
 
-		if (this.getUpdatedTimeZone() == null || this.getUpdatedTimeZone().length() == 0) {
+		if (this.getUpdatedTimeZone() == null || this.getUpdatedTimeZone().isEmpty()) {
 			timeZone = ZoneId.systemDefault();
 		} else {
 			timeZone = ZoneId.of(this.getUpdatedTimeZone());
