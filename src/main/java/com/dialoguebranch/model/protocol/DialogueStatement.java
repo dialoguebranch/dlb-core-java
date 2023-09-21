@@ -48,11 +48,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class is used for dialogue statements that are sent to the client in the
- * web service protocol. It mirrors the statement segments in a {@link
- * DLBNodeBody}. The main difference is that any variables have
- * been resolved and "if" and "set" commands have been executed. There are three
- * types of segments:
+ * This class is used for dialogue statements that are sent to the client in the web service
+ * protocol. It mirrors the statement segments in a {@link DLBNodeBody}. The main difference is that
+ * any variables have been resolved and commands such as "if", "set" and "random" have already been
+ * executed. There are three types of segments:
  *
  * <ul>
  *   <li>{@link TextSegment TextSegment}: Corresponds to a {@link DLBNodeBody.TextSegment} with
@@ -65,6 +64,7 @@ import java.util.Map;
  * </ul>
  *
  * @author Dennis Hofs (RRD)
+ * @author Harm op den Akker
  */
 public class DialogueStatement {
 	private List<Segment> segments = new ArrayList<>();
@@ -105,7 +105,7 @@ public class DialogueStatement {
 
 	@JsonDeserialize(using=SegmentDeserializer.class)
 	public static abstract class Segment {
-		private SegmentType segmentType;
+		private final SegmentType segmentType;
 		
 		protected Segment(SegmentType segmentType) {
 			this.segmentType = segmentType;

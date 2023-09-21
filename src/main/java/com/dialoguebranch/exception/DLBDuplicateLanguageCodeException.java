@@ -27,9 +27,15 @@
 
 package com.dialoguebranch.exception;
 
+/**
+ * An exception that indicates that a DialogueBranch project is trying to define two languages with
+ * the same language code, or similar errors.
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 public class DLBDuplicateLanguageCodeException extends Exception {
 
-	private String languageCode;
+	private final String languageCode;
 
 	/**
 	 * Constructs a new exception for the specified language code.

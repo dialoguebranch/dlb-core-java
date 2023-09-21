@@ -29,7 +29,7 @@ package com.dialoguebranch.exception;
 
 public class DLBUnknownLanguageCodeException extends Exception {
 
-	private String languageCode;
+	private final String languageCode;
 
 	/**
 	 * Constructs a new exception for the specified language code.

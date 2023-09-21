@@ -32,11 +32,9 @@ package com.dialoguebranch.exception;
  * Exception that may be thrown whenever the user is providing invalid input in any Dialogue Branch
  * related context.
  *
- * @author Harm op den Akker (Fruit Tree Labs - hopdenakker@fruittreelabs.com)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBInvalidInputException extends Exception {
-
-	private String languageCode;
 
 	/**
 	 * Creates an instance of a {@link DLBInvalidInputException} with a given message.

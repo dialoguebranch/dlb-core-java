@@ -27,13 +27,18 @@
 
 package com.dialoguebranch.exception;
 
+import java.io.Serial;
+
 /**
  * A {@link DLBException} is an exception that can be thrown during execution of a Dialogue Branch
  * dialogue.
  *
  * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBException extends Exception {
+
+	@Serial
 	private static final long serialVersionUID = -8591019315920219483L;
 
 	public enum Type {
@@ -45,7 +50,7 @@ public class DLBException extends Exception {
 		NO_ACTIVE_DIALOGUE
 	}
 	
-	private Type type;
+	private final Type type;
 
 	/**
 	 * Creates an instance of a {@link DLBException} with a given {@link Type} and {@code message}.
@@ -58,7 +63,8 @@ public class DLBException extends Exception {
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBException} with a given {@link Type}, {@code message} and {@code cause}.
+	 * Creates an instance of a {@link DLBException} with a given {@link Type}, {@code message} and
+	 * {@code cause}.
 	 * @param type the type of the exception
 	 * @param message the error message
 	 * @param cause the cause of the exception

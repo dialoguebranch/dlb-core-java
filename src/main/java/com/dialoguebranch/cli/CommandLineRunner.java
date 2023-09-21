@@ -45,6 +45,18 @@ import java.util.Scanner;
  */
 public class CommandLineRunner {
 
+	/**
+	 * Creates an instance of a CommandLineRunner, which serves no purpose as the CommandLineRunner
+	 * class is a collection of static methods.
+	 */
+	public CommandLineRunner() { }
+
+	/**
+	 * Execute the command line runner, either without parameters ("interactive mode"), or by
+	 * providing certain command line options for quickly executing a specific task (To Be Defined).
+	 *
+	 * @param args Command line arguments
+	 */
 	public static void main(String... args) {
 		System.out.println("""
 				Welcome to the DialogueBranch Command Line Runner.

@@ -30,35 +30,37 @@ package com.dialoguebranch.exception;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 
+import java.io.Serial;
+
 /**
  * This exception indicates a parse error within a node.
  * 
  * @author Dennis Hofs (Roessingh Research and Development)
  */
 public class DLBNodeParseException extends ParseException {
+
+	@Serial
 	private static final long serialVersionUID = 5095774410463182542L;
 
-	private String nodeTitle;
+	private final String nodeTitle;
 
 	/**
-	 * Constructs a new exception in the specified node. If the node title is
-	 * unknown, it can be set to null.
+	 * Constructs a new exception in the specified node. If the node title is unknown, it can be set
+	 * to {@code null}.
 	 * 
 	 * @param message the message
-	 * @param nodeTitle the node title or null
+	 * @param nodeTitle the node title or {@code null}
 	 * @param cause the parse error
 	 */
-	public DLBNodeParseException(String message, String nodeTitle,
-								 LineNumberParseException cause) {
+	public DLBNodeParseException(String message, String nodeTitle, LineNumberParseException cause) {
 		super(message, cause);
 		this.nodeTitle = nodeTitle;
 	}
 
 	/**
-	 * Returns the node title. If the title is unknown, this method returns
-	 * null.
+	 * Returns the node title. If the title is unknown, this method returns {@code null}.
 	 * 
-	 * @return the node title or null
+	 * @return the node title or {@code null}
 	 */
 	public String getNodeTitle() {
 		return nodeTitle;

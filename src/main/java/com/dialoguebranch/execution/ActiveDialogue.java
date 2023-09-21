@@ -52,38 +52,65 @@ import java.util.Map;
  */
 public class ActiveDialogue {
 
-	private DLBFileDescription dialogueDescription;
-	private DLBDialogue dialogueDefinition;
+	private final DLBFileDescription dialogueFileDescription;
+	private final DLBDialogue dialogueDefinition;
 	private DLBNode currentNode;
 	private DLBVariableStore dlbVariableStore;
-		
-	// ----------- Constructors:
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Creates an instance of an {@link ActiveDialogue} with a given {@link
 	 * DLBFileDescription} and {@link DLBDialogue}.
 	 *
-	 * @param dialogueDescription the dialogue description
+	 * @param dialogueFileDescription the {@link DLBFileDescription} containing metadata of the
+	 *                                dialogue file used in this {@link ActiveDialogue}.
 	 * @param dialogueDefinition the dialogue definition
 	 */
-	public ActiveDialogue(DLBFileDescription dialogueDescription,
+	public ActiveDialogue(DLBFileDescription dialogueFileDescription,
 						  DLBDialogue dialogueDefinition) {
-		this.dialogueDescription = dialogueDescription;
+		this.dialogueFileDescription = dialogueFileDescription;
 		this.dialogueDefinition = dialogueDefinition;
 	}
-	
-	// ---------- Getters:
 
-	public DLBFileDescription getDialogueDescription() {
-		return dialogueDescription;
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
+	/**
+	 * Returns the {@link DLBFileDescription} of the dialogue file corresponding to this
+	 * {@link ActiveDialogue} containing metadata for the file.
+	 * @return the dialogue file description as a {@link DLBFileDescription}
+	 */
+	public DLBFileDescription getDialogueFileDescription() {
+		return dialogueFileDescription;
 	}
 
+	/**
+	 * Returns the {@link DLBDialogue} containing the definition of the dialogue being run through
+	 * this {@link ActiveDialogue} object.
+	 * @return the dialogue definition as a {@link DLBDialogue}
+	 */
 	public DLBDialogue getDialogueDefinition() {
 		return dialogueDefinition;
 	}
-	
+
+	/**
+	 * Returns the "current node" (the current step in the active dialogue) as a {@link DLBNode}.
+	 * @return the current step in the active dialogue as a {@link DLBNode}
+	 */
 	public DLBNode getCurrentNode() {
 		return currentNode;
+	}
+
+	/**
+	 * Sets in which node the current active dialogue is.
+	 * @param currentNode the {@link DLBNode} currently being executed.
+	 */
+	public void setCurrentNode(DLBNode currentNode) {
+		this.currentNode = currentNode;
 	}
 
 	/**
@@ -93,8 +120,6 @@ public class ActiveDialogue {
 	public DLBVariableStore getDLBVariableStore() {
 		return dlbVariableStore;
 	}
-	
-	// ---------- Setters:
 
 	/**
 	 * Sets the {@link DLBVariableStore} used to store/retrieve parameters for this {@link ActiveDialogue}.
@@ -104,25 +129,13 @@ public class ActiveDialogue {
 		this.dlbVariableStore = dlbVariableStore;
 	}
 
-	public void setCurrentNode(DLBNode currentNode) {
-		this.currentNode = currentNode;
-	}
-
-	// ---------- Convenience:
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 	
 	/**
-	 * Returns the name of this {@link ActiveDialogue} as defined in the associated {@link DLBDialogue}.
-	 * @return the name of this {@link ActiveDialogue} as defined in the associated {@link DLBDialogue}.
-	 */
-	public String getDialogueName() {
-		return dialogueDefinition.getDialogueName();
-	}
-	
-	// ---------- Functions:
-	
-	/**
-	 * "Starts" this {@link ActiveDialogue}, returning the start node and
-	 * updating its internal state.
+	 * "Starts" this {@link ActiveDialogue}, returning the start node and updating its internal
+	 * state.
 	 *
 	 * @param eventTime the timestamp (in the time zone of the user) of the event that triggered
 	 *                  this start of the DialogueBranch dialogue.
@@ -130,35 +143,40 @@ public class ActiveDialogue {
 	 * @throws DLBException if the request is invalid
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public DLBNode startDialogue(ZonedDateTime eventTime) throws DLBException,
-			EvaluationException {
+	public DLBNode startDialogue(ZonedDateTime eventTime) throws DLBException, EvaluationException {
 		return startDialogue(null, eventTime);
 	}
 	
 	/**
-	 * "Starts" this {@link ActiveDialogue} at the {@link DLBNode} represented by
-	 * the provided {@code nodeId}, or at the "Start" node of the dialogue if the given
-	 * {@code nodeId} is {@code null}, returning that node and updating the dialogue's internal
-	 * state. If you set the nodeId to null, it will return the start node.
+	 * "Starts" this {@link ActiveDialogue} at the {@link DLBNode} represented by the provided
+	 * {@code startNodeId}, or at the "Start" node of the dialogue if the given {@code startNodeId}
+	 * is {@code null}, returning that node and updating the dialogue's internal state. If you set
+	 * the {@code startNodeId} to null, it will return the start node.
 	 *
-	 * @param nodeId the node ID or {@code null} (to start from the "Start" node).
+	 * <p>If executed successfully, this method also sets {@code this.currentNode} and thus updates the
+	 * value of {@link #getCurrentNode()}.</p>
+	 *
+	 * @param startNodeId the node ID of the node to start from, or {@code null} to start from the
+	 *                    default "Start" node.
 	 * @param eventTime the timestamp (in the time zone of the user) that triggered this start of
-	 *                  the DialogueBranch dialogue
-	 * @return the {@link DLBNode}
+	 *                  execution of the dialogue
+	 * @return the {@link DLBNode} object representing the given "starting node" after it has been
+	 * 		   executed by the DialogueBranch parser (e.g. after control statements have been
+	 * 		   resolved)
 	 * @throws DLBException if the request is invalid
-	 * @throws EvaluationException if an expression cannot be evaluated
+	 * @throws EvaluationException if an expression cannot be evaluated during execution of the node
 	 */
-	public DLBNode startDialogue(String nodeId, ZonedDateTime eventTime)
+	public DLBNode startDialogue(String startNodeId, ZonedDateTime eventTime)
 			throws DLBException, EvaluationException {
 		DLBNode nextNode;
-		if (nodeId == null) {
+		if (startNodeId == null) {
 			nextNode = dialogueDefinition.getStartNode();
 		} else {
-			nextNode = dialogueDefinition.getNodeById(nodeId);
+			nextNode = dialogueDefinition.getNodeById(startNodeId);
 			if (nextNode == null) {
 				throw new DLBException(DLBException.Type.NODE_NOT_FOUND,
 						String.format("Node \"%s\" not found in dialogue \"%s\"",
-								nodeId, dialogueDefinition.getDialogueName()));
+								startNodeId, dialogueDefinition.getDialogueName()));
 			}
 		}
 		this.currentNode = executeDLBNode(nextNode,eventTime);
@@ -166,9 +184,9 @@ public class ActiveDialogue {
 	}
 	
 	/**
-	 * Retrieves the pointer to the next node based on the provided reply id.
-	 * This might be a pointer to the end node. This method also performs any
-	 * "set" actions associated with the reply.
+	 * Retrieves the pointer to the next node based on the provided {@code replyId}. This might be a
+	 * pointer to the end node. This method also performs any "set" actions associated with the
+	 * reply.
 	 * 
 	 * @param replyId the reply ID
 	 * @param eventTime the time (in the user's timezone) of the event that triggered this
@@ -181,10 +199,9 @@ public class ActiveDialogue {
 		DLBReply selectedDLBReply = currentNode.getBody().findReplyById(replyId);
 		Map<String,Object> variableMap =
 				dlbVariableStore.getModifiableMap(true, eventTime,
-						DLBVariableStoreChange.Source.DLB_SCRIPT);
+					DLBVariableStoreChange.Source.DLB_SCRIPT);
 		for (DLBCommand command : selectedDLBReply.getCommands()) {
-			if (command instanceof DLBSetCommand) {
-				DLBSetCommand setCommand = (DLBSetCommand)command;
+			if (command instanceof DLBSetCommand setCommand) {
 				setCommand.getExpression().evaluate(variableMap);
 			}
 		}
@@ -192,30 +209,27 @@ public class ActiveDialogue {
 	}
 	
 	/**
-	 * Takes the next node pointer from the selected reply and determines the
-	 * next node. The pointer might point to the end note, which means that
-	 * there is no next node. If there is no next node, or the next node has no
-	 * reply options, then the dialogue is considered finished.
+	 * Takes the next node pointer from the selected reply and determines the next node. The pointer
+	 * might point to the end note, which means that there is no next node. If there is no next
+	 * node, or the next node has no reply options, then the dialogue is considered finished.
 	 * 
-	 * <p>If there is a next node, then it returns the executed version of that
-	 * next {@link DLBNode}.</p>
+	 * <p>If there is a next node, then it returns the executed version of that next
+	 * {@link DLBNode}.</p>
 	 *  
 	 * @param nodePointer the next node pointer from the selected reply
 	 * @param eventTime the timestamp (in the time zone of the user) of the event that triggered the
 	 *                  progressing of the dialogue
-	 * @return the next {@link DLBNode} that follows on the selected reply or
-	 * null  
+	 * @return the next {@link DLBNode} that follows on the selected reply or {@code null}
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
 	public DLBNode progressDialogue(DLBNodePointerInternal nodePointer, ZonedDateTime eventTime)
 			throws EvaluationException {
 		DLBNode nextNode = null;
-		if (!nodePointer.getNodeId().equalsIgnoreCase("end"))
+		if (!nodePointer.getNodeId().equalsIgnoreCase(DLBConstants.DLB_NODE_END_ID))
 			nextNode = dialogueDefinition.getNodeById(nodePointer.getNodeId());
 		this.currentNode = nextNode;
-		if (nextNode != null)
-			this.currentNode = executeDLBNode(nextNode, eventTime);
-		return currentNode;
+		if (nextNode != null) this.currentNode = executeDLBNode(nextNode, eventTime);
+		return this.currentNode;
 	}
 
 	/**
@@ -234,30 +248,31 @@ public class ActiveDialogue {
 	}
 
 	/**
-	 * The user's client returned the given {@code replyId} - what was the
-	 * statement that was uttered by the user?
+	 * Returns the statement corresponding to a given {@code replyId}. In any given state of the
+	 * conversation, the user's client may return a replyId corresponding to a specific reply option
+	 * in the current node. This method retrieves the corresponding statement to that reply, which
+	 * may be the statement as defined in the {@link DLBDialogue}, or it may be a constant defining
+	 * that this was an "Auto Forward" reply without a specified statement (see
+	 * {@link DLBConstants#DLB_REPLY_STATEMENT_AUTOFORWARD}).
 	 *
-	 * @param replyId the reply ID
-	 * @return the statement
-	 * @throws DLBException if no reply with the specified ID is found
+	 * @param replyId the reply id as provided e.g. by a client application.
+	 * @return the statement {@link String} corresponding to the reply identified by {@code replyId}
+	 * @throws DLBException if no reply with the specified {@code replyId} is found
 	 */
 	public String getUserStatementFromReplyId(int replyId) throws DLBException {
 		DLBReply selectedReply = currentNode.getBody().findReplyById(replyId);
 		if (selectedReply == null) {
 			throw new DLBException(DLBException.Type.REPLY_NOT_FOUND,
 					String.format("Reply with ID %s not found in dialogue \"%s\", node \"%s\"",
-					replyId, dialogueDefinition.getDialogueName(),
-					currentNode.getTitle()));
+					replyId, dialogueDefinition.getDialogueName(), currentNode.getTitle()));
 		}
 		if (selectedReply.getStatement() == null)
-			return "AUTOFORWARD";
+			return DLBConstants.DLB_REPLY_STATEMENT_AUTOFORWARD;
 		StringBuilder result = new StringBuilder();
 		List<DLBNodeBody.Segment> segments = selectedReply.getStatement()
 				.getSegments();
 		for (DLBNodeBody.Segment segment : segments) {
-			if (segment instanceof DLBNodeBody.TextSegment) {
-				DLBNodeBody.TextSegment textSegment =
-						(DLBNodeBody.TextSegment)segment;
+			if (segment instanceof DLBNodeBody.TextSegment textSegment) {
 				result.append(textSegment.getText().evaluate(null));
 			} else {
 				DLBNodeBody.CommandSegment cmdSegment =
@@ -272,11 +287,10 @@ public class ActiveDialogue {
 	}
 
 	/**
-	 * Executes the agent statement and reply statements in the specified node.
-	 * It executes ("if", "random" and "set") commands and resolves variables.
-	 * Any resulting body content that should be sent to the client, is added to
-	 * the (agent or reply) statement body in the resulting node. This content
-	 * can be text or client commands, with all variables resolved.
+	 * Executes the agent statement and reply statements in the specified node. It executes "if",
+	 * "random" and "set" commands and resolves variables. Any resulting body content that should be
+	 * sent to the client, is added to the (agent or reply) statement body in the resulting node.
+	 * This content can be text or client commands, with all variables resolved.
 	 *
 	 * @param DLBNode a node to execute
 	 * @param eventTime the time stamp (in the time zone of the user) of the event that triggered
@@ -298,11 +312,10 @@ public class ActiveDialogue {
 	}
 
 	/**
-	 * Executes the agent statement and reply statements in the specified node.
-	 * It executes "if" and "random" commands and resolves variables. Any
-	 * resulting body content that should be sent to the client, is added to the
-	 * (agent or reply) statement body in the resulting node. This content can
-	 * be text or client commands, with all variables resolved.
+	 * Executes the agent statement and reply statements in the specified node. It executes "if" and
+	 * "random" commands and resolves variables. Any resulting body content that should be sent to
+	 * the client, is added to the (agent or reply) statement body in the resulting node. This
+	 * content can be text or client commands, with all variables resolved.
 	 *
 	 * <p>This method does not change the dialogue state and does not change
 	 * any variables. Any "set" commands have no effect.</p>

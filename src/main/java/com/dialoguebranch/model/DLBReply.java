@@ -40,6 +40,8 @@ import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.command.DLBActionCommand;
 
 /**
+ * TODO: It may be nice to make DLBReply Abstract with different implementing subclasses, e.g.
+ *       "DLBAutoForwardReply" and "DLBNormalReply".
  * A reply option within a {@link DLBNodeBody}. A reply always has
  * a pointer to the next node when the reply is chosen. This might be a pointer
  * to the end node. The reply usually has a statement that is shown in the UI,
