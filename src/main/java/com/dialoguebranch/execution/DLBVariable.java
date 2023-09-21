@@ -35,6 +35,12 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+/**
+ * A DLBVariable models a DialogueBranch variable at any specific moment in time, e.g. as part of
+ * a DLBVariableStore, using easily serializable parameters (i.e. avoiding Time-related objects).
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class DLBVariable {
 
@@ -47,6 +53,17 @@ public class DLBVariable {
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
+	/**
+	 * Creates an instance of a DLBVariable with a given {@code name}, and {@code value}, as well as
+	 * the time at which it was last updated in epoch time ({@code updatedTime}), and the timeZone
+	 * in which this update took place as IANA code (e.g. "Europe/Lisbon").
+	 * @param name the name (or 'identifier') of the variable.
+	 * @param value the value of the variable.
+	 * @param updatedTime the timestamp of when this {@link DLBVariable} was last updated (as epoch
+	 *                    time in milliseconds)
+	 * @param updatedTimeZone the timezone corresponding to the {@code updatedTime} in which this
+	 *                        variable was updated (as IANA Code, e.g. "Europe/Lisbon")
+	 */
 	public DLBVariable(
 			@JsonProperty("name")
 			String name,
@@ -62,6 +79,14 @@ public class DLBVariable {
 		this.updatedTimeZone = updatedTimeZone;
 	}
 
+	/**
+	 * Creates an instance of a DLBVariable with a given {@code name}, and {@code value}, as well as
+	 * the time at which it was last updated as a {@link ZonedDateTime} object. From this
+	 * {@code lastUpdated} time, the time in epoch milliseconds and timezone will be extracted.
+	 * @param name the name (or 'identifier') of the variable
+	 * @param value the value of the variable.
+	 * @param lastUpdated the last updated time for this variable in the timezone of the user.
+	 */
 	@JsonIgnore
 	public DLBVariable(String name, Object value, ZonedDateTime lastUpdated) {
 		this.name = name;
@@ -70,7 +95,9 @@ public class DLBVariable {
 		this.updatedTimeZone = lastUpdated.getZone().toString();
 	}
 
-	// ----- Getters & Setters
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns the name of this {@link DLBVariable} as a String.
@@ -98,11 +125,19 @@ public class DLBVariable {
 		return updatedTime;
 	}
 
+	/**
+	 * Returns the time zone in which this {@link DLBVariable} was last updated (as IANA Code
+	 * {@code String}, e.g. "Europe/Lisbon").
+	 * @return the time zone in which this {@link DLBVariable} was last updated (as IANA Code
+	 *         {@code String}, e.g. "Europe/Lisbon").
+	 */
 	public String getUpdatedTimeZone() {
 		return updatedTimeZone;
 	}
 
-	// ---------- Convenience
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 
 	/**
 	 * Returns a {@link ZonedDateTime} object representing the date/time that this {@link DLBVariable} was last updated

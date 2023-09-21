@@ -31,18 +31,18 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * A {@link DLBVariableStore} is an object that stores all DialogueBranch variable values for a given
- * user.
+ * A {@link DLBVariableStore} is an object that stores all DialogueBranch variable values for a
+ * given user.
  * 
  * @author Harm op den Akker
  */
 public class DLBVariableStore {
 
 	// Contains the list of all DLBVariables in this store
-	private final Map<String, DLBVariable> dlbVariables = new HashMap<>();
+	private final Map<String, DLBVariable> variables = new HashMap<>();
 
 	// The DialogueBranch user associated with this DLBVariableStore
-	private DLBUser DLBUser;
+	private DLBUser user;
 
 	// Contains the list of all DLBVariableChangeListeners that need to be notified for updates
 	private final List<DLBVariableStoreOnChangeListener> onChangeListeners = new ArrayList<>();
@@ -54,17 +54,17 @@ public class DLBVariableStore {
 	/**
 	 * Creates an instance of a new {@link DLBVariableStore} for a user in the given
 	 * {@code timeZone}.
-	 * @param DLBUser the {@link DLBUser} associated with this {@link DLBVariableStore}.
+	 * @param user the {@link DLBUser} associated with this {@link DLBVariableStore}.
 	 */
-	public DLBVariableStore(DLBUser DLBUser) {
-		this.DLBUser = DLBUser;
+	public DLBVariableStore(DLBUser user) {
+		this.user = user;
 	}
 
-	public DLBVariableStore(DLBUser DLBUser, DLBVariable[] DLBVariableArray) {
-		this.DLBUser = DLBUser;
-		synchronized(dlbVariables) {
+	public DLBVariableStore(DLBUser user, DLBVariable[] DLBVariableArray) {
+		this.user = user;
+		synchronized(variables) {
 			for (DLBVariable variable : DLBVariableArray) {
-				dlbVariables.put(variable.getName(),variable);
+				variables.put(variable.getName(),variable);
 			}
 		}
 	}
@@ -132,8 +132,8 @@ public class DLBVariableStore {
 	 * @return the {@link DLBVariable} with the given {@code name}, nor {@code null}.
 	 */
 	public DLBVariable getDLBVariable(String name) {
-		synchronized (dlbVariables) {
-			return dlbVariables.get(name);
+		synchronized (variables) {
+			return variables.get(name);
 		}
 	}
 
@@ -142,8 +142,8 @@ public class DLBVariableStore {
 	 * @return the contents of this {@link DLBVariableStore} as an array of {@link DLBVariable}s.
 	 */
 	public DLBVariable[] getDLBVariables() {
-		synchronized (dlbVariables) {
-			return dlbVariables.values().toArray(new DLBVariable[0]);
+		synchronized (variables) {
+			return variables.values().toArray(new DLBVariable[0]);
 		}
 	}
 
@@ -163,8 +163,8 @@ public class DLBVariableStore {
 	 */
 	public Object getValue(String variableName) {
 		DLBVariable variable;
-		synchronized (dlbVariables) {
-			variable = dlbVariables.get(variableName);
+		synchronized (variables) {
+			variable = variables.get(variableName);
 		}
 		if (variable == null)
 			return null;
@@ -175,8 +175,8 @@ public class DLBVariableStore {
 	 * Returns the {@link DLBUser} associated with this {@link DLBVariableStore}.
 	 * @return the {@link DLBUser} associated with this {@link DLBVariableStore}.
 	 */
-	public DLBUser getDLBUser() {
-		return DLBUser;
+	public DLBUser getUser() {
+		return user;
 	}
 
 	/**
@@ -187,11 +187,11 @@ public class DLBVariableStore {
 	 * {@link DLBVariableStore}.
 	 */
 	public Set<String> getDLBVariableNames() {
-		return dlbVariables.keySet();
+		return variables.keySet();
 	}
 
 	public List<String> getSortedDLBVariableNames() {
-		List<String> nameList = new ArrayList<>(dlbVariables.keySet());
+		List<String> nameList = new ArrayList<>(variables.keySet());
 		Collections.sort(nameList);
 		return nameList;
 	}
@@ -230,9 +230,9 @@ public class DLBVariableStore {
 	 */
 	public void setValue(String name, Object value, boolean notifyObservers,
 						 ZonedDateTime eventTime, DLBVariableStoreChange.Source source) {
-		synchronized (dlbVariables) {
+		synchronized (variables) {
 			DLBVariable DLBVariable = new DLBVariable(name, value, eventTime);
-			dlbVariables.put(name, DLBVariable);
+			variables.put(name, DLBVariable);
 			if (notifyObservers) {
 				notifyOnChange(new DLBVariableStoreChange.Put(DLBVariable, eventTime, source));
 			}
@@ -273,8 +273,8 @@ public class DLBVariableStore {
 									ZonedDateTime eventTime,
 									DLBVariableStoreChange.Source source) {
 		DLBVariable result;
-		synchronized (dlbVariables) {
-			result = dlbVariables.remove(name);
+		synchronized (variables) {
+			result = variables.remove(name);
 		}
 		if(result == null) {
 			return null;
@@ -323,9 +323,9 @@ public class DLBVariableStore {
 			DLBVariablesToAdd.add(DLBVariable);
 		}
 
-		synchronized (dlbVariables) {
+		synchronized (variables) {
 			for(DLBVariable DLBVariable : DLBVariablesToAdd) {
-				dlbVariables.put(DLBVariable.getName(), DLBVariable);
+				variables.put(DLBVariable.getName(), DLBVariable);
 			}
 		}
 
@@ -336,10 +336,10 @@ public class DLBVariableStore {
 
 	/**
 	 * Sets the {@link DLBUser} for this {@link DLBVariableStore}.
-	 * @param DLBUser the {@link DLBUser} for this {@link DLBVariableStore}.
+	 * @param user the {@link DLBUser} for this {@link DLBVariableStore}.
 	 */
-	public void setDLBUser(DLBUser DLBUser) {
-		this.DLBUser = DLBUser;
+	public void setUser(DLBUser user) {
+		this.user = user;
 	}
 
 	/**
@@ -442,8 +442,8 @@ public class DLBVariableStore {
 
 		@Override
 		public void clear() {
-			synchronized (dlbVariables) {
-				dlbVariables.clear();
+			synchronized (variables) {
+				variables.clear();
 			}
 			if (notifyObservers)
 				notifyOnChange(new DLBVariableStoreChange.Clear(eventTime, source));
@@ -455,38 +455,38 @@ public class DLBVariableStore {
 
 		@Override
 		public int size() {
-			synchronized (dlbVariables) {
-				return dlbVariables.size();
+			synchronized (variables) {
+				return variables.size();
 			}
 		}
 
 		@Override
 		public boolean isEmpty() {
-			synchronized (dlbVariables) {
-				return dlbVariables.isEmpty();
+			synchronized (variables) {
+				return variables.isEmpty();
 			}
 		}
 
 		@Override
 		public boolean containsKey(Object key) {
-			synchronized (dlbVariables) {
-				return dlbVariables.containsKey(key);
+			synchronized (variables) {
+				return variables.containsKey(key);
 			}
 		}
 
 		@Override
 		public Object get(Object key) {
-			synchronized (dlbVariables) {
-				if(dlbVariables.get(key) != null) {
-					return dlbVariables.get(key).getValue();
+			synchronized (variables) {
+				if(variables.get(key) != null) {
+					return variables.get(key).getValue();
 				} else return null;
 			}
 		}
 
 		@Override
 		public boolean containsValue(Object value) {
-			synchronized (dlbVariables) {
-				for (Map.Entry<String, DLBVariable> entry : dlbVariables.entrySet()) {
+			synchronized (variables) {
+				for (Map.Entry<String, DLBVariable> entry : variables.entrySet()) {
 					if(entry.getValue().getValue().equals(value)) return true;
 				}
 				return false;
@@ -495,8 +495,8 @@ public class DLBVariableStore {
 
 		@Override
 		public Set<String> keySet() {
-			synchronized (dlbVariables) {
-				return dlbVariables.keySet();
+			synchronized (variables) {
+				return variables.keySet();
 			}
 		}
 
@@ -504,8 +504,8 @@ public class DLBVariableStore {
 		public Collection<Object> values() {
 			Collection<Object> objectCollection = new ArrayList<>();
 
-			synchronized (dlbVariables) {
-				Collection<DLBVariable> DLBVariableCollection = dlbVariables.values();
+			synchronized (variables) {
+				Collection<DLBVariable> DLBVariableCollection = variables.values();
 				for(DLBVariable DLBVariable : DLBVariableCollection) {
 					objectCollection.add(DLBVariable.getValue());
 				}
@@ -518,8 +518,8 @@ public class DLBVariableStore {
 		public Set<Entry<String, Object>> entrySet() {
 			Set<Entry<String,Object>> resultSet = new HashSet<>();
 
-			synchronized (dlbVariables) {
-				Set<Entry<String, DLBVariable>> entrySet = dlbVariables.entrySet();
+			synchronized (variables) {
+				Set<Entry<String, DLBVariable>> entrySet = variables.entrySet();
 
 				for(Entry<String, DLBVariable> entry : entrySet) {
 					String key = entry.getKey();
