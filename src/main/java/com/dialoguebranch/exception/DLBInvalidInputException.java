@@ -41,6 +41,10 @@ public class DLBInvalidInputException extends Exception {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
 	/**
 	 * Creates an instance of a {@link DLBInvalidInputException} with a given message.
 	 *

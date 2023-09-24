@@ -36,6 +36,7 @@ import java.io.Serial;
  * This exception indicates a parse error within a node.
  * 
  * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBNodeParseException extends ParseException {
 
@@ -43,6 +44,10 @@ public class DLBNodeParseException extends ParseException {
 	private static final long serialVersionUID = 1L;
 
 	private final String nodeTitle;
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Constructs a new exception in the specified node. If the node title is unknown, it can be set
@@ -57,6 +62,10 @@ public class DLBNodeParseException extends ParseException {
 		this.nodeTitle = nodeTitle;
 	}
 
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
 	/**
 	 * Returns the node title. If the title is unknown, this method returns {@code null}.
 	 * 
@@ -67,9 +76,10 @@ public class DLBNodeParseException extends ParseException {
 	}
 
 	/**
-	 * Returns the parse error in the node.
+	 * Returns the cause of this {@link DLBNodeParseException} as a
+	 * {@link LineNumberParseException}.
 	 * 
-	 * @return the parse error in the node
+	 * @return the {@link LineNumberParseException} that caused this {@link DLBNodeParseException}
 	 */
 	public LineNumberParseException getLineNumberParseException() {
 		return (LineNumberParseException)getCause();

@@ -30,16 +30,20 @@ package com.dialoguebranch.exception;
 import java.io.Serial;
 
 /**
- * This exception can be thrown when the content of the variable store is not as
- * expected. It can mean that a variable is not defined or its value is invalid.
+ * This exception can be thrown when the content of the variable store is not as expected. It can
+ * mean that a variable is not defined or its value is invalid.
  * 
  * @author Dennis Hofs (Roessingh Research and Development)
- *
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class DLBVariableException extends RuntimeException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Creates an instance of a {@link DLBVariableException} with given {@code message}.

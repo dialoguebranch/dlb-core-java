@@ -39,8 +39,11 @@ public class DLBDuplicateLanguageCodeException extends Exception {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
-
 	private final String languageCode;
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Constructs a new exception for the specified language code.
@@ -52,6 +55,10 @@ public class DLBDuplicateLanguageCodeException extends Exception {
 		super(message);
 		this.languageCode = languageCode;
 	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Return the language code associated with this {@link DLBDuplicateLanguageCodeException}.

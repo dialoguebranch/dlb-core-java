@@ -52,6 +52,10 @@ public class DLBException extends Exception {
 	
 	private final Type type;
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
 	/**
 	 * Creates an instance of a {@link DLBException} with a given {@link Type} and {@code message}.
 	 * @param type the type of the exception
@@ -73,6 +77,10 @@ public class DLBException extends Exception {
 		super(message, cause);
 		this.type = type;
 	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns the {@link Type} of this {@link DLBException}.

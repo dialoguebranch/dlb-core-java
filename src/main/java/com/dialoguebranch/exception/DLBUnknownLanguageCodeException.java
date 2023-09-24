@@ -29,12 +29,22 @@ package com.dialoguebranch.exception;
 
 import java.io.Serial;
 
+/**
+ * An exception that may be thrown in case a user, or software configuration attempts to reference
+ * a language code that is not known to the system.
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 public class DLBUnknownLanguageCodeException extends Exception {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final String languageCode;
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 
 	/**
 	 * Constructs a new exception for the specified language code.
@@ -46,6 +56,10 @@ public class DLBUnknownLanguageCodeException extends Exception {
 		super(message);
 		this.languageCode = languageCode;
 	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Return the language code associated with this {@link DLBUnknownLanguageCodeException}.

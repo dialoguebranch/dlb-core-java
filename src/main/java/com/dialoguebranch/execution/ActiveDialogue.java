@@ -122,8 +122,10 @@ public class ActiveDialogue {
 	}
 
 	/**
-	 * Sets the {@link DLBVariableStore} used to store/retrieve parameters for this {@link ActiveDialogue}.
-	 * @param dlbVariableStore the {@link DLBVariableStore} used to store/retrieve parameters for this {@link ActiveDialogue}.
+	 * Sets the {@link DLBVariableStore} used to store/retrieve parameters for this
+	 * {@link ActiveDialogue}.
+	 * @param dlbVariableStore the {@link DLBVariableStore} used to store/retrieve parameters for
+	 *                         this {@link ActiveDialogue}.
 	 */
 	public void setDLBVariableStore(DLBVariableStore dlbVariableStore) {
 		this.dlbVariableStore = dlbVariableStore;
@@ -153,8 +155,8 @@ public class ActiveDialogue {
 	 * is {@code null}, returning that node and updating the dialogue's internal state. If you set
 	 * the {@code startNodeId} to null, it will return the start node.
 	 *
-	 * <p>If executed successfully, this method also sets {@code this.currentNode} and thus updates the
-	 * value of {@link #getCurrentNode()}.</p>
+	 * <p>If executed successfully, this method also sets {@code this.currentNode} and thus updates
+	 * the value of {@link #getCurrentNode()}.</p>
 	 *
 	 * @param startNodeId the node ID of the node to start from, or {@code null} to start from the
 	 *                    default "Start" node.
