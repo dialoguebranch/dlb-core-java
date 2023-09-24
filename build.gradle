@@ -9,7 +9,6 @@ plugins {
 group = 'com.dialoguebranch'
 version = '1.1.0'
 
-
 application {
 	mainClassName = "com.dialoguebranch.cli.CommandLineRunner"
 }
@@ -22,12 +21,6 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	api "nl.rrd:rrd-utils:3.0.0"
-	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.13.4'
-	testImplementation 'junit:junit:4.13.2'
-}
-
 base {
 	archivesName = "dlb-core-java"
 }
@@ -37,6 +30,12 @@ java {
 	targetCompatibility = JavaVersion.VERSION_17
 	withJavadocJar()
 	withSourcesJar()
+}
+
+dependencies {
+	api "nl.rrd:rrd-utils:3.0.0"
+	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.13.4'
+	testImplementation 'junit:junit:4.13.2'
 }
 
 jar {
