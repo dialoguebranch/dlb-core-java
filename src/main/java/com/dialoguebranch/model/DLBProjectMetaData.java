@@ -31,7 +31,7 @@ import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
 import nl.rrd.utils.xml.SimpleSAXHandler;
 import nl.rrd.utils.xml.XMLWriter;
-import com.dialoguebranch.exception.DLBDuplicateLanguageCodeException;
+import com.dialoguebranch.exception.DuplicateLanguageCodeException;
 import com.dialoguebranch.exception.DLBUnknownLanguageCodeException;
 import org.xml.sax.Attributes;
 
@@ -183,13 +183,13 @@ public class DLBProjectMetaData {
 	 * @param name the name of the source language to add.
 	 * @param code the code of the source language to add.
 	 * @param languageSet the language set to which to add the language
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 * @throws DuplicateLanguageCodeException in case a language with the given {@code code}
 	 *                                           already exists in this DialogueBranch project.
 	 */
 	public void setSourceLanguage(String name, String code, LanguageSet languageSet)
-			throws DLBDuplicateLanguageCodeException {
+			throws DuplicateLanguageCodeException {
 		if(languageExists(code))
-			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+			throw new DuplicateLanguageCodeException("A language with the given language " +
 					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
 		languageSet.setSourceLanguage(new Language(name,code));
@@ -198,20 +198,20 @@ public class DLBProjectMetaData {
 	/**
 	 * Attempts to add a new source language to this DialogueBranch project with the given
 	 * {@code name} and {@code code} by creating a new {@link LanguageSet} for it. This method
-	 * will fail with a {@link DLBDuplicateLanguageCodeException} if a language with the given
+	 * will fail with a {@link DuplicateLanguageCodeException} if a language with the given
 	 * {@code code} already exists in this DialogueBranch project. Otherwise, it will return a
 	 * pointer to the newly created {@link LanguageSet}.
 	 *
 	 * @param name the name of the source language to add.
 	 * @param code the code of the source language to add.
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 * @throws DuplicateLanguageCodeException in case a language with the given {@code code}
 	 *                                           already exists in this DialogueBranch project.
 	 * @return the newly created {@link LanguageSet}
 	 */
 	public LanguageSet addSourceLanguage(String name, String code)
-			throws DLBDuplicateLanguageCodeException {
+			throws DuplicateLanguageCodeException {
 		if(languageExists(code))
-			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+			throw new DuplicateLanguageCodeException("A language with the given language " +
 					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
 		LanguageSet languageSet = new LanguageSet(new Language(name, code));
@@ -228,13 +228,13 @@ public class DLBProjectMetaData {
 	 * @param name the name of the language to add.
 	 * @param code the code of the language to add.
 	 * @param languageSet the language set to which to add the language
-	 * @throws DLBDuplicateLanguageCodeException in case a language with the given {@code code}
+	 * @throws DuplicateLanguageCodeException in case a language with the given {@code code}
 	 *                                           already exists in this DialogueBranch project.
 	 */
 	public void addTranslationLanguage(String name, String code, LanguageSet languageSet)
-			throws DLBDuplicateLanguageCodeException {
+			throws DuplicateLanguageCodeException {
 		if(languageExists(code))
-			throw new DLBDuplicateLanguageCodeException("A language with the given language " +
+			throw new DuplicateLanguageCodeException("A language with the given language " +
 					"code '"+code+"' is already defined in this DialogueBranch project.",code);
 
 		languageSet.addTranslationLanguage(new Language(name,code));

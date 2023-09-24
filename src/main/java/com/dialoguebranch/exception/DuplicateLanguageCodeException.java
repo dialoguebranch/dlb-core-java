@@ -35,7 +35,7 @@ import java.io.Serial;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBDuplicateLanguageCodeException extends Exception {
+public class DuplicateLanguageCodeException extends Exception {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public class DLBDuplicateLanguageCodeException extends Exception {
 	 * @param message the message
 	 * @param languageCode the duplicate language code
 	 */
-	public DLBDuplicateLanguageCodeException(String message, String languageCode) {
+	public DuplicateLanguageCodeException(String message, String languageCode) {
 		super(message);
 		this.languageCode = languageCode;
 	}
@@ -61,7 +61,7 @@ public class DLBDuplicateLanguageCodeException extends Exception {
 	// -----------------------------------------------------------
 
 	/**
-	 * Return the language code associated with this {@link DLBDuplicateLanguageCodeException}.
+	 * Return the language code associated with this {@link DuplicateLanguageCodeException}.
 	 *
 	 * @return the language code or {@code null}.
 	 */
