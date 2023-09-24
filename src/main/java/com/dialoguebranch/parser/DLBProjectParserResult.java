@@ -30,7 +30,7 @@ package com.dialoguebranch.parser;
 import com.dialoguebranch.i18n.DLBContextTranslation;
 import com.dialoguebranch.i18n.DLBTranslatable;
 import com.dialoguebranch.model.DLBDialogue;
-import com.dialoguebranch.model.DLBFileDescription;
+import com.dialoguebranch.model.DialogueBranchFileDescriptor;
 import nl.rrd.utils.exception.ParseException;
 import com.dialoguebranch.model.DLBProject;
 
@@ -209,30 +209,30 @@ public class DLBProjectParserResult {
 				.append(projectLocationDescription)
 				.append("\n");
 
-		Map<DLBFileDescription, DLBDialogue> sourceDialogues = project.getSourceDialogues();
+		Map<DialogueBranchFileDescriptor, DLBDialogue> sourceDialogues = project.getSourceDialogues();
 		result.append("Number of Dialogue Scripts: ")
 				.append(sourceDialogues.size())
 				.append("\n");
-		for(DLBFileDescription dialogueDescription : sourceDialogues.keySet()) {
+		for(DialogueBranchFileDescriptor dialogueDescription : sourceDialogues.keySet()) {
 			result.append("  - ")
 					.append(dialogueDescription)
 					.append("\n");
 		}
 
-		Map<DLBFileDescription,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
+		Map<DialogueBranchFileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
 				project.getTranslations();
 		result.append("Number of Translation Scripts: ")
 				.append(translations.size())
 				.append("\n");
-		for(DLBFileDescription dialogueDescription : translations.keySet()) {
+		for(DialogueBranchFileDescriptor dialogueDescription : translations.keySet()) {
 			result.append("  - ")
 					.append(dialogueDescription)
 					.append("\n");
 		}
 
-		Map<DLBFileDescription, DLBDialogue> dialogues = this.getProject().getDialogues();
+		Map<DialogueBranchFileDescriptor, DLBDialogue> dialogues = this.getProject().getDialogues();
 
-		for (DLBFileDescription dialogue : dialogues.keySet()) {
+		for (DialogueBranchFileDescriptor dialogue : dialogues.keySet()) {
 			result.append("----------");
 			result.append("DIALOGUE ")
 					.append(dialogue.getFilePath())

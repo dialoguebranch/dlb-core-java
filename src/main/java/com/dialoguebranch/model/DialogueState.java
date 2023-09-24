@@ -30,15 +30,15 @@ package com.dialoguebranch.model;
 import com.dialoguebranch.execution.ActiveDialogue;
 
 public class DialogueState {
-	private DLBFileDescription dialogueDescription;
+	private DialogueBranchFileDescriptor dialogueDescription;
 	private DLBDialogue dialogueDefinition;
 	private DLBLoggedDialogue loggedDialogue;
 	private int loggedInteractionIndex;
 	private ActiveDialogue activeDialogue;
 
-	public DialogueState(DLBFileDescription dialogueDescription,
-						 DLBDialogue dialogueDefinition, DLBLoggedDialogue loggedDialogue,
-						 int loggedInteractionIndex, ActiveDialogue activeDialogue) {
+	public DialogueState(DialogueBranchFileDescriptor dialogueDescription,
+                         DLBDialogue dialogueDefinition, DLBLoggedDialogue loggedDialogue,
+                         int loggedInteractionIndex, ActiveDialogue activeDialogue) {
 		this.dialogueDescription = dialogueDescription;
 		this.dialogueDefinition = dialogueDefinition;
 		this.loggedDialogue = loggedDialogue;
@@ -46,7 +46,7 @@ public class DialogueState {
 		this.activeDialogue = activeDialogue;
 	}
 
-	public DLBFileDescription getDialogueDescription() {
+	public DialogueBranchFileDescriptor getDialogueDescription() {
 		return dialogueDescription;
 	}
 

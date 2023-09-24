@@ -42,17 +42,17 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An {@link ActiveDialogue} is a wrapper around a {@link DLBDialogue}, which contains
- * a static definition of a dialogue (referred to as the {@code dialogueDefinition}). 
- * The {@link ActiveDialogue} also contains utility functions to keep track of the state during
+ * An {@link ActiveDialogue} is a wrapper around a {@link DLBDialogue}, which contains a static
+ * definition of a dialogue (referred to as the {@code dialogueDefinition}). The
+ * {@link ActiveDialogue} also contains utility functions to keep track of the state during
  * "execution" of the dialogue.
  * 
- * @author Harm op den Akker
- * @author Tessa Beinema
+ * @author Harm op den Akker (Fruit Tree Labs)
+ * @author Tessa Beinema (Roessingh Research and Development)
  */
 public class ActiveDialogue {
 
-	private final DLBFileDescription dialogueFileDescription;
+	private final DialogueBranchFileDescriptor dialogueFileDescription;
 	private final DLBDialogue dialogueDefinition;
 	private DLBNode currentNode;
 	private DLBVariableStore dlbVariableStore;
@@ -62,14 +62,14 @@ public class ActiveDialogue {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of an {@link ActiveDialogue} with a given {@link
-	 * DLBFileDescription} and {@link DLBDialogue}.
+	 * Creates an instance of an {@link ActiveDialogue} with a given {@link DialogueBranchFileDescriptor} and
+	 * {@link DLBDialogue}.
 	 *
-	 * @param dialogueFileDescription the {@link DLBFileDescription} containing metadata of the
+	 * @param dialogueFileDescription the {@link DialogueBranchFileDescriptor} containing metadata of the
 	 *                                dialogue file used in this {@link ActiveDialogue}.
 	 * @param dialogueDefinition the dialogue definition
 	 */
-	public ActiveDialogue(DLBFileDescription dialogueFileDescription,
+	public ActiveDialogue(DialogueBranchFileDescriptor dialogueFileDescription,
 						  DLBDialogue dialogueDefinition) {
 		this.dialogueFileDescription = dialogueFileDescription;
 		this.dialogueDefinition = dialogueDefinition;
@@ -80,11 +80,11 @@ public class ActiveDialogue {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the {@link DLBFileDescription} of the dialogue file corresponding to this
+	 * Returns the {@link DialogueBranchFileDescriptor} of the dialogue file corresponding to this
 	 * {@link ActiveDialogue} containing metadata for the file.
-	 * @return the dialogue file description as a {@link DLBFileDescription}
+	 * @return the dialogue file description as a {@link DialogueBranchFileDescriptor}
 	 */
-	public DLBFileDescription getDialogueFileDescription() {
+	public DialogueBranchFileDescriptor getDialogueFileDescription() {
 		return dialogueFileDescription;
 	}
 

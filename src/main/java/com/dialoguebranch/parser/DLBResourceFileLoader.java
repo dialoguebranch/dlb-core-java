@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.parser;
 
-import com.dialoguebranch.model.DLBFileDescription;
+import com.dialoguebranch.model.DialogueBranchFileDescriptor;
 import com.dialoguebranch.model.DLBFileType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import nl.rrd.utils.exception.ParseException;
@@ -87,8 +87,8 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	@Override
-	public List<DLBFileDescription> listDialogueBranchFiles() throws IOException {
-		List<DLBFileDescription> result = new ArrayList<>();
+	public List<DialogueBranchFileDescriptor> listDialogueBranchFiles() throws IOException {
+		List<DialogueBranchFileDescriptor> result = new ArrayList<>();
 		String path = resourcePath + "/" + INDEX_FILE;
 		InputStream input = getClass().getClassLoader().getResourceAsStream(
 				path);
@@ -108,7 +108,7 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	private void parseLanguageValue(String language, Object value,
-			List<DLBFileDescription> files) throws ParseException {
+			List<DialogueBranchFileDescriptor> files) throws ParseException {
 		if (value instanceof List) {
 			parseDirectoryList(language, "", (List<?>)value, files);
 		} else if (value == null) {
@@ -121,7 +121,7 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	private void parseDirectoryValue(String language, String prefix,
-			Map<?,?> entry, List<DLBFileDescription> files)
+			Map<?,?> entry, List<DialogueBranchFileDescriptor> files)
 			throws ParseException {
 		if (entry.size() != 1) {
 			throw new ParseException(String.format(
@@ -142,7 +142,7 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	private void parseDirectoryList(String language, String prefix,
-			List<?> children, List<DLBFileDescription> files)
+			List<?> children, List<DialogueBranchFileDescriptor> files)
 			throws ParseException {
 		for (Object child : children) {
 			parseDirectoryChild(language, prefix, child, files);
@@ -150,7 +150,7 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	private void parseDirectoryChild(String language, String prefix,
-			Object entry, List<DLBFileDescription> files)
+			Object entry, List<DialogueBranchFileDescriptor> files)
 			throws ParseException {
 		if (entry instanceof Map) {
 			parseDirectoryValue(language, prefix, (Map<?,?>)entry, files);
@@ -167,7 +167,7 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 	}
 
 	private void parseFileValue(String language, String prefix, String entry,
-			List<DLBFileDescription> files) throws ParseException {
+			List<DialogueBranchFileDescriptor> files) throws ParseException {
 		String path = prefix + entry;
 		if (!entry.endsWith(".dlb") && !entry.endsWith(".json")) {
 			throw new ParseException(
@@ -179,11 +179,11 @@ public class DLBResourceFileLoader implements DLBFileLoader {
 		} else {
 			fileType = DLBFileType.TRANSLATION;
 		}
-		files.add(new DLBFileDescription(language, path, fileType));
+		files.add(new DialogueBranchFileDescriptor(language, path, fileType));
 	}
 
 	@Override
-	public Reader openFile(DLBFileDescription fileDescription) throws IOException {
+	public Reader openFile(DialogueBranchFileDescriptor fileDescription) throws IOException {
 		String path = resourcePath + "/" + fileDescription.getLanguage() + "/" +
 				fileDescription.getFilePath();
 		return new InputStreamReader(getClass().getClassLoader()

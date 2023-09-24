@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.parser;
 
-import com.dialoguebranch.model.DLBFileDescription;
+import com.dialoguebranch.model.DialogueBranchFileDescriptor;
 import com.dialoguebranch.model.DLBFileType;
 
 import java.io.*;
@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  * An implementation of a {@link DLBFileLoader} that can generate a list of
- * {@link DLBFileDescription}s by finding all .dlb and .json files in a given directory. The
+ * {@link DialogueBranchFileDescriptor}s by finding all .dlb and .json files in a given directory. The
  * directory provided when creating this {@link DLBDirectoryFileLoader} is assumed to have one or
  * many subdirectories, representing different languages, that contain .dlb and/or .json files. For
  * example:
@@ -103,8 +103,8 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// -------------------------------------------------------------------
 
 	@Override
-	public List<DLBFileDescription> listDialogueBranchFiles() {
-		List<DLBFileDescription> result = new ArrayList<>();
+	public List<DialogueBranchFileDescriptor> listDialogueBranchFiles() {
+		List<DialogueBranchFileDescriptor> result = new ArrayList<>();
 		File[] children = rootDirectory.listFiles();
 		if(children != null) {
 			for (File child : children) {
@@ -118,7 +118,7 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	}
 
 	@Override
-	public Reader openFile(DLBFileDescription fileDescription) throws IOException {
+	public Reader openFile(DialogueBranchFileDescriptor fileDescription) throws IOException {
 		File file = new File(rootDirectory, fileDescription.getLanguage() + File.separator +
 				fileDescription.getFilePath());
 		return new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
@@ -129,20 +129,20 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// ---------------------------------------------------------
 
 	/**
-	 * Recursively generates a list of {@link DLBFileDescription} objects from all .dlb and/or .json
+	 * Recursively generates a list of {@link DialogueBranchFileDescriptor} objects from all .dlb and/or .json
 	 * files in the given {@code directory} (and all its subdirectories), under the given relative
 	 * {@code pathName} (relative to the {@code rootDirectory} of this
-	 * {@link DLBDirectoryFileLoader}. Each {@link DLBFileDescription} will have its language
+	 * {@link DLBDirectoryFileLoader}. Each {@link DialogueBranchFileDescriptor} will have its language
 	 * attribute set to the given {@code language} parameter, which is the direct subfolder of the
 	 * {@code rootDirectory} under which it was found.
 	 *
 	 * @param language the language code, or name of the main folder.
 	 * @param pathName the relative pathName in which the given {@code directory} can be found.
 	 * @param directory the directory in which to look for .dlb and .json files.
-	 * @return a list of all encountered .dlb and .json files as {@code DLBFileDescription}s.
+	 * @return a list of all encountered .dlb and .json files as {@code DialogueBranchFileDescriptor}s.
 	 */
-	private List<DLBFileDescription> listDir(String language, String pathName, File directory) {
-		List<DLBFileDescription> result = new ArrayList<>();
+	private List<DialogueBranchFileDescriptor> listDir(String language, String pathName, File directory) {
+		List<DialogueBranchFileDescriptor> result = new ArrayList<>();
 		File[] children = directory.listFiles();
 		if(children != null) {
 			for (File child : children) {
@@ -150,10 +150,10 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 					result.addAll(listDir(language, pathName + child.getName() + "/", child));
 				} else if (child.isFile()) {
 					if (child.getName().endsWith(".dlb")) {
-						result.add(new DLBFileDescription(
+						result.add(new DialogueBranchFileDescriptor(
 								language, pathName + child.getName(), DLBFileType.SCRIPT));
 					} else if (child.getName().endsWith(".json")) {
-						result.add(new DLBFileDescription(
+						result.add(new DialogueBranchFileDescriptor(
 								language, pathName + child.getName(), DLBFileType.TRANSLATION));
 					}
 				}
