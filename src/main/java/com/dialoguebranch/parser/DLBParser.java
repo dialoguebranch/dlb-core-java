@@ -209,7 +209,7 @@ public class DLBParser implements AutoCloseable {
 			}
 			DLBNodeHeader header = createHeader(headerMap, lineNum, nodeState);
 			boolean inBody = true;
-			DLBBodyTokenizer tokenizer = new DLBBodyTokenizer();
+			BodyTokenizer tokenizer = new BodyTokenizer();
 			lineNum = reader.getLineNum();
 			line = readLine();
 			List<BodyToken> bodyTokens = new ArrayList<>();

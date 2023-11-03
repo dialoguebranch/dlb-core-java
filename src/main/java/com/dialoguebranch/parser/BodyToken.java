@@ -35,7 +35,7 @@ import java.util.List;
 
 /**
  * A {@link BodyToken} is the smallest meaningful segment of a line of text of a DialogueBranch
- * script and can be generated from the script text by the {@link DLBBodyTokenizer}. A
+ * script and can be generated from the script text by the {@link BodyTokenizer}. A
  * {@link BodyToken} can be of the following types (as defined by {@link Type}):
  *
  * <ul>

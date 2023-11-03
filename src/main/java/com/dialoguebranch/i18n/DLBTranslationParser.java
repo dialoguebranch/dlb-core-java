@@ -29,7 +29,7 @@ package com.dialoguebranch.i18n;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.parser.BodyToken;
-import com.dialoguebranch.parser.DLBBodyTokenizer;
+import com.dialoguebranch.parser.BodyTokenizer;
 import com.fasterxml.jackson.core.type.TypeReference;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
@@ -206,7 +206,7 @@ public class DLBTranslationParser {
 
 	private static DLBTranslatable parseTranslationString(String translation)
 			throws ParseException {
-		DLBBodyTokenizer tokenizer = new DLBBodyTokenizer();
+		BodyTokenizer tokenizer = new BodyTokenizer();
 		List<BodyToken> tokens;
 		try {
 			tokens = tokenizer.readBodyTokens(translation, 1);

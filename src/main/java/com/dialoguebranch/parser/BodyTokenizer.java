@@ -34,15 +34,23 @@ import nl.rrd.utils.ReferenceParameter;
 import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.model.DLBVariableString;
 
-public class DLBBodyTokenizer {
-	private BodyState bodyState = new BodyState();
+/**
+ * A {@link BodyTokenizer} may be used to split a line of dialogue branch script into a {@link List}
+ * of {@link BodyToken}s.
+ *
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
+public class BodyTokenizer {
+
+	private final BodyState bodyState = new BodyState();
 
 	/**
-	 * Reads the body tokens from the specified line. The line should end with a
-	 * newline (\n) character.
+	 * Reads the body tokens from the specified line. The line should end with a newline (\n)
+	 * character.
 	 * 
-	 * @param line the line with \n
-	 * @param lineNum the line number (first line is 1)
+	 * @param line the line including the newline (\n) character
+	 * @param lineNum the line number within the Dialogue Branch script (first line is 1)
 	 * @return the body tokens
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
@@ -181,11 +189,10 @@ public class DLBBodyTokenizer {
 		return tokens;
 	}
 
-	private int readBodyVariable(List<BodyToken> tokens, String line,
-                                 int lineNum, int start) {
+	private int readBodyVariable(List<BodyToken> tokens, String line, int lineNum, int start) {
 		ReferenceParameter<Integer> end = new ReferenceParameter<>();
 		String varName = readVariableName(line, start + 1, end);
-		if (varName.length() == 0) {
+		if (varName.isEmpty()) {
 			bodyState.textBuffer.append('$');
 			return end.get();
 		}
@@ -200,8 +207,7 @@ public class DLBBodyTokenizer {
 		return end.get();
 	}
 
-	private String readVariableName(String line, int start,
-			ReferenceParameter<Integer> end) {
+	private String readVariableName(String line, int start, ReferenceParameter<Integer> end) {
 		for (int i = start; i < line.length(); i++) {
 			char c = line.charAt(i);
 			if (i == start && (c < 'A' || c > 'Z') &&
@@ -218,8 +224,8 @@ public class DLBBodyTokenizer {
 		return line.substring(start);
 	}
 
-	private int readQuotedString(List<BodyToken> tokens, String line,
-                                 int lineNum, int start) throws LineNumberParseException {
+	private int readQuotedString(List<BodyToken> tokens, String line, int lineNum, int start)
+			throws LineNumberParseException {
 		finishTextToken(tokens, line, lineNum, start);
 		ReferenceParameter<Integer> end = new ReferenceParameter<>();
 		DLBVariableString string = readQuotedString(line, lineNum, start, end);
@@ -233,8 +239,8 @@ public class DLBBodyTokenizer {
 		return end.get();
 	}
 
-	private DLBVariableString readQuotedString(String line, int lineNum,
-											   int start, ReferenceParameter<Integer> end)
+	private DLBVariableString readQuotedString(String line, int lineNum, int start,
+											   ReferenceParameter<Integer> end)
 			throws LineNumberParseException {
 		DLBVariableString result = new DLBVariableString();
 		StringBuilder textBuffer = new StringBuilder();
@@ -259,9 +265,9 @@ public class DLBBodyTokenizer {
 				ReferenceParameter<Integer> varEnd =
 						new ReferenceParameter<>();
 				String varName = readVariableName(line, i + 1, varEnd);
-				if (varName.length() > 0) {
+				if (!varName.isEmpty()) {
 					textBuffer.append(line, textStart, i);
-					if (textBuffer.length() > 0) {
+					if (!textBuffer.isEmpty()) {
 						result.addSegment(new DLBVariableString.TextSegment(
 								textBuffer.toString()));
 					}
@@ -276,7 +282,7 @@ public class DLBBodyTokenizer {
 				break;
 			case '"':
 				textBuffer.append(line, textStart, i);
-				if (textBuffer.length() > 0) {
+				if (!textBuffer.isEmpty()) {
 					result.addSegment(new DLBVariableString.TextSegment(
 							textBuffer.toString()));
 				}
@@ -286,8 +292,7 @@ public class DLBBodyTokenizer {
 				i++;
 			}
 		}
-		throw new LineNumberParseException("Quoted string not terminated",
-				lineNum, start + 1);
+		throw new LineNumberParseException("Quoted string not terminated", lineNum, start + 1);
 	}
 	
 	private void startBodyTextBuffer(int colNum) {
@@ -295,10 +300,9 @@ public class DLBBodyTokenizer {
 		bodyState.textStartCol = colNum;
 	}
 	
-	private void finishTextToken(List<BodyToken> tokens, String line,
-                                 int lineNum, int end) {
+	private void finishTextToken(List<BodyToken> tokens, String line, int lineNum, int end) {
 		String text = bodyState.textBuffer.toString();
-		if (text.length() == 0)
+		if (text.isEmpty())
 			return;
 		BodyToken token = new BodyToken(BodyToken.Type.TEXT);
 		token.setText(line.substring(bodyState.textStartCol - 1, end));
@@ -308,8 +312,8 @@ public class DLBBodyTokenizer {
 		tokens.add(token);
 	}
 	
-	private void finishCommandStart(List<BodyToken> tokens, int lineNum,
-                                    int colNum) throws LineNumberParseException {
+	private void finishCommandStart(List<BodyToken> tokens, int lineNum, int colNum)
+			throws LineNumberParseException {
 		if (bodyState.inCommand) {
 			throw new LineNumberParseException("Found << inside <<...>>",
 					lineNum, colNum);
@@ -322,8 +326,8 @@ public class DLBBodyTokenizer {
 		bodyState.inCommand = true;
 	}
 	
-	private void finishCommandEnd(List<BodyToken> tokens, int lineNum,
-                                  int colNum) throws LineNumberParseException {
+	private void finishCommandEnd(List<BodyToken> tokens, int lineNum, int colNum)
+			throws LineNumberParseException {
 		if (!bodyState.inCommand) {
 			throw new LineNumberParseException("Found >> without preceding <<",
 					lineNum, colNum);
@@ -336,11 +340,10 @@ public class DLBBodyTokenizer {
 		bodyState.inCommand = false;
 	}
 	
-	private void finishReplyStart(List<BodyToken> tokens, int lineNum,
-                                  int colNum) throws LineNumberParseException {
+	private void finishReplyStart(List<BodyToken> tokens, int lineNum, int colNum)
+			throws LineNumberParseException {
 		if (bodyState.inReply) {
-			throw new LineNumberParseException("Found [[ inside [[...]]",
-					lineNum, colNum);
+			throw new LineNumberParseException("Found [[ inside [[...]]", lineNum, colNum);
 		}
 		BodyToken token = new BodyToken(BodyToken.Type.REPLY_START);
 		token.setText("[[");
@@ -350,11 +353,10 @@ public class DLBBodyTokenizer {
 		bodyState.inReply = true;
 	}
 	
-	private void finishReplyEnd(List<BodyToken> tokens, int lineNum,
-                                int colNum) throws LineNumberParseException {
+	private void finishReplyEnd(List<BodyToken> tokens, int lineNum, int colNum)
+			throws LineNumberParseException {
 		if (!bodyState.inReply) {
-			throw new LineNumberParseException("Found ]] without preceding [[",
-					lineNum, colNum);
+			throw new LineNumberParseException("Found ]] without preceding [[", lineNum, colNum);
 		}
 		BodyToken token = new BodyToken(BodyToken.Type.REPLY_END);
 		token.setText("]]");
@@ -364,8 +366,7 @@ public class DLBBodyTokenizer {
 		bodyState.inReply = false;
 	}
 	
-	private void finishReplySeparator(List<BodyToken> tokens, int lineNum,
-                                      int colNum) {
+	private void finishReplySeparator(List<BodyToken> tokens, int lineNum, int colNum) {
 		BodyToken token = new BodyToken(BodyToken.Type.REPLY_SEPARATOR);
 		token.setText("|");
 		token.setLineNumber(lineNum);
