@@ -34,7 +34,7 @@ import java.util.Map;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 public abstract class DLBAttributesCommand extends DLBCommand {
 
@@ -51,13 +51,13 @@ public abstract class DLBAttributesCommand extends DLBCommand {
 	 * @return the attributes
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	protected static Map<String, DLBBodyToken> parseAttributesCommand(
-			DLBBodyToken cmdStartToken, CurrentIterator<DLBBodyToken> tokens)
+	protected static Map<String, BodyToken> parseAttributesCommand(
+            BodyToken cmdStartToken, CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
-		Map<String, DLBBodyToken> result = new LinkedHashMap<>();
+		Map<String, BodyToken> result = new LinkedHashMap<>();
 		boolean first = true;
 		while (tokens.getCurrent() != null) {
-			DLBBodyToken token = tokens.getCurrent();
+			BodyToken token = tokens.getCurrent();
 			String text;
 			if (first) {
 				first = false;
@@ -68,13 +68,13 @@ public abstract class DLBAttributesCommand extends DLBCommand {
 					continue;
 				}
 				text = split[1];
-			} else if (token.getType() == DLBBodyToken.Type.COMMAND_END) {
+			} else if (token.getType() == BodyToken.Type.COMMAND_END) {
 				tokens.moveNext();
 				return result;
-			} else if (token.getType() != DLBBodyToken.Type.TEXT) {
+			} else if (token.getType() != BodyToken.Type.TEXT) {
 				throw new LineNumberParseException(
 						"Expected attribute name, found token: " +
-						token.getType(), token.getLineNum(), token.getColNum());
+						token.getType(), token.getLineNumber(), token.getColNumber());
 			} else {
 				text = ((String)token.getValue()).trim();
 			}
@@ -88,84 +88,84 @@ public abstract class DLBAttributesCommand extends DLBCommand {
 				attr = text;
 			if (!attr.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
 				throw new LineNumberParseException("Invalid attribute name: " +
-						attr, token.getLineNum(), token.getColNum());
+						attr, token.getLineNumber(), token.getColNumber());
 			}
 			if (sep == -1) {
 				throw new LineNumberParseException(
 						"Character = not found after attribute name",
-						token.getLineNum(), token.getColNum());
+						token.getLineNumber(), token.getColNumber());
 			}
 			String post = text.substring(sep + 1).trim();
 			if (!post.isEmpty()) {
 				throw new LineNumberParseException("Unexpected text after =",
-						token.getLineNum(), token.getColNum());
+						token.getLineNumber(), token.getColNumber());
 			}
 			tokens.moveNext();
-			DLBBodyToken.skipWhitespace(tokens);
+			BodyToken.skipWhitespace(tokens);
 			token = tokens.getCurrent();
 			if (token == null) {
 				throw new LineNumberParseException("Command not terminated",
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
-			if (token.getType() != DLBBodyToken.Type.QUOTED_STRING) {
+			if (token.getType() != BodyToken.Type.QUOTED_STRING) {
 				throw new LineNumberParseException(
 						"Expected quoted string, found token: " +
-						token.getType(), token.getLineNum(), token.getColNum());
+						token.getType(), token.getLineNumber(), token.getColNumber());
 			}
 			result.put(attr, token);
 			tokens.moveNext();
-			DLBBodyToken.skipWhitespace(tokens);
+			BodyToken.skipWhitespace(tokens);
 		}
 		throw new LineNumberParseException("Command not terminated",
-				cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+				cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 	}
 	
 	protected static DLBVariableString readAttr(String name,
-												Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-												boolean require) throws LineNumberParseException {
+                                                Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                                boolean require) throws LineNumberParseException {
 		if (!attrs.containsKey(name)) {
 			if (!require)
 				return null;
 			throw new LineNumberParseException(String.format(
 					"Required attribute \"%s\" not found", name),
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 		return (DLBVariableString)token.getValue();
 	}
 	
 	protected static String readPlainTextAttr(String name,
-											  Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-											  boolean require) throws LineNumberParseException {
+                                              Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                              boolean require) throws LineNumberParseException {
 		DLBVariableString varStr = readAttr(name, attrs, cmdStartToken,
 				require);
 		if (varStr == null)
 			return null;
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 		if (!varStr.isPlainText()) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" is not plain text", name) +
-					": " + token.getText(), token.getLineNum(),
-					token.getColNum());
+					": " + token.getText(), token.getLineNumber(),
+					token.getColNumber());
 		}
 		return varStr.evaluate(null);
 	}
 	
 	protected static String readVariableAttr(String name,
-											 Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-											 boolean require) throws LineNumberParseException {
+                                             Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                             boolean require) throws LineNumberParseException {
 		DLBVariableString varStr = readAttr(name, attrs, cmdStartToken,
 				require);
 		if (varStr == null)
 			return null;
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 		List<DLBVariableString.Segment> segments = varStr.getSegments();
 		if (segments.size() != 1 || !(segments.get(0) instanceof
 				DLBVariableString.VariableSegment)) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" is not a variable", name) +
-					": " + token.getText(), token.getLineNum(),
-					token.getColNum());
+					": " + token.getText(), token.getLineNumber(),
+					token.getColNumber());
 		}
 		DLBVariableString.VariableSegment segment =
 				(DLBVariableString.VariableSegment)segments.get(0);
@@ -173,79 +173,79 @@ public abstract class DLBAttributesCommand extends DLBCommand {
 	}
 	
 	protected static Integer readIntAttr(String name,
-										 Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-										 boolean require, Integer min, Integer max)
+                                         Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                         boolean require, Integer min, Integer max)
 			throws LineNumberParseException {
 		String s = readPlainTextAttr(name, attrs, cmdStartToken, require);
 		if (s == null)
 			return null;
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 		int result;
 		try {
 			result = Integer.parseInt(s);
 		} catch (NumberFormatException ex) {
 			throw new LineNumberParseException(String.format(
 					"Invalid value for attribute \"%s\"", name) + ": " + s,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 		if (min != null && result < min) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" < %s", name, min) + ": " +
-					result, token.getLineNum(), token.getColNum());
+					result, token.getLineNumber(), token.getColNumber());
 		}
 		if (max != null && result > max) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" > %s", name, max) + ": " +
-					result, token.getLineNum(), token.getColNum());
+					result, token.getLineNumber(), token.getColNumber());
 		}
 		return result;
 	}
 
 	protected static Float readFloatAttr(String name,
-										 Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-										 boolean require, Float min, Float max)
+                                         Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                         boolean require, Float min, Float max)
 			throws LineNumberParseException {
 		String s = readPlainTextAttr(name, attrs, cmdStartToken, require);
 		if (s == null)
 			return null;
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 		float result;
 		try {
 			result = Float.parseFloat(s);
 		} catch (NumberFormatException ex) {
 			throw new LineNumberParseException(String.format(
 					"Invalid value for attribute \"%s\"", name) + ": " + s,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 		if (min != null && result < min) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" < %s", name, min) + ": " +
-					result, token.getLineNum(), token.getColNum());
+					result, token.getLineNumber(), token.getColNumber());
 		}
 		if (max != null && result > max) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" > %s", name, max) + ": " +
-					result, token.getLineNum(), token.getColNum());
+					result, token.getLineNumber(), token.getColNumber());
 		}
 		return result;
 	}
 
 	protected static Boolean readBooleanAttr(String name,
-											 Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken,
-											 boolean require) throws LineNumberParseException {
+                                             Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                             boolean require) throws LineNumberParseException {
 
 		String s = readPlainTextAttr(name, attrs, cmdStartToken, require);
 		if (s == null)
 			return null;
 
-		DLBBodyToken token = attrs.get(name);
+		BodyToken token = attrs.get(name);
 
 		if(s.toLowerCase().equals("true") || s.toLowerCase().equals("false")) {
 			return Boolean.parseBoolean(s.toLowerCase());
 		} else {
 			throw new LineNumberParseException(String.format(
 					"Invalid value for attribute \"%s\" (please use \"true\" or \"false\"", name) + ": " + s,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 
 	}

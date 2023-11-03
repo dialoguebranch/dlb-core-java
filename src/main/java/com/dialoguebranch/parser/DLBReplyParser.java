@@ -51,7 +51,7 @@ public class DLBReplyParser {
 		this.nodeState = nodeState;
 	}
 	
-	public DLBReply parse(CurrentIterator<DLBBodyToken> tokens)
+	public DLBReply parse(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		readSections(tokens);
 		DLBNodeBody statement = parseStatement();
@@ -63,33 +63,33 @@ public class DLBReplyParser {
 		return reply;
 	}
 	
-	private void readSections(CurrentIterator<DLBBodyToken> tokens)
+	private void readSections(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		int maxSections = 3;
-		DLBBodyToken startToken = tokens.getCurrent();
+		BodyToken startToken = tokens.getCurrent();
 		tokens.moveNext();
 		List<ReplySection> sections = new ArrayList<>();
 		ReplySection currSection = new ReplySection();
 		sections.add(currSection);
 		boolean foundEnd = false;
 		while (!foundEnd && tokens.getCurrent() != null) {
-			DLBBodyToken token = tokens.getCurrent();
+			BodyToken token = tokens.getCurrent();
 			switch (token.getType()) {
 			case REPLY_SEPARATOR:
 				if (sections.size() == maxSections) {
 					throw new LineNumberParseException(String.format(
 							"Exceeded maximum number of %s sections",
-							maxSections), token.getLineNum(),
-							token.getColNum());
+							maxSections), token.getLineNumber(),
+							token.getColNumber());
 				}
-				currSection.endLineNum = token.getLineNum();
-				currSection.endColNum = token.getColNum();
+				currSection.endLineNum = token.getLineNumber();
+				currSection.endColNum = token.getColNumber();
 				currSection = new ReplySection();
 				sections.add(currSection);
 				break;
 			case REPLY_END:
-				currSection.endLineNum = token.getLineNum();
-				currSection.endColNum = token.getColNum();
+				currSection.endLineNum = token.getLineNumber();
+				currSection.endColNum = token.getColNumber();
 				foundEnd = true;
 				break;
 			default:
@@ -99,7 +99,7 @@ public class DLBReplyParser {
 		}
 		if (!foundEnd) {
 			throw new LineNumberParseException("Reply not terminated",
-					startToken.getLineNum(), startToken.getColNum());
+					startToken.getLineNumber(), startToken.getColNumber());
 		}
 		statementSection = null;
 		nodePointerSection = null;
@@ -129,19 +129,19 @@ public class DLBReplyParser {
 	}
 	
 	private DLBNodePointer parseNodePointer() throws LineNumberParseException {
-		DLBBodyToken.trimWhitespace(nodePointerSection.tokens);
+		BodyToken.trimWhitespace(nodePointerSection.tokens);
 		if (nodePointerSection.tokens.size() == 0) {
 			throw new LineNumberParseException("Empty node pointer in reply",
 					nodePointerSection.endLineNum,
 					nodePointerSection.endColNum);
 		}
-		DLBBodyToken nodePointerToken = nodePointerSection.tokens.get(0);
+		BodyToken nodePointerToken = nodePointerSection.tokens.get(0);
 		if (nodePointerSection.tokens.size() != 1 ||
-				nodePointerToken.getType() != DLBBodyToken.Type.TEXT) {
+				nodePointerToken.getType() != BodyToken.Type.TEXT) {
 			throw new LineNumberParseException(
 					"Invalid node pointer in reply",
-					nodePointerToken.getLineNum(),
-					nodePointerToken.getColNum());
+					nodePointerToken.getLineNumber(),
+					nodePointerToken.getColNumber());
 		}
 		String nodePointerStr = (String)nodePointerToken.getValue();
 		DLBNodePointer result;
@@ -158,14 +158,14 @@ public class DLBReplyParser {
 			} catch (ParseException ex) {
 				throw new LineNumberParseException(
 						"Invalid node pointer in reply: " + ex.getMessage(),
-						nodePointerToken.getLineNum(),
-						nodePointerToken.getColNum(), ex);
+						nodePointerToken.getLineNumber(),
+						nodePointerToken.getColNumber(), ex);
 			}
 		} else {
 			throw new LineNumberParseException(
 					"Invalid node pointer in reply: " + nodePointerStr,
-					nodePointerToken.getLineNum(),
-					nodePointerToken.getColNum());
+					nodePointerToken.getLineNumber(),
+					nodePointerToken.getColNumber());
 		}
 		nodeState.addNodePointerToken(result, nodePointerToken);
 		return result;
@@ -173,26 +173,26 @@ public class DLBReplyParser {
 	
 	private void parseCommands(DLBReply reply)
 			throws LineNumberParseException {
-		CurrentIterator<DLBBodyToken> it = new CurrentIterator<>(
+		CurrentIterator<BodyToken> it = new CurrentIterator<>(
 				commandSection.tokens.iterator());
 		it.moveNext();
-		DLBBodyToken.skipWhitespace(it);
+		BodyToken.skipWhitespace(it);
 		while (it.getCurrent() != null) {
-			DLBBodyToken token = it.getCurrent();
-			if (token.getType() != DLBBodyToken.Type.COMMAND_START) {
+			BodyToken token = it.getCurrent();
+			if (token.getType() != BodyToken.Type.COMMAND_START) {
 				throw new LineNumberParseException(
 						"Expected <<, found token: " + token.getType(),
-						token.getLineNum(), token.getColNum());
+						token.getLineNumber(), token.getColNumber());
 			}
 			DLBCommandParser cmdParser = new DLBCommandParser(
 					Arrays.asList("action", "set"), nodeState);
 			reply.addCommand(cmdParser.parseFromStart(it));
-			DLBBodyToken.skipWhitespace(it);
+			BodyToken.skipWhitespace(it);
 		}
 	}
 
 	private class ReplySection {
-		private List<DLBBodyToken> tokens = new ArrayList<>();
+		private List<BodyToken> tokens = new ArrayList<>();
 		private int endLineNum;
 		private int endColNum;
 	}

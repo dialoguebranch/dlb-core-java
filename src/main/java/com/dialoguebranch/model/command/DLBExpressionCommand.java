@@ -34,7 +34,7 @@ import nl.rrd.utils.expressions.ExpressionParser;
 import nl.rrd.utils.expressions.Token;
 import nl.rrd.utils.expressions.Tokenizer;
 import nl.rrd.utils.io.LineColumnNumberReader;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -51,16 +51,16 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
 	protected static ReadContentResult readCommandContent(
-			DLBBodyToken cmdStartToken, CurrentIterator<DLBBodyToken> tokens)
+            BodyToken cmdStartToken, CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		ReadContentResult result = new ReadContentResult();
-		result.lineNum = tokens.getCurrent().getLineNum();
-		result.colNum = tokens.getCurrent().getColNum();
+		result.lineNum = tokens.getCurrent().getLineNumber();
+		result.colNum = tokens.getCurrent().getColNumber();
 		StringBuilder text = new StringBuilder();
 		boolean foundEnd = false;
 		while (!foundEnd && tokens.getCurrent() != null) {
-			DLBBodyToken token = tokens.getCurrent();
-			if (token.getType() == DLBBodyToken.Type.COMMAND_END) {
+			BodyToken token = tokens.getCurrent();
+			if (token.getType() == BodyToken.Type.COMMAND_END) {
 				foundEnd = true;
 			} else {
 				text.append(tokens.getCurrent().getText());
@@ -69,7 +69,7 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 		}
 		if (!foundEnd) {
 			throw new LineNumberParseException("Command not terminated",
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		result.content = text.toString();
 		return result;
@@ -92,18 +92,18 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
 	protected static ParseContentResult parseCommandContentName(
-			DLBBodyToken cmdStartToken, ReadContentResult content, String name)
+            BodyToken cmdStartToken, ReadContentResult content, String name)
 			throws LineNumberParseException {
 		ParseContentResult result = parseCommandContent(cmdStartToken, content);
 		if (!result.name.equals(name)) {
 			throw new LineNumberParseException(String.format(
 					"Expected command \"%s\", found: %s", name, result.name),
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		if (result.expression != null) {
 			throw new LineNumberParseException(String.format(
 					"Unexpected content after command name \"%s\"", name),
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		return result;
 	}
@@ -119,18 +119,18 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
 	protected static ParseContentResult parseCommandContentExpression(
-			DLBBodyToken cmdStartToken, ReadContentResult content, String name)
+            BodyToken cmdStartToken, ReadContentResult content, String name)
 			throws LineNumberParseException {
 		ParseContentResult result = parseCommandContent(cmdStartToken, content);
 		if (!result.name.equals(name)) {
 			throw new LineNumberParseException(String.format(
 					"Expected command \"%s\", found: %s", name, result.name),
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		if (result.expression == null) {
 			throw new LineNumberParseException(String.format(
 					"Expression not found in command \"%s\"", name),
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		return result;
 	}
@@ -146,7 +146,7 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
 	protected static ParseContentResult parseCommandContent(
-			DLBBodyToken cmdStartToken, ReadContentResult content)
+            BodyToken cmdStartToken, ReadContentResult content)
 			throws LineNumberParseException {
 		int lineOff = content.lineNum;
 		int colOff = content.colNum;
@@ -169,9 +169,9 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 	}
 
 	private static ParseContentResult parseCommandContent(
-			DLBBodyToken cmdStartToken, ReadContentResult content,
-			Tokenizer tokenizer, ExpressionParser parser, int lineOff,
-			int colOff) throws LineNumberParseException, IOException {
+            BodyToken cmdStartToken, ReadContentResult content,
+            Tokenizer tokenizer, ExpressionParser parser, int lineOff,
+            int colOff) throws LineNumberParseException, IOException {
 		ParseContentResult result = new ParseContentResult();
 		Token nameToken;
 		try {
@@ -182,7 +182,7 @@ public abstract class DLBExpressionCommand extends DLBCommand {
 		}
 		if (nameToken == null) {
 			throw new LineNumberParseException("Found empty command",
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		if (nameToken.getType() != Token.Type.NAME) {
 			throw createParseException("Expected command name, found token: " +

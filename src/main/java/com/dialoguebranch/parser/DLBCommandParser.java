@@ -53,12 +53,12 @@ public class DLBCommandParser {
 	 * @return the command name
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public String readCommandName(CurrentIterator<DLBBodyToken> tokens)
+	public String readCommandName(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
-		DLBBodyToken startToken = tokens.getCurrent();
+		BodyToken startToken = tokens.getCurrent();
 		tokens.moveNext();
-		DLBBodyToken.skipWhitespace(tokens);
-		DLBBodyToken token = tokens.getCurrent();
+		BodyToken.skipWhitespace(tokens);
+		BodyToken token = tokens.getCurrent();
 		return getCommandName(startToken, token);
 	}
 	
@@ -74,14 +74,14 @@ public class DLBCommandParser {
 	 * @return the command
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public DLBCommand parseFromName(DLBBodyToken startToken,
-									CurrentIterator<DLBBodyToken> tokens)
+	public DLBCommand parseFromName(BodyToken startToken,
+                                    CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
-		DLBBodyToken token = tokens.getCurrent();
+		BodyToken token = tokens.getCurrent();
 		String name = getCommandName(startToken, token);
 		if (!validCommands.contains(name)) {
 			throw new LineNumberParseException("Unexpected command: " + name,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 		switch (name) {
 		case "action":
@@ -96,7 +96,7 @@ public class DLBCommandParser {
 			return DLBSetCommand.parse(startToken, tokens, nodeState);
 		default:
 			throw new LineNumberParseException("Unknown command: " + name,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 	}
 	
@@ -111,11 +111,11 @@ public class DLBCommandParser {
 	 * @return the command
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public DLBCommand parseFromStart(CurrentIterator<DLBBodyToken> tokens)
+	public DLBCommand parseFromStart(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
-		DLBBodyToken startToken = tokens.getCurrent();
+		BodyToken startToken = tokens.getCurrent();
 		tokens.moveNext();
-		DLBBodyToken.skipWhitespace(tokens);
+		BodyToken.skipWhitespace(tokens);
 		return parseFromName(startToken, tokens);
 	}
 	
@@ -129,17 +129,17 @@ public class DLBCommandParser {
 	 * @return the command name
 	 * @throws LineNumberParseException if the command name can't be read
 	 */
-	private String getCommandName(DLBBodyToken startToken,
-								  DLBBodyToken nameToken) throws LineNumberParseException {
+	private String getCommandName(BodyToken startToken,
+                                  BodyToken nameToken) throws LineNumberParseException {
 		if (nameToken == null) {
 			throw new LineNumberParseException("Command not terminated",
-					startToken.getLineNum(), startToken.getColNum());
+					startToken.getLineNumber(), startToken.getColNumber());
 		}
-		if (nameToken.getType() != DLBBodyToken.Type.TEXT) {
+		if (nameToken.getType() != BodyToken.Type.TEXT) {
 			throw new LineNumberParseException(
 					"Expected command name, found token: " +
-					nameToken.getType(), nameToken.getLineNum(),
-					nameToken.getColNum());
+					nameToken.getType(), nameToken.getLineNumber(),
+					nameToken.getColNumber());
 		}
 		String name = nameToken.getText().trim();
 		String[] split = name.split("\\s+", 2);

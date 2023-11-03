@@ -33,7 +33,7 @@ import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.execution.DLBVariable;
 import com.dialoguebranch.execution.DLBVariableStore;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -373,7 +373,7 @@ public abstract class DLBInputAbstractTextCommand extends DLBInputCommand {
 	}
 
 	public static void parseAttributes(DLBInputAbstractTextCommand command,
-									   DLBBodyToken cmdStartToken, Map<String, DLBBodyToken> attrs)
+                                       BodyToken cmdStartToken, Map<String, BodyToken> attrs)
 			throws LineNumberParseException {
 		command.setMin(readIntAttr("min", attrs, cmdStartToken, false, null, null));
 		command.setMax(readIntAttr("max", attrs, cmdStartToken, false, null, null));

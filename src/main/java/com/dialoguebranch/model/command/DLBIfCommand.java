@@ -38,7 +38,7 @@ import nl.rrd.utils.expressions.Value;
 import nl.rrd.utils.expressions.types.AssignExpression;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.parser.DLBBodyParser;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
 
@@ -191,8 +191,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 		return result.toString();
 	}
 
-	public static DLBIfCommand parse(DLBBodyToken cmdStartToken,
-									 CurrentIterator<DLBBodyToken> tokens, DLBNodeState nodeState)
+	public static DLBIfCommand parse(BodyToken cmdStartToken,
+                                     CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
 			throws LineNumberParseException {
 		DLBIfCommand command = new DLBIfCommand();
 		ReadContentResult content = readCommandContent(cmdStartToken, tokens);
@@ -208,7 +208,7 @@ public class DLBIfCommand extends DLBExpressionCommand {
 			if (bodyParse.cmdClauseStartToken == null) {
 				throw new LineNumberParseException(
 						"Command \"if\" not terminated",
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
 			if (parsedIf.name.equals("if") || parsedIf.name.equals("elseif")) {
 				command.addIfClause(new Clause(parsedIf.expression,
@@ -216,7 +216,7 @@ public class DLBIfCommand extends DLBExpressionCommand {
 			} else {
 				command.setElseClause(bodyParse.body);
 			}
-			DLBBodyToken clauseStartToken = bodyParse.cmdClauseStartToken;
+			BodyToken clauseStartToken = bodyParse.cmdClauseStartToken;
 			String clauseName = bodyParse.cmdClauseName;
 			content = readCommandContent(clauseStartToken, tokens);
 			switch (clauseName) {
@@ -224,8 +224,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 				if (command.elseClause != null) {
 					throw new LineNumberParseException(
 							"Found \"elseif\" after \"else\"",
-							clauseStartToken.getLineNum(),
-							clauseStartToken.getColNum());
+							clauseStartToken.getLineNumber(),
+							clauseStartToken.getColNumber());
 				}
 				parsedIf = parseCommandContentExpression(clauseStartToken,
 						content, clauseName);
@@ -236,8 +236,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 				if (command.elseClause != null) {
 					throw new LineNumberParseException(
 							"Found more than one \"else\"",
-							clauseStartToken.getLineNum(),
-							clauseStartToken.getColNum());
+							clauseStartToken.getLineNumber(),
+							clauseStartToken.getColNumber());
 				}
 				parsedIf = parseCommandContentName(clauseStartToken, content,
 						clauseName);
@@ -249,8 +249,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 		}
 	}
 	
-	private static void checkNoAssignment(DLBBodyToken cmdStartToken,
-										  String name, Expression expression)
+	private static void checkNoAssignment(BodyToken cmdStartToken,
+                                          String name, Expression expression)
 			throws LineNumberParseException {
 		List<Expression> list = new ArrayList<>();
 		list.add(expression);
@@ -259,7 +259,7 @@ public class DLBIfCommand extends DLBExpressionCommand {
 			if (expr instanceof AssignExpression) {
 				throw new LineNumberParseException(String.format(
 						"Found assignment expression in \"%s\" command", name),
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
 		}
 	}

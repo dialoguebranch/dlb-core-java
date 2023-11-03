@@ -144,10 +144,10 @@ public class DLBParser implements AutoCloseable {
 					(DLBNodePointerInternal)pointerToken.getPointer();
 			if (dialogue.nodeExists(pointer.getNodeId()))
 				continue;
-			DLBBodyToken token = pointerToken.getToken();
+			BodyToken token = pointerToken.getToken();
 			LineNumberParseException parseEx = new LineNumberParseException(
 					"Found reply with pointer to non-existing node: " +
-					pointer.getNodeId(), token.getLineNum(), token.getColNum());
+					pointer.getNodeId(), token.getLineNumber(), token.getColNumber());
 			result.getParseErrors().add(createDLBNodeParseException(
 					pointerToken.getNodeTitle(), parseEx));
 		}
@@ -212,7 +212,7 @@ public class DLBParser implements AutoCloseable {
 			DLBBodyTokenizer tokenizer = new DLBBodyTokenizer();
 			lineNum = reader.getLineNum();
 			line = readLine();
-			List<DLBBodyToken> bodyTokens = new ArrayList<>();
+			List<BodyToken> bodyTokens = new ArrayList<>();
 			while (line != null && inBody) {
 				if (getContent(line).equals("===")) {
 					inBody = false;
@@ -240,13 +240,13 @@ public class DLBParser implements AutoCloseable {
 	}
 	
 	private void validateEndNode(DLBNodeHeader header, DLBNodeBody body,
-								 List<DLBBodyToken> tokens) throws LineNumberParseException {
+								 List<BodyToken> tokens) throws LineNumberParseException {
 		if (body.getSegments().isEmpty() && body.getReplies().isEmpty())
 			return;
-		DLBBodyToken token = tokens.get(0);
+		BodyToken token = tokens.get(0);
 		throw new LineNumberParseException(String.format(
 				"Node \"%s\" must have an empty body", header.getTitle()),
-				token.getLineNum(), token.getColNum());
+				token.getLineNumber(), token.getColNumber());
 	}
 	
 	/**

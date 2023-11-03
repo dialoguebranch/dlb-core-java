@@ -28,7 +28,7 @@
 package com.dialoguebranch.model.command;
 
 import nl.rrd.utils.exception.LineNumberParseException;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.Map;
 
@@ -46,8 +46,8 @@ public class DLBInputLongtextCommand extends DLBInputAbstractTextCommand {
 		return new DLBInputLongtextCommand(this);
 	}
 
-	public static DLBInputCommand parse(DLBBodyToken cmdStartToken,
-										Map<String, DLBBodyToken> attrs) throws LineNumberParseException {
+	public static DLBInputCommand parse(BodyToken cmdStartToken,
+                                        Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
 		DLBInputLongtextCommand command = new DLBInputLongtextCommand(variableName);

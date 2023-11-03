@@ -36,7 +36,7 @@ import java.util.Set;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 import com.dialoguebranch.parser.DLBNodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
@@ -185,17 +185,17 @@ public class DLBActionCommand extends DLBAttributesCommand {
 		return result.toString();
 	}
 	
-	public static DLBActionCommand parse(DLBBodyToken cmdStartToken,
-										 CurrentIterator<DLBBodyToken> tokens, DLBNodeState nodeState)
+	public static DLBActionCommand parse(BodyToken cmdStartToken,
+                                         CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
 			throws LineNumberParseException {
-		Map<String, DLBBodyToken> attrs = parseAttributesCommand(cmdStartToken,
+		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
 		String type = readPlainTextAttr("type", attrs, cmdStartToken, true);
-		DLBBodyToken token = attrs.get("type");
+		BodyToken token = attrs.get("type");
 		if (!VALID_TYPES.contains(type)) {
 			throw new LineNumberParseException(
 					"Invalid value for attribute \"type\": " + type,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 		attrs.remove("type");
 		DLBVariableString value = readAttr("value", attrs, cmdStartToken,

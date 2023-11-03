@@ -90,17 +90,17 @@ public class DLBNodeState {
 	}
 	
 	public void addNodePointerToken(DLBNodePointer pointer,
-									DLBBodyToken token) {
+									BodyToken token) {
 		nodePointerTokens.add(new NodePointerToken(title, pointer, token));
 	}
 
 	public static class NodePointerToken {
 		private String nodeTitle;
 		private DLBNodePointer pointer;
-		private DLBBodyToken token;
+		private BodyToken token;
 		
 		public NodePointerToken(String nodeTitle, DLBNodePointer pointer,
-				DLBBodyToken token) {
+				BodyToken token) {
 			this.nodeTitle = nodeTitle;
 			this.pointer = pointer;
 			this.token = token;
@@ -114,7 +114,7 @@ public class DLBNodeState {
 			return pointer;
 		}
 
-		public DLBBodyToken getToken() {
+		public BodyToken getToken() {
 			return token;
 		}
 	}

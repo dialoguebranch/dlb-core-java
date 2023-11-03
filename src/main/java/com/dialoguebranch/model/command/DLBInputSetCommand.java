@@ -35,7 +35,7 @@ import nl.rrd.utils.json.JsonMapper;
 import com.dialoguebranch.execution.DLBVariable;
 import com.dialoguebranch.execution.DLBVariableStore;
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
 
@@ -134,25 +134,25 @@ public class DLBInputSetCommand extends DLBInputCommand {
 		return new DLBInputSetCommand(this);
 	}
 
-	public static DLBInputSetCommand parse(DLBBodyToken cmdStartToken,
-										   Map<String, DLBBodyToken> attrs) throws LineNumberParseException {
+	public static DLBInputSetCommand parse(BodyToken cmdStartToken,
+                                           Map<String, BodyToken> attrs) throws LineNumberParseException {
 		DLBInputSetCommand result = new DLBInputSetCommand();
 		int index = 1;
 		while (true) {
-			DLBBodyToken valueToken = attrs.get("value" + index);
-			DLBBodyToken optionToken = attrs.get("option" + index);
+			BodyToken valueToken = attrs.get("value" + index);
+			BodyToken optionToken = attrs.get("option" + index);
 			if (valueToken == null && optionToken == null) {
 				return result;
 			} else if (valueToken != null && optionToken == null) {
 				throw new LineNumberParseException(String.format(
 						"Found attribute \"%s\" without attribute \"%s\"",
 						"value" + index, "option" + index),
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			} else if (valueToken == null && optionToken != null) {
 				throw new LineNumberParseException(String.format(
 						"Found attribute \"%s\" without attribute \"%s\"",
 						"option" + index, "value" + index),
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
 			Option option = new Option();
 			option.setVariableName(readVariableAttr("value" + index, attrs,

@@ -41,7 +41,7 @@ import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Expression;
 import nl.rrd.utils.expressions.types.AssignExpression;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 /**
  * This class models a &lt;&lt;set ...&gt;&gt; command. It can be part of a
@@ -105,8 +105,8 @@ public class DLBSetCommand extends DLBExpressionCommand {
 		return new DLBSetCommand(this);
 	}
 
-	public static DLBSetCommand parse(DLBBodyToken cmdStartToken,
-									  CurrentIterator<DLBBodyToken> tokens, DLBNodeState nodeState)
+	public static DLBSetCommand parse(BodyToken cmdStartToken,
+                                      CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
 			throws LineNumberParseException {
 		ReadContentResult content = readCommandContent(cmdStartToken, tokens);
 		ParseContentResult parsed = parseCommandContentExpression(cmdStartToken,
@@ -114,15 +114,15 @@ public class DLBSetCommand extends DLBExpressionCommand {
 		if (!(parsed.expression instanceof AssignExpression)) {
 			throw new LineNumberParseException(
 					"Expression in \"set\" command is not an assignment",
-					cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		AssignExpression assignExpr = (AssignExpression)parsed.expression;
 		checkNoAssignment(cmdStartToken, assignExpr.getValueOperand());
 		return new DLBSetCommand(assignExpr);
 	}
 
-	private static void checkNoAssignment(DLBBodyToken cmdStartToken,
-										  Expression expression) throws LineNumberParseException {
+	private static void checkNoAssignment(BodyToken cmdStartToken,
+                                          Expression expression) throws LineNumberParseException {
 		List<Expression> list = new ArrayList<>();
 		list.add(expression);
 		list.addAll(expression.getDescendants());
@@ -130,7 +130,7 @@ public class DLBSetCommand extends DLBExpressionCommand {
 			if (expr instanceof AssignExpression) {
 				throw new LineNumberParseException(
 						"Found assignment expression in value operand of \"set\" command",
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
 		}
 	}

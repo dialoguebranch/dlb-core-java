@@ -35,7 +35,7 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.parser.DLBBodyParser;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
 
@@ -159,10 +159,10 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 		return result.toString();
 	}
 
-	public static DLBRandomCommand parse(DLBBodyToken cmdStartToken,
-										 CurrentIterator<DLBBodyToken> tokens, DLBNodeState nodeState)
+	public static DLBRandomCommand parse(BodyToken cmdStartToken,
+                                         CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
 			throws LineNumberParseException {
-		Map<String, DLBBodyToken> attrs = parseAttributesCommand(cmdStartToken,
+		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
 		DLBRandomCommand command = new DLBRandomCommand();
 		Float weight = readFloatAttr("weight", attrs, cmdStartToken, false, 0f,
@@ -178,10 +178,10 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 			if (bodyParse.cmdClauseStartToken == null) {
 				throw new LineNumberParseException(
 						"Command \"random\" not terminated",
-						cmdStartToken.getLineNum(), cmdStartToken.getColNum());
+						cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 			}
 			command.addClause(new Clause(weight, bodyParse.body));
-			DLBBodyToken clauseStartToken = bodyParse.cmdClauseStartToken;
+			BodyToken clauseStartToken = bodyParse.cmdClauseStartToken;
 			String clauseName = bodyParse.cmdClauseName;
 			attrs = parseAttributesCommand(clauseStartToken, tokens);
 			switch (clauseName) {

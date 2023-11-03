@@ -44,9 +44,9 @@ public class DLBBodyParser {
 		this.nodeState = nodeState;
 	}
 	
-	public DLBNodeBody parse(List<DLBBodyToken> tokens,
+	public DLBNodeBody parse(List<BodyToken> tokens,
 							 List<String> validCommands) throws LineNumberParseException {
-		CurrentIterator<DLBBodyToken> it = new CurrentIterator<>(
+		CurrentIterator<BodyToken> it = new CurrentIterator<>(
 				tokens.iterator());
 		it.moveNext();
 		ParseUntilCommandClauseResult result = parseUntilCommandClause(it,
@@ -73,14 +73,14 @@ public class DLBBodyParser {
 	 * @throws LineNumberParseException if a parse error occurs
 	 */
 	public ParseUntilCommandClauseResult parseUntilCommandClause(
-			CurrentIterator<DLBBodyToken> tokens, List<String> validCommands,
-			List<String> validCommandClauses) throws LineNumberParseException {
+            CurrentIterator<BodyToken> tokens, List<String> validCommands,
+            List<String> validCommandClauses) throws LineNumberParseException {
 		ParseUntilCommandClauseResult result =
 				new ParseUntilCommandClauseResult();
 		result.body = new DLBNodeBody();
 		while (result.cmdClauseStartToken == null &&
 				tokens.getCurrent() != null) {
-			DLBBodyToken token = tokens.getCurrent();
+			BodyToken token = tokens.getCurrent();
 			switch (token.getType()) {
 			case TEXT:
 			case VARIABLE:
@@ -89,8 +89,8 @@ public class DLBBodyParser {
 					result.body.addSegment(new DLBNodeBody.TextSegment(text));
 				} else if (!text.isWhitespace()) {
 					throw new LineNumberParseException(
-							"Found content after reply", token.getLineNum(),
-							token.getColNum());
+							"Found content after reply", token.getLineNumber(),
+							token.getColNumber());
 				}
 				break;
 			case COMMAND_START:
@@ -103,8 +103,8 @@ public class DLBBodyParser {
 				} else if (!name.equals("if") && !name.equals("random") &&
 						!result.body.getReplies().isEmpty()) {
 					throw new LineNumberParseException(
-							"Found << after reply", token.getLineNum(),
-							token.getColNum());
+							"Found << after reply", token.getLineNumber(),
+							token.getColNumber());
 				} else {
 					DLBCommand command = cmdParser.parseFromName(token,
 							tokens);
@@ -115,8 +115,8 @@ public class DLBBodyParser {
 			case REPLY_START:
 				if (nodeState == null) {
 					throw new LineNumberParseException(
-							"Unexpected start of reply [[", token.getLineNum(),
-							token.getColNum());
+							"Unexpected start of reply [[", token.getLineNumber(),
+							token.getColNumber());
 				}
 				DLBReplyParser replyParser = new DLBReplyParser(nodeState);
 				DLBReply reply = replyParser.parse(tokens);
@@ -124,14 +124,14 @@ public class DLBBodyParser {
 						hasAutoForwardReply(result.body)) {
 					throw new LineNumberParseException(
 							"Found more than one autoforward reply",
-							token.getLineNum(), token.getColNum());
+							token.getLineNumber(), token.getColNumber());
 				}
 				result.body.addReply(reply);
 				break;
 			default:
 				// If we get here, there must be a bug
 				throw new LineNumberParseException("Unexpected token type: " +
-						token.getType(), token.getLineNum(), token.getColNum());
+						token.getType(), token.getLineNumber(), token.getColNumber());
 			}
 		}
 		result.body.trimWhitespace();
@@ -148,16 +148,16 @@ public class DLBBodyParser {
 
 	public static class ParseUntilCommandClauseResult {
 		public DLBNodeBody body;
-		public DLBBodyToken cmdClauseStartToken = null;
+		public BodyToken cmdClauseStartToken = null;
 		public String cmdClauseName = null;
 	}
 	
 	private DLBVariableString parseTextSegment(
-			CurrentIterator<DLBBodyToken> tokens) {
+			CurrentIterator<BodyToken> tokens) {
 		DLBVariableString string = new DLBVariableString();
 		boolean foundEnd = false;
 		while (!foundEnd && tokens.getCurrent() != null) {
-			DLBBodyToken token = tokens.getCurrent();
+			BodyToken token = tokens.getCurrent();
 			switch (token.getType()) {
 			case TEXT:
 				string.addSegment(new DLBVariableString.TextSegment(

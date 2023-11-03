@@ -34,7 +34,7 @@ import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.execution.DLBVariable;
 import com.dialoguebranch.execution.DLBVariableStore;
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -202,8 +202,8 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 		return builder.toString();
 	}
 
-	public static DLBInputTimeCommand parse(DLBBodyToken cmdStartToken,
-											Map<String, DLBBodyToken> attrs) throws LineNumberParseException {
+	public static DLBInputTimeCommand parse(BodyToken cmdStartToken,
+                                            Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
 		DLBInputTimeCommand command = new DLBInputTimeCommand(variableName);
@@ -219,20 +219,20 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 	}
 
 	private static DLBVariableString readTimeAttribute(String attrName,
-													   Map<String, DLBBodyToken> attrs, DLBBodyToken cmdStartToken)
+                                                       Map<String, BodyToken> attrs, BodyToken cmdStartToken)
 			throws LineNumberParseException {
 		DLBVariableString result = readAttr(attrName, attrs, cmdStartToken,
 				false);
 		if (result == null || !result.isPlainText())
 			return result;
-		DLBBodyToken token = attrs.get(attrName);
+		BodyToken token = attrs.get(attrName);
 		String value = result.evaluate(null);
 		try {
 			return evaluateTime(value);
 		} catch (EvaluationException ex) {
 			throw new LineNumberParseException(String.format(
 					"Invalid value for attribute \"%s\"", attrName) + ": " +
-					ex.getMessage(), token.getLineNum(), token.getColNum(), ex);
+					ex.getMessage(), token.getLineNumber(), token.getColNumber(), ex);
 		}
 	}
 }

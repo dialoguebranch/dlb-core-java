@@ -35,7 +35,7 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.execution.DLBVariableStore;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.Arrays;
 import java.util.List;
@@ -147,17 +147,17 @@ public abstract class DLBInputCommand extends DLBAttributesCommand {
 	public void getNodePointers(Set<DLBNodePointer> pointers) {
 	}
 
-	public static DLBInputCommand parse(DLBBodyToken cmdStartToken,
-										CurrentIterator<DLBBodyToken> tokens, DLBNodeState nodeState)
+	public static DLBInputCommand parse(BodyToken cmdStartToken,
+                                        CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
 			throws LineNumberParseException {
-		Map<String, DLBBodyToken> attrs = parseAttributesCommand(cmdStartToken,
+		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
 		String type = readPlainTextAttr("type", attrs, cmdStartToken, true);
-		DLBBodyToken token = attrs.get("type");
+		BodyToken token = attrs.get("type");
 		if (!VALID_TYPES.contains(type)) {
 			throw new LineNumberParseException(
 					"Invalid value for attribute \"type\": " + type,
-					token.getLineNum(), token.getColNum());
+					token.getLineNumber(), token.getColNumber());
 		}
 		DLBInputCommand result;
 		switch (type) {

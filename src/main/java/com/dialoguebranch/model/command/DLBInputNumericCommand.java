@@ -33,7 +33,7 @@ import com.dialoguebranch.execution.DLBVariable;
 import com.dialoguebranch.execution.DLBVariableStore;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
-import com.dialoguebranch.parser.DLBBodyToken;
+import com.dialoguebranch.parser.BodyToken;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -128,8 +128,8 @@ public class DLBInputNumericCommand extends DLBInputCommand {
 		return new DLBInputNumericCommand(this);
 	}
 
-	public static DLBInputCommand parse(DLBBodyToken cmdStartToken,
-										Map<String, DLBBodyToken> attrs) throws LineNumberParseException {
+	public static DLBInputCommand parse(BodyToken cmdStartToken,
+                                        Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
 		DLBInputNumericCommand command = new DLBInputNumericCommand(
