@@ -40,14 +40,14 @@ import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 
-public class DLBReplyParser {
+public class ReplyParser {
 	private DLBNodeState nodeState;
 	
 	private ReplySection statementSection;
 	private ReplySection nodePointerSection;
 	private ReplySection commandSection;
 	
-	public DLBReplyParser(DLBNodeState nodeState) {
+	public ReplyParser(DLBNodeState nodeState) {
 		this.nodeState = nodeState;
 	}
 	
