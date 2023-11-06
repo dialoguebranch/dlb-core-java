@@ -29,7 +29,7 @@ package com.dialoguebranch.i18n;
 
 import com.dialoguebranch.model.DLBDialogue;
 import com.dialoguebranch.model.DLBNode;
-import com.dialoguebranch.parser.Parser;
+import com.dialoguebranch.parser.DialogueBranchParser;
 import com.dialoguebranch.parser.ParserResult;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
@@ -166,8 +166,8 @@ public class POEditorTools {
 	 * @return a {@link DLBDialogue} object representation of the given .dlb script
 	 */
 	public DLBDialogue readDialogueFile (File dlbScriptFile) {
-		try(Parser parser = new Parser(dlbScriptFile)) {
-			ParserResult parserResult = parser.readDialogue();
+		try(DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(dlbScriptFile)) {
+			ParserResult parserResult = dialogueBranchParser.readDialogue();
 			return parserResult.getDialogue();
 		} catch (IOException e) {
 			throw new RuntimeException(e);

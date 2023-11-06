@@ -41,7 +41,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class Parser implements AutoCloseable {
+public class DialogueBranchParser implements AutoCloseable {
 	public static final String NODE_NAME_REGEX = "[A-Za-z0-9_-]+";
 	public static final String DIALOGUE_NAME_REGEX =
 			"(" + NODE_NAME_REGEX + "/)*" + NODE_NAME_REGEX;
@@ -55,19 +55,19 @@ public class Parser implements AutoCloseable {
 	private DLBDialogue dialogue = null;
 	private List<NodeState.NodePointerToken> nodePointerTokens = null;
 	
-	public Parser(String filename) throws FileNotFoundException {
+	public DialogueBranchParser(String filename) throws FileNotFoundException {
 		this(new File(filename));
 	}
 	
-	public Parser(File file) throws FileNotFoundException {
+	public DialogueBranchParser(File file) throws FileNotFoundException {
 		init(file);
 	}
 	
-	public Parser(String dialogueName, InputStream input) {
+	public DialogueBranchParser(String dialogueName, InputStream input) {
 		init(dialogueName, input);
 	}
 	
-	public Parser(String dialogueName, Reader reader) {
+	public DialogueBranchParser(String dialogueName, Reader reader) {
 		init(dialogueName, new LineColumnNumberReader(reader));
 	}
 	
@@ -417,7 +417,7 @@ public class Parser implements AutoCloseable {
 	
 	private static void showUsage() {
 		System.out.println("Usage:");
-		System.out.println("java " + Parser.class.getName() + " [options] <dialogue-branch-file>");
+		System.out.println("java " + DialogueBranchParser.class.getName() + " [options] <dialogue-branch-file>");
 		System.out.println("    Parse a .dlb file and print a summary of the dialogue");
 		System.out.println("");
 		System.out.println("Options:");
@@ -458,8 +458,8 @@ public class Parser implements AutoCloseable {
 		}
 		ParserResult readResult;
 		try {
-			Parser parser = new Parser(file);
-			readResult = parser.readDialogue();
+			DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(file);
+			readResult = dialogueBranchParser.readDialogue();
 		} catch (IOException ex) {
 			System.err.println("ERROR: Can't read file: " +
 					file.getAbsolutePath() + ": " + ex.getMessage());

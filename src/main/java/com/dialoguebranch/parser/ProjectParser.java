@@ -270,9 +270,9 @@ public class ProjectParser {
 	private ParserResult parseDialogueFile(DialogueBranchFileDescriptor description)
 			throws IOException {
 		String dlgName = description.getDialogueName();
-		try (Parser parser = new Parser(dlgName,
+		try (DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(dlgName,
 				fileLoader.openFile(description))) {
-			return parser.readDialogue();
+			return dialogueBranchParser.readDialogue();
 		}
 	}
 
