@@ -39,7 +39,7 @@ import java.util.List;
 
 /**
  * The {@link BodyParser} can be used to parse the body of a Dialogue Branch Node. This
- * {@link BodyParser} makes use of the {@link DLBCommandParser}, and the {@link DLBReplyParser} for
+ * {@link BodyParser} makes use of the {@link CommandParser}, and the {@link DLBReplyParser} for
  * parsing Dialogue Branch commands and replies respectively. Information about the state of the
  * current node that is being parsed is kept in the provided {@link DLBNodeState} object.
  *
@@ -119,7 +119,7 @@ public class BodyParser {
 				}
 				break;
 			case COMMAND_START:
-				DLBCommandParser cmdParser = new DLBCommandParser(validCommands, nodeState);
+				CommandParser cmdParser = new CommandParser(validCommands, nodeState);
 				String name = cmdParser.readCommandName(tokens);
 				if (validCommandClauses.contains(name)) {
 					result.cmdClauseStartToken = token;

@@ -183,7 +183,7 @@ public class DLBReplyParser {
 						"Expected <<, found token: " + token.getType(),
 						token.getLineNumber(), token.getColNumber());
 			}
-			DLBCommandParser cmdParser = new DLBCommandParser(
+			CommandParser cmdParser = new CommandParser(
 					Arrays.asList("action", "set"), nodeState);
 			reply.addCommand(cmdParser.parseFromStart(it));
 			BodyToken.skipWhitespace(it);

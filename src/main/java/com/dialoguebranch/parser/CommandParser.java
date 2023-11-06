@@ -33,12 +33,12 @@ import com.dialoguebranch.model.command.*;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 
-public class DLBCommandParser {
+public class CommandParser {
 
 	private final List<String> validCommands;
 	private final DLBNodeState nodeState;
 	
-	public DLBCommandParser(List<String> validCommands, DLBNodeState nodeState) {
+	public CommandParser(List<String> validCommands, DLBNodeState nodeState) {
 		this.validCommands = validCommands;
 		this.nodeState = nodeState;
 	}
