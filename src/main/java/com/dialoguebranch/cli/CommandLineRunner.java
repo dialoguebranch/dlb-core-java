@@ -113,7 +113,7 @@ public class CommandLineRunner {
 
 		ProjectParserResult readResult;
 		try {
-			DLBFileLoader fileLoader = new DirectoryFileLoader(rootDirectory);
+			FileLoader fileLoader = new DirectoryFileLoader(rootDirectory);
 			ProjectParser parser = new ProjectParser(fileLoader);
 			readResult = parser.parse();
 		} catch (IOException ex) {

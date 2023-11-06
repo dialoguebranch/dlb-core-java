@@ -42,7 +42,7 @@ import java.util.List;
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs - hopdenakker@fruittreelabs.com)
  */
-public interface DLBFileLoader {
+public interface FileLoader {
 
 	/**
 	 * Lists all DialogueBranch files in the project. The files should be dialogue files (.dlb) or

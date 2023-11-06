@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectFileLoader implements DLBFileLoader {
+public class ProjectFileLoader implements FileLoader {
 
 	private final File projectMetadataFile;
 	private final DLBProjectMetaData projectMetaData;
