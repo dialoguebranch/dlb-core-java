@@ -40,7 +40,7 @@ import java.util.Map;
 
 /**
  * This class contains the result of parsing a DialogueBranch project with the {@link
- * DLBProjectParser}.
+ * ProjectParser}.
  *
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)

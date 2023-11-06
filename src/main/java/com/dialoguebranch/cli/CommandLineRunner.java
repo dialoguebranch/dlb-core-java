@@ -114,7 +114,7 @@ public class CommandLineRunner {
 		DLBProjectParserResult readResult;
 		try {
 			DLBFileLoader fileLoader = new DLBDirectoryFileLoader(rootDirectory);
-			DLBProjectParser parser = new DLBProjectParser(fileLoader);
+			ProjectParser parser = new ProjectParser(fileLoader);
 			readResult = parser.parse();
 		} catch (IOException ex) {
 			System.err.println("ERROR: Can't read DialogueBranch project from directory: " +
@@ -145,7 +145,7 @@ public class CommandLineRunner {
 		DLBProjectParserResult readResult;
 		try {
 			ProjectFileLoader fileLoader = new ProjectFileLoader(projectMetadataFile);
-			DLBProjectParser parser = new DLBProjectParser(fileLoader);
+			ProjectParser parser = new ProjectParser(fileLoader);
 			readResult = parser.parse();
 		} catch (IOException ex) {
 			System.err.println("ERROR: Can't read DialogueBranch project from given project XML " +

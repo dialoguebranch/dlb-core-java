@@ -58,7 +58,7 @@ import com.dialoguebranch.model.DLBProject;
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBProjectParser {
+public class ProjectParser {
 	private final DLBFileLoader fileLoader;
 
 	private final Map<DialogueBranchFileDescriptor, DLBDialogue> dialogues = new LinkedHashMap<>();
@@ -71,11 +71,11 @@ public class DLBProjectParser {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link DLBProjectParser} with a given {@link DLBFileLoader} that is
+	 * Creates an instance of a {@link ProjectParser} with a given {@link DLBFileLoader} that is
 	 * used to retrieve a complete set of files (".dlb" and ".json") to use in this parser.
 	 * @param fileLoader the {@link DLBFileLoader} implementation.
 	 */
-	public DLBProjectParser(DLBFileLoader fileLoader) {
+	public ProjectParser(DLBFileLoader fileLoader) {
 		this.fileLoader = fileLoader;
 	}
 
