@@ -29,7 +29,7 @@ package com.dialoguebranch.model.command;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.parser.DLBNodeState;
+import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
@@ -160,7 +160,7 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 	}
 
 	public static DLBRandomCommand parse(BodyToken cmdStartToken,
-                                         CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
+                                         CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);

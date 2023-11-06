@@ -34,7 +34,7 @@ import java.util.Set;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.parser.DLBNodeState;
+import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
@@ -106,7 +106,7 @@ public class DLBSetCommand extends DLBExpressionCommand {
 	}
 
 	public static DLBSetCommand parse(BodyToken cmdStartToken,
-                                      CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
+                                      CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		ReadContentResult content = readCommandContent(cmdStartToken, tokens);
 		ParseContentResult parsed = parseCommandContentExpression(cmdStartToken,

@@ -32,7 +32,7 @@ import java.util.List;
 
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 
-public class DLBNodeState {
+public class NodeState {
 	private final String dialogueName;
 	private String title = null;
 	private String speaker = null;
@@ -41,7 +41,7 @@ public class DLBNodeState {
 	private int nextReplyId = 1;
 	private final List<NodePointerToken> nodePointerTokens = new ArrayList<>();
 
-	public DLBNodeState(String dialogueName) {
+	public NodeState(String dialogueName) {
 		this.dialogueName = dialogueName;
 	}
 

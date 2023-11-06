@@ -41,13 +41,13 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 
 public class ReplyParser {
-	private DLBNodeState nodeState;
+	private NodeState nodeState;
 	
 	private ReplySection statementSection;
 	private ReplySection nodePointerSection;
 	private ReplySection commandSection;
 	
-	public ReplyParser(DLBNodeState nodeState) {
+	public ReplyParser(NodeState nodeState) {
 		this.nodeState = nodeState;
 	}
 	

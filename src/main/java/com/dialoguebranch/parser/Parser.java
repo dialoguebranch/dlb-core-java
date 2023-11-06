@@ -53,7 +53,7 @@ public class Parser implements AutoCloseable {
 	private LineColumnNumberReader reader;
 	
 	private DLBDialogue dialogue = null;
-	private List<DLBNodeState.NodePointerToken> nodePointerTokens = null;
+	private List<NodeState.NodePointerToken> nodePointerTokens = null;
 	
 	public Parser(String filename) throws FileNotFoundException {
 		this(new File(filename));
@@ -137,7 +137,7 @@ public class Parser implements AutoCloseable {
 					"Node with title \"Start\" not found",
 					reader.getLineNum(), reader.getColNum()));
 		}
-		for (DLBNodeState.NodePointerToken pointerToken : nodePointerTokens) {
+		for (NodeState.NodePointerToken pointerToken : nodePointerTokens) {
 			if (!(pointerToken.pointer() instanceof DLBNodePointerInternal))
 				continue;
 			DLBNodePointerInternal pointer =
@@ -177,7 +177,7 @@ public class Parser implements AutoCloseable {
 	 */
 	private ReadDLBNodeResult readNode() throws IOException {
 		ReadDLBNodeResult result = new ReadDLBNodeResult();
-		DLBNodeState nodeState = new DLBNodeState(dialogueName);
+		NodeState nodeState = new NodeState(dialogueName);
 		try {
 			boolean inHeader = true;
 			Map<String,String> headerMap = new LinkedHashMap<>();
@@ -273,7 +273,7 @@ public class Parser implements AutoCloseable {
 	}
 
 	private void parseHeaderLine(Map<String,String> headerMap, String line,
-			int lineNum, DLBNodeState nodeState)
+			int lineNum, NodeState nodeState)
 			throws LineNumberParseException {
 		int commentSep = line.indexOf("//");
 		if (commentSep != -1)
@@ -322,7 +322,7 @@ public class Parser implements AutoCloseable {
 	}
 	
 	private DLBNodeHeader createHeader(Map<String,String> headerMap,
-									   int lineNum, DLBNodeState nodeState)
+									   int lineNum, NodeState nodeState)
 			throws LineNumberParseException {
 		String title = nodeState.getTitle();
 		if (title == null) {

@@ -37,7 +37,7 @@ import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 import com.dialoguebranch.parser.BodyToken;
-import com.dialoguebranch.parser.DLBNodeState;
+import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
@@ -186,7 +186,7 @@ public class DLBActionCommand extends DLBAttributesCommand {
 	}
 	
 	public static DLBActionCommand parse(BodyToken cmdStartToken,
-                                         CurrentIterator<BodyToken> tokens, DLBNodeState nodeState)
+                                         CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);

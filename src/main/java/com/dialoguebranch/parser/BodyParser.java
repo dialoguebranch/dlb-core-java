@@ -41,7 +41,7 @@ import java.util.List;
  * The {@link BodyParser} can be used to parse the body of a Dialogue Branch Node. This
  * {@link BodyParser} makes use of the {@link CommandParser}, and the {@link ReplyParser} for
  * parsing Dialogue Branch commands and replies respectively. Information about the state of the
- * current node that is being parsed is kept in the provided {@link DLBNodeState} object.
+ * current node that is being parsed is kept in the provided {@link NodeState} object.
  *
  * <p>The {@link BodyParser} can generate a {@link DLBNodeBody} object from a given list of
  * {@link BodyToken}s and a list of command names that are valid in the given context. Which
@@ -54,14 +54,14 @@ import java.util.List;
  */
 public class BodyParser {
 
-	private final DLBNodeState nodeState;
+	private final NodeState nodeState;
 
 	/**
 	 * Creates an instance of a {@link BodyParser} that keeps track of the state of the node it is
-	 * parsing in the given {@link DLBNodeState}.
+	 * parsing in the given {@link NodeState}.
 	 * @param nodeState the state of the node being parsed.
 	 */
-	public BodyParser(DLBNodeState nodeState) {
+	public BodyParser(NodeState nodeState) {
 		this.nodeState = nodeState;
 	}
 

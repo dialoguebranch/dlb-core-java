@@ -36,9 +36,9 @@ import nl.rrd.utils.exception.LineNumberParseException;
 public class CommandParser {
 
 	private final List<String> validCommands;
-	private final DLBNodeState nodeState;
+	private final NodeState nodeState;
 	
-	public CommandParser(List<String> validCommands, DLBNodeState nodeState) {
+	public CommandParser(List<String> validCommands, NodeState nodeState) {
 		this.validCommands = validCommands;
 		this.nodeState = nodeState;
 	}
