@@ -41,7 +41,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-public class DLBParser implements AutoCloseable {
+public class Parser implements AutoCloseable {
 	public static final String NODE_NAME_REGEX = "[A-Za-z0-9_-]+";
 	public static final String DIALOGUE_NAME_REGEX =
 			"(" + NODE_NAME_REGEX + "/)*" + NODE_NAME_REGEX;
@@ -55,19 +55,19 @@ public class DLBParser implements AutoCloseable {
 	private DLBDialogue dialogue = null;
 	private List<DLBNodeState.NodePointerToken> nodePointerTokens = null;
 	
-	public DLBParser(String filename) throws FileNotFoundException {
+	public Parser(String filename) throws FileNotFoundException {
 		this(new File(filename));
 	}
 	
-	public DLBParser(File file) throws FileNotFoundException {
+	public Parser(File file) throws FileNotFoundException {
 		init(file);
 	}
 	
-	public DLBParser(String dialogueName, InputStream input) {
+	public Parser(String dialogueName, InputStream input) {
 		init(dialogueName, input);
 	}
 	
-	public DLBParser(String dialogueName, Reader reader) {
+	public Parser(String dialogueName, Reader reader) {
 		init(dialogueName, new LineColumnNumberReader(reader));
 	}
 	
@@ -417,7 +417,7 @@ public class DLBParser implements AutoCloseable {
 	
 	private static void showUsage() {
 		System.out.println("Usage:");
-		System.out.println("java " + DLBParser.class.getName() + " [options] <dialogue-branch-file>");
+		System.out.println("java " + Parser.class.getName() + " [options] <dialogue-branch-file>");
 		System.out.println("    Parse a .dlb file and print a summary of the dialogue");
 		System.out.println("");
 		System.out.println("Options:");
@@ -458,7 +458,7 @@ public class DLBParser implements AutoCloseable {
 		}
 		DLBParserResult readResult;
 		try {
-			DLBParser parser = new DLBParser(file);
+			Parser parser = new Parser(file);
 			readResult = parser.readDialogue();
 		} catch (IOException ex) {
 			System.err.println("ERROR: Can't read file: " +

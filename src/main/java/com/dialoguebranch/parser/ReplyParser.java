@@ -145,10 +145,10 @@ public class ReplyParser {
 		}
 		String nodePointerStr = (String)nodePointerToken.getValue();
 		DLBNodePointer result;
-		if (nodePointerStr.matches(DLBParser.NODE_NAME_REGEX)) {
+		if (nodePointerStr.matches(Parser.NODE_NAME_REGEX)) {
 			result = new DLBNodePointerInternal(nodePointerStr);
 		} else if (nodePointerStr.matches(
-				DLBParser.EXTERNAL_NODE_POINTER_REGEX)) {
+				Parser.EXTERNAL_NODE_POINTER_REGEX)) {
 			int sep = nodePointerStr.lastIndexOf('.');
 			try {
 				result = new DLBNodePointerExternal(
