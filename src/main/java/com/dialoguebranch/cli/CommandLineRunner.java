@@ -111,7 +111,7 @@ public class CommandLineRunner {
 			}
 		}
 
-		DLBProjectParserResult readResult;
+		ProjectParserResult readResult;
 		try {
 			DLBFileLoader fileLoader = new DLBDirectoryFileLoader(rootDirectory);
 			ProjectParser parser = new ProjectParser(fileLoader);
@@ -142,7 +142,7 @@ public class CommandLineRunner {
 			}
 		}
 
-		DLBProjectParserResult readResult;
+		ProjectParserResult readResult;
 		try {
 			ProjectFileLoader fileLoader = new ProjectFileLoader(projectMetadataFile);
 			ProjectParser parser = new ProjectParser(fileLoader);

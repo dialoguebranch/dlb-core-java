@@ -83,8 +83,8 @@ public class ProjectParser {
 	// -------------------- Other Methods --------------------
 	// -------------------------------------------------------
 
-	public DLBProjectParserResult parse() throws IOException {
-		DLBProjectParserResult projectParserResult = new DLBProjectParserResult(fileLoader);
+	public ProjectParserResult parse() throws IOException {
+		ProjectParserResult projectParserResult = new ProjectParserResult(fileLoader);
 
 		List<DialogueBranchFileDescriptor> files = fileLoader.listDialogueBranchFiles();
 
@@ -130,7 +130,7 @@ public class ProjectParser {
 	 * @throws IOException if a reading error occurs
 	 */
 	private void parseFiles(List<DialogueBranchFileDescriptor> fileDescriptions,
-							DLBProjectParserResult readResult) throws IOException {
+							ProjectParserResult readResult) throws IOException {
 		Set<DialogueBranchFileDescriptor> fileDescriptionsSet = new HashSet<>();
 		List<DialogueBranchFileDescriptor> dialogueFiles = new ArrayList<>();
 		List<DialogueBranchFileDescriptor> translationFiles = new ArrayList<>();
@@ -191,7 +191,7 @@ public class ProjectParser {
 		}
 	}
 
-	private List<ParseException> getParseErrors(DLBProjectParserResult readResult,
+	private List<ParseException> getParseErrors(ProjectParserResult readResult,
 												DialogueBranchFileDescriptor fileDescription) {
 		String path = fileDescriptionToPath(fileDescription);
 		List<ParseException> errors = readResult.getParseErrors().get(path);
@@ -202,7 +202,7 @@ public class ProjectParser {
 		return errors;
 	}
 
-	private List<String> getWarnings(DLBProjectParserResult readResult,
+	private List<String> getWarnings(ProjectParserResult readResult,
 									 DialogueBranchFileDescriptor fileDescription) {
 		String path = fileDescriptionToPath(fileDescription);
 		List<String> warnings = readResult.getWarnings().get(path);
@@ -222,7 +222,7 @@ public class ProjectParser {
 	 *
 	 * @param readResult the read result
 	 */
-	private void createTranslatedDialogues(DLBProjectParserResult readResult) {
+	private void createTranslatedDialogues(ProjectParserResult readResult) {
 		for (DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
 			DLBDialogue dlg = dialogues.get(fileDescription);
 			translatedDialogues.put(fileDescription, dlg);

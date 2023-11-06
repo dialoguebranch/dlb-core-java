@@ -45,7 +45,7 @@ import java.util.Map;
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBProjectParserResult {
+public class ProjectParserResult {
 
 	private DLBFileLoader fileLoader;
 	private DLBProject project = null;
@@ -57,16 +57,16 @@ public class DLBProjectParserResult {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an empty instance of a {@link DLBProjectParserResult}.
+	 * Creates an empty instance of a {@link ProjectParserResult}.
 	 */
-	public DLBProjectParserResult() { }
+	public ProjectParserResult() { }
 
 	/**
-	 * Creates an instance of a {@link DLBProjectParserResult} with a given {@code fileLoader},
+	 * Creates an instance of a {@link ProjectParserResult} with a given {@code fileLoader},
 	 * indicating which {@link DLBFileLoader} was used in the creation of these results.
 	 * @param fileLoader the {@link DLBFileLoader} implementation.
 	 */
-	public DLBProjectParserResult(DLBFileLoader fileLoader) {
+	public ProjectParserResult(DLBFileLoader fileLoader) {
 		this.fileLoader = fileLoader;
 	}
 
@@ -76,7 +76,7 @@ public class DLBProjectParserResult {
 
 	/**
 	 * Returns the {@link DLBFileLoader} implementation that was used for generating this
-	 * {@link DLBProjectParserResult}.
+	 * {@link ProjectParserResult}.
 	 * @return the {@link DLBFileLoader} implementation.
 	 */
 	public DLBFileLoader getFileLoader() {
@@ -146,8 +146,8 @@ public class DLBProjectParserResult {
 	}
 
 	/**
-	 * Generates a human-readable summary {@link String} of this {@link DLBProjectParserResult}.
-	 * @return human-readable summary {@link String} of this {@link DLBProjectParserResult}.
+	 * Generates a human-readable summary {@link String} of this {@link ProjectParserResult}.
+	 * @return human-readable summary {@link String} of this {@link ProjectParserResult}.
 	 */
 	public String generateSummaryString() {
 		StringBuilder result = new StringBuilder();
