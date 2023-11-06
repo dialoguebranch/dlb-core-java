@@ -161,7 +161,7 @@ public class DLBProjectParserResult {
 					((ProjectFileLoader)fileLoader).getProjectMetaData().getBasePath();
 		} else if(fileLoader instanceof DLBDirectoryFileLoader) {
 			projectLocationDescription =
-					((DLBDirectoryFileLoader)fileLoader).getRootDirectory().toString();
+					((DLBDirectoryFileLoader)fileLoader).rootDirectory().toString();
 		}
 
 		// In case of parse errors, print them and then return

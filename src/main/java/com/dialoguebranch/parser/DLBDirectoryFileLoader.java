@@ -37,10 +37,10 @@ import java.util.List;
 
 /**
  * An implementation of a {@link DLBFileLoader} that can generate a list of
- * {@link DialogueBranchFileDescriptor}s by finding all .dlb and .json files in a given directory. The
- * directory provided when creating this {@link DLBDirectoryFileLoader} is assumed to have one or
- * many subdirectories, representing different languages, that contain .dlb and/or .json files. For
- * example:
+ * {@link DialogueBranchFileDescriptor}s by finding all .dlb and .json files in a given directory.
+ * The directory provided when creating this {@link DLBDirectoryFileLoader} is assumed to have one
+ * or many subdirectories, representing different languages, that contain .dlb and/or .json files.
+ * For example:
  * <br/>
  * <ul>
  *   <li>/directory/</li>
@@ -69,22 +69,7 @@ import java.util.List;
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBDirectoryFileLoader implements DLBFileLoader {
-
-	private final File rootDirectory;
-
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
-
-	/**
-	 * Creates an instance of a {@link DLBDirectoryFileLoader} with the given {@code rootDirectory}.
-	 * @param rootDirectory the directory in which to look for languages folders with .dlb and/or
-	 *                      .json files.
-	 */
-	public DLBDirectoryFileLoader(File rootDirectory) {
-		this.rootDirectory = rootDirectory;
-	}
+public record DLBDirectoryFileLoader(File rootDirectory) implements DLBFileLoader {
 
 	// -----------------------------------------------------------
 	// -------------------- Getters & Setters --------------------
@@ -92,9 +77,11 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 
 	/**
 	 * Returns the root directory for this {@link DLBDirectoryFileLoader}.
+	 *
 	 * @return the root directory for this {@link DLBDirectoryFileLoader}.
 	 */
-	public File getRootDirectory() {
+	@Override
+	public File rootDirectory() {
 		return rootDirectory;
 	}
 
@@ -106,7 +93,7 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	public List<DialogueBranchFileDescriptor> listDialogueBranchFiles() {
 		List<DialogueBranchFileDescriptor> result = new ArrayList<>();
 		File[] children = rootDirectory.listFiles();
-		if(children != null) {
+		if (children != null) {
 			for (File child : children) {
 				if (!child.isDirectory() || child.getName().startsWith("."))
 					continue;
@@ -129,32 +116,39 @@ public class DLBDirectoryFileLoader implements DLBFileLoader {
 	// ---------------------------------------------------------
 
 	/**
-	 * Recursively generates a list of {@link DialogueBranchFileDescriptor} objects from all .dlb and/or .json
-	 * files in the given {@code directory} (and all its subdirectories), under the given relative
-	 * {@code pathName} (relative to the {@code rootDirectory} of this
-	 * {@link DLBDirectoryFileLoader}. Each {@link DialogueBranchFileDescriptor} will have its language
-	 * attribute set to the given {@code language} parameter, which is the direct subfolder of the
-	 * {@code rootDirectory} under which it was found.
+	 * Recursively generates a list of {@link DialogueBranchFileDescriptor} objects from all .dlb
+	 * and/or .json files in the given {@code directory} (and all its subdirectories), under the
+	 * given relative {@code pathName} (relative to the {@code rootDirectory} of this
+	 * {@link DLBDirectoryFileLoader}). Each {@link DialogueBranchFileDescriptor} will have its
+	 * language attribute set to the given {@code language} parameter, which is the direct
+	 * sub-folder of the {@code rootDirectory} under which it was found.
 	 *
-	 * @param language the language code, or name of the main folder.
-	 * @param pathName the relative pathName in which the given {@code directory} can be found.
+	 * @param language  the language code, or name of the main folder.
+	 * @param pathName  the relative pathName in which the given {@code directory} can be found.
 	 * @param directory the directory in which to look for .dlb and .json files.
-	 * @return a list of all encountered .dlb and .json files as {@code DialogueBranchFileDescriptor}s.
+	 * @return a list of all encountered .dlb and .json files as
+	 * {@code DialogueBranchFileDescriptor}s.
 	 */
-	private List<DialogueBranchFileDescriptor> listDir(String language, String pathName, File directory) {
+	private List<DialogueBranchFileDescriptor> listDir(String language, String pathName,
+													   File directory) {
 		List<DialogueBranchFileDescriptor> result = new ArrayList<>();
 		File[] children = directory.listFiles();
-		if(children != null) {
+		if (children != null) {
 			for (File child : children) {
 				if (child.isDirectory() && !child.getName().startsWith(".")) {
-					result.addAll(listDir(language, pathName + child.getName() + "/", child));
+					result.addAll(listDir(language, pathName + child.getName()
+							+ "/", child));
 				} else if (child.isFile()) {
 					if (child.getName().endsWith(".dlb")) {
 						result.add(new DialogueBranchFileDescriptor(
-								language, pathName + child.getName(), DLBFileType.SCRIPT));
+								language,
+								pathName + child.getName(),
+								DLBFileType.SCRIPT));
 					} else if (child.getName().endsWith(".json")) {
 						result.add(new DialogueBranchFileDescriptor(
-								language, pathName + child.getName(), DLBFileType.TRANSLATION));
+								language,
+								pathName + child.getName(),
+								DLBFileType.TRANSLATION));
 					}
 				}
 			}

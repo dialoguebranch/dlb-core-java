@@ -44,9 +44,10 @@ import java.util.List;
  * current node that is being parsed is kept in the provided {@link DLBNodeState} object.
  *
  * <p>The {@link BodyParser} can generate a {@link DLBNodeBody} object from a given list of
- * {@link BodyToken}s.</p>
- *
- * TODO: Remove the passing of 'validCommands' and replace with a static final set defined elsewhere (i.e. "DLBConstants?")
+ * {@link BodyToken}s and a list of command names that are valid in the given context. Which
+ * commands are valid can differ depending on whether we are parsing the main part of a node body
+ * (where we accept e.g. 'action', 'if', 'random' and 'set') or a statement section within a reply
+ * (where we only accept 'action' or 'set' commands).</p>
  *
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -67,7 +68,7 @@ public class BodyParser {
 	/**
 	 * Parses the given set of {@link BodyToken}s into a {@link DLBNodeBody}.
 	 * @param tokens the list of {@link BodyToken}s making up the node body.
-	 * @param validCommands
+	 * @param validCommands a list of command names that are valid within the current context.
 	 * @return the {@link DLBNodeBody} resulting from parsing all given tokens.
 	 * @throws LineNumberParseException in case of any errors in the body.
 	 */
@@ -89,8 +90,8 @@ public class BodyParser {
 	 *   <li>random: has subclauses "or" and "endrandom"</li>
 	 * </ul>
 	 *
-	 * <p>If any command token is found that is not in "validCommands" or in
-	 * "validCommandClauses", then this method throws a parse exception.</p>
+	 * <p>If any command token is found that is not in "validCommands" or in "validCommandClauses",
+	 * then this method throws a parse exception.</p>
 	 *
 	 * @param tokens the tokens
 	 * @param validCommands valid commands
@@ -126,8 +127,7 @@ public class BodyParser {
 				} else if (!name.equals("if") && !name.equals("random") &&
 						!result.body.getReplies().isEmpty()) {
 					throw new LineNumberParseException(
-							"Found << after reply", token.getLineNumber(),
-							token.getColNumber());
+							"Found << after reply", token.getLineNumber(), token.getColNumber());
 				} else {
 					DLBCommand command = cmdParser.parseFromName(token, tokens);
 					result.body.addSegment(new DLBNodeBody.CommandSegment(command));

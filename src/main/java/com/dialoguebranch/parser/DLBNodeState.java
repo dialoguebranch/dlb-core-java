@@ -33,13 +33,13 @@ import java.util.List;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 
 public class DLBNodeState {
-	private String dialogueName;
+	private final String dialogueName;
 	private String title = null;
 	private String speaker = null;
 	private int speakerLine = 0;
 	private int speakerColumn = 0;
 	private int nextReplyId = 1;
-	private List<NodePointerToken> nodePointerTokens = new ArrayList<>();
+	private final List<NodePointerToken> nodePointerTokens = new ArrayList<>();
 
 	public DLBNodeState(String dialogueName) {
 		this.dialogueName = dialogueName;
@@ -89,33 +89,9 @@ public class DLBNodeState {
 		return nodePointerTokens;
 	}
 	
-	public void addNodePointerToken(DLBNodePointer pointer,
-									BodyToken token) {
+	public void addNodePointerToken(DLBNodePointer pointer, BodyToken token) {
 		nodePointerTokens.add(new NodePointerToken(title, pointer, token));
 	}
 
-	public static class NodePointerToken {
-		private String nodeTitle;
-		private DLBNodePointer pointer;
-		private BodyToken token;
-		
-		public NodePointerToken(String nodeTitle, DLBNodePointer pointer,
-				BodyToken token) {
-			this.nodeTitle = nodeTitle;
-			this.pointer = pointer;
-			this.token = token;
-		}
-		
-		public String getNodeTitle() {
-			return nodeTitle;
-		}
-
-		public DLBNodePointer getPointer() {
-			return pointer;
-		}
-
-		public BodyToken getToken() {
-			return token;
-		}
-	}
+	public record NodePointerToken(String nodeTitle, DLBNodePointer pointer, BodyToken token) { }
 }

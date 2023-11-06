@@ -171,8 +171,7 @@ public class DLBReplyParser {
 		return result;
 	}
 	
-	private void parseCommands(DLBReply reply)
-			throws LineNumberParseException {
+	private void parseCommands(DLBReply reply) throws LineNumberParseException {
 		CurrentIterator<BodyToken> it = new CurrentIterator<>(
 				commandSection.tokens.iterator());
 		it.moveNext();

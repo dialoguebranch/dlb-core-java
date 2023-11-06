@@ -34,20 +34,19 @@ import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 
 public class DLBCommandParser {
-	private List<String> validCommands;
-	private DLBNodeState nodeState;
+
+	private final List<String> validCommands;
+	private final DLBNodeState nodeState;
 	
-	public DLBCommandParser(List<String> validCommands,
-							DLBNodeState nodeState) {
+	public DLBCommandParser(List<String> validCommands, DLBNodeState nodeState) {
 		this.validCommands = validCommands;
 		this.nodeState = nodeState;
 	}
 
 	/**
-	 * Reads the command name from the start of a command. The specified
-	 * iterator should be positioned at the command start token. When this
-	 * method returns, it will be positioned at the token with the command name.
-	 * This method does not validate the command name.
+	 * Reads the command name from the start of a command. The specified iterator should be
+	 * positioned at the command start token. When this method returns, it will be positioned at the
+	 * token with the command name. This method does not validate the command name.
 	 * 
 	 * @param tokens the tokens
 	 * @return the command name
@@ -63,10 +62,9 @@ public class DLBCommandParser {
 	}
 	
 	/**
-	 * Parses a command from the command name. The specified iterator should be
-	 * positioned at the command name token. When this method returns it will be
-	 * positioned after the command end token. This method can be called after
-	 * {@link #readCommandName(CurrentIterator) readCommandName()}. This method
+	 * Parses a command from the command name. The specified iterator should be positioned at the
+	 * command name token. When this method returns it will be positioned after the command end
+	 * token. This method can be called after {@link #readCommandName(CurrentIterator)}. This method
 	 * validates the command name.
 	 * 
 	 * @param startToken the command start token
@@ -74,8 +72,7 @@ public class DLBCommandParser {
 	 * @return the command
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public DLBCommand parseFromName(BodyToken startToken,
-                                    CurrentIterator<BodyToken> tokens)
+	public DLBCommand parseFromName(BodyToken startToken, CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		BodyToken token = tokens.getCurrent();
 		String name = getCommandName(startToken, token);
@@ -83,28 +80,21 @@ public class DLBCommandParser {
 			throw new LineNumberParseException("Unexpected command: " + name,
 					token.getLineNumber(), token.getColNumber());
 		}
-		switch (name) {
-		case "action":
-			return DLBActionCommand.parse(startToken, tokens, nodeState);
-		case "if":
-			return DLBIfCommand.parse(startToken, tokens, nodeState);
-		case "input":
-			return DLBInputCommand.parse(startToken, tokens, nodeState);
-		case "random":
-			return DLBRandomCommand.parse(startToken, tokens, nodeState);
-		case "set":
-			return DLBSetCommand.parse(startToken, tokens, nodeState);
-		default:
-			throw new LineNumberParseException("Unknown command: " + name,
-					token.getLineNumber(), token.getColNumber());
-		}
+        return switch (name) {
+            case "action" -> DLBActionCommand.parse(startToken, tokens, nodeState);
+            case "if" -> DLBIfCommand.parse(startToken, tokens, nodeState);
+            case "input" -> DLBInputCommand.parse(startToken, tokens, nodeState);
+            case "random" -> DLBRandomCommand.parse(startToken, tokens, nodeState);
+            case "set" -> DLBSetCommand.parse(startToken, tokens, nodeState);
+            default -> throw new LineNumberParseException("Unknown command: " + name,
+                    token.getLineNumber(), token.getColNumber());
+        };
 	}
 	
 	/**
-	 * Parses a command from the start token. The specified iterator should be
-	 * positioned at the command start token. When this method returns it will
-	 * be positioned after the command end token. This method cannot be called
-	 * after {@link #readCommandName(CurrentIterator) readCommandName()}. This
+	 * Parses a command from the start token. The specified iterator should be positioned at the
+	 * command start token. When this method returns it will be positioned after the command end
+	 * token. This method cannot be called after {@link #readCommandName(CurrentIterator)}. This
 	 * method validates the command name.
 	 * 
 	 * @param tokens the tokens
@@ -120,9 +110,8 @@ public class DLBCommandParser {
 	}
 	
 	/**
-	 * Tries to read the command name from the specified name token. This should
-	 * be the first non-whitespace token after the command start token. It may
-	 * be null.
+	 * Tries to read the command name from the specified name token. This should be the first
+	 * non-whitespace token after the command start token. It may be null.
 	 * 
 	 * @param startToken the start token
 	 * @param nameToken the name token or null

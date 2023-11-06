@@ -102,9 +102,9 @@ public class DLBParser implements AutoCloseable {
 	}
 
 	/**
-	 * Tries to read the dialogue file. If a reading error occurs, it throws an
-	 * {@link IOException IOException}. Otherwise it returns a result object
-	 * where either the dialogue is set, or one or more parse errors are set.
+	 * Tries to read the dialogue file. If a reading error occurs, it throws an {@link IOException}.
+	 * Otherwise, it returns a result object where either the dialogue is set, or one or more parse
+	 * errors are set.
 	 * 
 	 * @return the read result
 	 * @throws IOException if a reading error occurs
@@ -138,18 +138,18 @@ public class DLBParser implements AutoCloseable {
 					reader.getLineNum(), reader.getColNum()));
 		}
 		for (DLBNodeState.NodePointerToken pointerToken : nodePointerTokens) {
-			if (!(pointerToken.getPointer() instanceof DLBNodePointerInternal))
+			if (!(pointerToken.pointer() instanceof DLBNodePointerInternal))
 				continue;
 			DLBNodePointerInternal pointer =
-					(DLBNodePointerInternal)pointerToken.getPointer();
+					(DLBNodePointerInternal)pointerToken.pointer();
 			if (dialogue.nodeExists(pointer.getNodeId()))
 				continue;
-			BodyToken token = pointerToken.getToken();
+			BodyToken token = pointerToken.token();
 			LineNumberParseException parseEx = new LineNumberParseException(
 					"Found reply with pointer to non-existing node: " +
 					pointer.getNodeId(), token.getLineNumber(), token.getColNumber());
 			result.getParseErrors().add(createDLBNodeParseException(
-					pointerToken.getNodeTitle(), parseEx));
+					pointerToken.nodeTitle(), parseEx));
 		}
 		if (!result.getParseErrors().isEmpty())
 			return result;
@@ -166,13 +166,11 @@ public class DLBParser implements AutoCloseable {
 	}
 	
 	/**
-	 * Tries to read the next node. The reader should be positioned at the start
-	 * of a node. If there are no more nodes, this method returns null. If a
-	 * reading error occurs, it throws an {@link IOException IOException}.
-	 * Otherwise it returns a result object, where either "node" or
-	 * "parseException" is set. The property "readNodeEnd" is set if the end of
-	 * the node (===) has been read. This can be used to skip to the next node
-	 * in case of a parse exception.
+	 * Tries to read the next node. The reader should be positioned at the start of a node. If there
+	 * are no more nodes, this method returns null. If a reading error occurs, it throws an
+	 * {@link IOException}. Otherwise, it returns a result object, where either "node" or
+	 * "parseException" is set. The property "readNodeEnd" is set if the end of the node (===) has
+	 * been read. This can be used to skip to the next node in case of a parse exception.
 	 * 
 	 * @return the result or null
 	 * @throws IOException if a reading error occurs
@@ -227,7 +225,7 @@ public class DLBParser implements AutoCloseable {
 			BodyParser bodyParser = new BodyParser(nodeState);
 			DLBNodeBody body = bodyParser.parse(bodyTokens, Arrays.asList(
 					"action", "if", "random", "set"));
-			if (header.getTitle().toLowerCase().equals("end"))
+			if (header.getTitle().equalsIgnoreCase("end"))
 				validateEndNode(header, body, bodyTokens);
 			nodePointerTokens.addAll(nodeState.getNodePointerTokens());
 			result.node = new DLBNode(header, body);
@@ -419,7 +417,7 @@ public class DLBParser implements AutoCloseable {
 	
 	private static void showUsage() {
 		System.out.println("Usage:");
-		System.out.println("java " + DLBParser.class.getName() + " [options] <dlbfile>");
+		System.out.println("java " + DLBParser.class.getName() + " [options] <dialogue-branch-file>");
 		System.out.println("    Parse a .dlb file and print a summary of the dialogue");
 		System.out.println("");
 		System.out.println("Options:");
