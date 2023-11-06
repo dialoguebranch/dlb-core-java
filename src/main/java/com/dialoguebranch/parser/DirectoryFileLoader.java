@@ -38,7 +38,7 @@ import java.util.List;
 /**
  * An implementation of a {@link DLBFileLoader} that can generate a list of
  * {@link DialogueBranchFileDescriptor}s by finding all .dlb and .json files in a given directory.
- * The directory provided when creating this {@link DLBDirectoryFileLoader} is assumed to have one
+ * The directory provided when creating this {@link DirectoryFileLoader} is assumed to have one
  * or many subdirectories, representing different languages, that contain .dlb and/or .json files.
  * For example:
  * <br/>
@@ -69,16 +69,16 @@ import java.util.List;
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public record DLBDirectoryFileLoader(File rootDirectory) implements DLBFileLoader {
+public record DirectoryFileLoader(File rootDirectory) implements DLBFileLoader {
 
 	// -----------------------------------------------------------
 	// -------------------- Getters & Setters --------------------
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the root directory for this {@link DLBDirectoryFileLoader}.
+	 * Returns the root directory for this {@link DirectoryFileLoader}.
 	 *
-	 * @return the root directory for this {@link DLBDirectoryFileLoader}.
+	 * @return the root directory for this {@link DirectoryFileLoader}.
 	 */
 	@Override
 	public File rootDirectory() {
@@ -119,7 +119,7 @@ public record DLBDirectoryFileLoader(File rootDirectory) implements DLBFileLoade
 	 * Recursively generates a list of {@link DialogueBranchFileDescriptor} objects from all .dlb
 	 * and/or .json files in the given {@code directory} (and all its subdirectories), under the
 	 * given relative {@code pathName} (relative to the {@code rootDirectory} of this
-	 * {@link DLBDirectoryFileLoader}). Each {@link DialogueBranchFileDescriptor} will have its
+	 * {@link DirectoryFileLoader}). Each {@link DialogueBranchFileDescriptor} will have its
 	 * language attribute set to the given {@code language} parameter, which is the direct
 	 * sub-folder of the {@code rootDirectory} under which it was found.
 	 *

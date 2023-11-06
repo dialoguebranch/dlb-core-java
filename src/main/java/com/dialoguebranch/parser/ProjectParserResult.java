@@ -159,9 +159,9 @@ public class ProjectParserResult {
 		if(fileLoader instanceof ProjectFileLoader) {
 			projectLocationDescription =
 					((ProjectFileLoader)fileLoader).getProjectMetaData().getBasePath();
-		} else if(fileLoader instanceof DLBDirectoryFileLoader) {
+		} else if(fileLoader instanceof DirectoryFileLoader) {
 			projectLocationDescription =
-					((DLBDirectoryFileLoader)fileLoader).rootDirectory().toString();
+					((DirectoryFileLoader)fileLoader).rootDirectory().toString();
 		}
 
 		// In case of parse errors, print them and then return

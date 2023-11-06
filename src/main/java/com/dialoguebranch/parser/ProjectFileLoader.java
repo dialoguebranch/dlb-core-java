@@ -133,7 +133,7 @@ public class ProjectFileLoader implements DLBFileLoader {
 	 * Recursively generates a list of {@link DialogueBranchFileDescriptor} objects from all .dlb and/or .json
 	 * files in the given {@code directory} (and all its subdirectories), under the given relative
 	 * {@code pathName} (relative to the {@code rootDirectory} of this
-	 * {@link DLBDirectoryFileLoader}. Each {@link DialogueBranchFileDescriptor} will have its language
+	 * {@link DirectoryFileLoader}. Each {@link DialogueBranchFileDescriptor} will have its language
 	 * attribute set to the given {@code language} parameter, which is the direct subfolder of the
 	 * {@code rootDirectory} under which it was found.
 	 *
