@@ -146,7 +146,7 @@ public class ProjectParser {
 		Set<String> dialogueNames = new HashSet<>();
 		for (DialogueBranchFileDescriptor fileDescription : dialogueFiles) {
 			fileDescriptionsSet.add(fileDescription);
-			DLBParserResult dlgReadResult = parseDialogueFile(fileDescription);
+			ParserResult dlgReadResult = parseDialogueFile(fileDescription);
 			if (dlgReadResult.getParseErrors().isEmpty()) {
 				dialogues.put(fileDescription, dlgReadResult.getDialogue());
 				dialogueNames.add(dlgReadResult.getDialogue().getDialogueName());
@@ -267,7 +267,7 @@ public class ProjectParser {
 			return dialogues.get(lngMap.get(language));
 	}
 
-	private DLBParserResult parseDialogueFile(DialogueBranchFileDescriptor description)
+	private ParserResult parseDialogueFile(DialogueBranchFileDescriptor description)
 			throws IOException {
 		String dlgName = description.getDialogueName();
 		try (Parser parser = new Parser(dlgName,

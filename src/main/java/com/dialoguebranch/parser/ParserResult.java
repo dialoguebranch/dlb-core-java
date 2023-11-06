@@ -33,27 +33,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link DLBParserResult} object contains the results of parsing a .dlb file, including
+ * A {@link ParserResult} object contains the results of parsing a .dlb file, including
  * the resulting {@link DLBDialogue} and a list of {@link ParseException}s.
  *
  * @author Dennis Hofs
  * @author Harm op den Akker
  */
-public class DLBParserResult {
+public class ParserResult {
 
     private DLBDialogue dialogue;
     private List<ParseException> parseErrors;
 
     /**
-     * Creates an instance of an empty {@link DLBParserResult} object.
+     * Creates an instance of an empty {@link ParserResult} object.
      */
-    public DLBParserResult() {
+    public ParserResult() {
         parseErrors = new ArrayList<ParseException>();
     }
 
     /**
-     * Returns the {@link DLBDialogue} that is part of this {@link DLBParserResult}.
-     * @return the {@link DLBDialogue} that is part of this {@link DLBParserResult}.
+     * Returns the {@link DLBDialogue} that is part of this {@link ParserResult}.
+     * @return the {@link DLBDialogue} that is part of this {@link ParserResult}.
      */
     public DLBDialogue getDialogue() {
         return dialogue;
@@ -69,8 +69,8 @@ public class DLBParserResult {
     }
 
     /**
-     * Sets the {@link DLBDialogue} that is part of this {@link DLBParserResult}.
-     * @param dialogue the {@link DLBDialogue} that is part of this {@link DLBParserResult}.
+     * Sets the {@link DLBDialogue} that is part of this {@link ParserResult}.
+     * @param dialogue the {@link DLBDialogue} that is part of this {@link ParserResult}.
      */
     public void setDialogue(DLBDialogue dialogue) {
         this.dialogue = dialogue;

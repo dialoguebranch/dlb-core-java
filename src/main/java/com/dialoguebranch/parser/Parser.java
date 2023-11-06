@@ -109,8 +109,8 @@ public class Parser implements AutoCloseable {
 	 * @return the read result
 	 * @throws IOException if a reading error occurs
 	 */
-	public DLBParserResult readDialogue() throws IOException {
-		DLBParserResult result = new DLBParserResult();
+	public ParserResult readDialogue() throws IOException {
+		ParserResult result = new ParserResult();
 		if (!dialogueName.matches(DIALOGUE_NAME_REGEX)) {
 			result.getParseErrors().add(new ParseException(
 					"Invalid dialogue name: " + dialogueName));
@@ -456,7 +456,7 @@ public class Parser implements AutoCloseable {
 			System.exit(1);
 			return;
 		}
-		DLBParserResult readResult;
+		ParserResult readResult;
 		try {
 			Parser parser = new Parser(file);
 			readResult = parser.readDialogue();
