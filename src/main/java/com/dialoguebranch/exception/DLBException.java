@@ -41,6 +41,10 @@ public class DLBException extends Exception {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * A {@link DLBException.Type} defines the different types of exception that can be thrown by
+	 * the Dialogue Branch libraries and software.
+	 */
 	public enum Type {
 		AGENT_NOT_FOUND,
 		DIALOGUE_NOT_FOUND,

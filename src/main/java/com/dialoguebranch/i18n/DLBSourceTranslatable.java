@@ -27,29 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
-public class DLBSourceTranslatable {
+public record DLBSourceTranslatable(String speaker, String addressee,
+									DLBTranslatable translatable) {
 	public static final String USER = "_user";
-
-	private String speaker;
-	private String addressee;
-	private DLBTranslatable translatable;
-
-	public DLBSourceTranslatable(String speaker, String addressee,
-								 DLBTranslatable translatable) {
-		this.speaker = speaker;
-		this.addressee = addressee;
-		this.translatable = translatable;
-	}
-
-	public String getSpeaker() {
-		return speaker;
-	}
-
-	public String getAddressee() {
-		return addressee;
-	}
-
-	public DLBTranslatable getTranslatable() {
-		return translatable;
-	}
 }

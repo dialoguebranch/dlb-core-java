@@ -36,21 +36,4 @@ import java.util.Set;
  *
  * @author Dennis Hofs (RRD)
  */
-public class DLBContextTranslation {
-	private Set<String> context;
-	private DLBTranslatable translation;
-
-	public DLBContextTranslation(Set<String> context,
-								 DLBTranslatable translation) {
-		this.context = context;
-		this.translation = translation;
-	}
-
-	public Set<String> getContext() {
-		return context;
-	}
-
-	public DLBTranslatable getTranslation() {
-		return translation;
-	}
-}
+public record DLBContextTranslation(Set<String> context, DLBTranslatable translation) { }

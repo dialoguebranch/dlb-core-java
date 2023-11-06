@@ -37,11 +37,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link DLBTranslationFile} is an object representation of a JSON file
- * that contains translations for a single .dlb script.
- * The body of a {@link DLBTranslationFile} consists of a mapping from
- * speakerNames to a map of {term,translation}-pairs, e.g.:
+ * A {@link DLBTranslationFile} is an object representation of a JSON file that contains
+ * translations for a single .dlb script. The body of a {@link DLBTranslationFile} consists of a
+ * mapping from speakerNames to a map of {term,translation}-pairs, e.g.:
  *
+ * <pre>
  * {
  *   "speaker1" : {
  *     "term1": "translation1",
@@ -51,12 +51,15 @@ import java.util.Map;
  *     "term3":"translation3",
  *     "term4":"translation4",
  *   }
- * }
+ * }</pre>
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ * @author Dennis Hofs (Roessingh Research and Development)
  */
 public class DLBTranslationFile {
 
-	private String fileName;
-	private Map<String, Map<String,String>> contentMap;
+	private final String fileName;
+	private final Map<String, Map<String,String>> contentMap;
 
 	// ----- Constructors
 

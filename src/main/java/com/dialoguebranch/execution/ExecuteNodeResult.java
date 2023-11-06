@@ -29,35 +29,6 @@ package com.dialoguebranch.execution;
 
 import com.dialoguebranch.model.DLBDialogue;
 import com.dialoguebranch.model.DLBLoggedDialogue;
-import com.dialoguebranch.model.DLBNode;
 
-public class ExecuteNodeResult {
-	private DLBDialogue dialogue;
-	private DLBNode DLBNode;
-	private DLBLoggedDialogue loggedDialogue;
-	private int interactionIndex;
-
-	public ExecuteNodeResult(DLBDialogue dialogue, DLBNode DLBNode,
-							 DLBLoggedDialogue loggedDialogue, int interactionIndex) {
-		this.dialogue = dialogue;
-		this.DLBNode = DLBNode;
-		this.loggedDialogue = loggedDialogue;
-		this.interactionIndex = interactionIndex;
-	}
-
-	public DLBDialogue getDialogue() {
-		return dialogue;
-	}
-
-	public DLBNode getDLBNode() {
-		return DLBNode;
-	}
-
-	public DLBLoggedDialogue getLoggedDialogue() {
-		return loggedDialogue;
-	}
-
-	public int getInteractionIndex() {
-		return interactionIndex;
-	}
-}
+public record ExecuteNodeResult(DLBDialogue dialogue, com.dialoguebranch.model.DLBNode DLBNode,
+								DLBLoggedDialogue loggedDialogue, int interactionIndex) { }

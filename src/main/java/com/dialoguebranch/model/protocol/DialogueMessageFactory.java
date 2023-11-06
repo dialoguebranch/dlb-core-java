@@ -49,16 +49,16 @@ public class DialogueMessageFactory {
 	public static DialogueMessage generateDialogueMessage(
 			ExecuteNodeResult executedNode) {
 		DialogueMessage dialogueMessage = new DialogueMessage();
-		DLBNode node = executedNode.getDLBNode();
+		DLBNode node = executedNode.DLBNode();
 		DLBNodeBody body = node.getBody();
-		dialogueMessage.setDialogue(executedNode.getDialogue()
+		dialogueMessage.setDialogue(executedNode.dialogue()
 				.getDialogueName());
 		dialogueMessage.setNode(node.getTitle());
-		if (executedNode.getLoggedDialogue() != null) {
-			dialogueMessage.setLoggedDialogueId(executedNode.getLoggedDialogue()
+		if (executedNode.loggedDialogue() != null) {
+			dialogueMessage.setLoggedDialogueId(executedNode.loggedDialogue()
 					.getId());
 			dialogueMessage.setLoggedInteractionIndex(
-					executedNode.getInteractionIndex());
+					executedNode.interactionIndex());
 		}
 		dialogueMessage.setSpeaker(node.getHeader().getSpeaker());
 		dialogueMessage.setStatement(generateDialogueStatement(body));

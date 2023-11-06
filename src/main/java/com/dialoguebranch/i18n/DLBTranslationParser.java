@@ -174,7 +174,7 @@ public class DLBTranslationParser {
 			return;
 		List<DLBContextTranslation> sourceTrans = translations.get(source);
 		for (DLBContextTranslation trans : sourceTrans) {
-			if (trans.getContext().equals(context)) {
+			if (trans.context().equals(context)) {
 				throw new ParseException(String.format(
 						"Found duplicate translation \"%s\" with context %s",
 						source, context));
@@ -229,7 +229,7 @@ public class DLBTranslationParser {
 				extractor.extractFromBody(null, null, body);
 		List<DLBTranslatable> translatables = new ArrayList<>();
 		for (DLBSourceTranslatable sourceTranslatable : sourceTranslatables) {
-			translatables.add(sourceTranslatable.getTranslatable());
+			translatables.add(sourceTranslatable.translatable());
 		}
 		if (translatables.size() == 0) {
 			throw new ParseException(

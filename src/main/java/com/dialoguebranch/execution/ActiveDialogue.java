@@ -62,11 +62,11 @@ public class ActiveDialogue {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of an {@link ActiveDialogue} with a given {@link DialogueBranchFileDescriptor} and
-	 * {@link DLBDialogue}.
+	 * Creates an instance of an {@link ActiveDialogue} with a given
+	 * {@link DialogueBranchFileDescriptor} and {@link DLBDialogue}.
 	 *
-	 * @param dialogueFileDescription the {@link DialogueBranchFileDescriptor} containing metadata of the
-	 *                                dialogue file used in this {@link ActiveDialogue}.
+	 * @param dialogueFileDescription the {@link DialogueBranchFileDescriptor} containing metadata
+	 *                                of the dialogue file used in this {@link ActiveDialogue}.
 	 * @param dialogueDefinition the dialogue definition
 	 */
 	public ActiveDialogue(DialogueBranchFileDescriptor dialogueFileDescription,

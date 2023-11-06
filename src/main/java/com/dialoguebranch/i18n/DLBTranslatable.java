@@ -48,8 +48,8 @@ import java.util.List;
  * @author Dennis Hofs (RRD)
  */
 public class DLBTranslatable {
-	private DLBNodeBody parent;
-	private List<DLBNodeBody.Segment> segments;
+	private final DLBNodeBody parent;
+	private final List<DLBNodeBody.Segment> segments;
 
 	/**
 	 * Constructs a new {@link DLBTranslatable}.

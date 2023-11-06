@@ -122,7 +122,7 @@ public class POEditorTools {
 					node.getHeader().getSpeaker(), DLBSourceTranslatable.USER, node.getBody());
 
 			for(DLBSourceTranslatable translatable : translatables) {
-				DLBTranslationTerm term = new DLBTranslationTerm(translatable.getTranslatable().toExportFriendlyString(),dialogue.getDialogueName()+" "+translatable.getSpeaker());
+				DLBTranslationTerm term = new DLBTranslationTerm(translatable.translatable().toExportFriendlyString(),dialogue.getDialogueName()+" "+translatable.speaker());
 				terms.add(term);
 			}
 
