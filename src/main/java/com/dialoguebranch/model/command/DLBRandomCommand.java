@@ -34,7 +34,7 @@ import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.parser.DLBBodyParser;
+import com.dialoguebranch.parser.BodyParser;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
@@ -170,8 +170,8 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 		if (weight == null)
 			weight = 1f;
 		while (true) {
-			DLBBodyParser bodyParser = new DLBBodyParser(nodeState);
-			DLBBodyParser.ParseUntilCommandClauseResult bodyParse =
+			BodyParser bodyParser = new BodyParser(nodeState);
+			BodyParser.ParseUntilCommandClauseResult bodyParse =
 					bodyParser.parseUntilCommandClause(tokens,
 					Arrays.asList("action", "if", "random", "set"),
 					Arrays.asList("or", "endrandom"));

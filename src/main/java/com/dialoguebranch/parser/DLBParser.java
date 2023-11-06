@@ -224,7 +224,7 @@ public class DLBParser implements AutoCloseable {
 					line = readLine();
 				}
 			}
-			DLBBodyParser bodyParser = new DLBBodyParser(nodeState);
+			BodyParser bodyParser = new BodyParser(nodeState);
 			DLBNodeBody body = bodyParser.parse(bodyTokens, Arrays.asList(
 					"action", "if", "random", "set"));
 			if (header.getTitle().toLowerCase().equals("end"))

@@ -119,7 +119,7 @@ public class DLBReplyParser {
 	private DLBNodeBody parseStatement() throws LineNumberParseException {
 		if (statementSection == null)
 			return null;
-		DLBBodyParser bodyParser = new DLBBodyParser(nodeState);
+		BodyParser bodyParser = new BodyParser(nodeState);
 		DLBNodeBody result = bodyParser.parse(statementSection.tokens,
 				Arrays.asList("input"));
 		if (result.getSegments().isEmpty())

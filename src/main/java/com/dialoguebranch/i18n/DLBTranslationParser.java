@@ -35,7 +35,7 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.io.FileUtils;
 import nl.rrd.utils.json.JsonMapper;
-import com.dialoguebranch.parser.DLBBodyParser;
+import com.dialoguebranch.parser.BodyParser;
 
 import java.io.*;
 import java.net.URL;
@@ -215,7 +215,7 @@ public class DLBTranslationParser {
 					"Invalid translation string: " + translation +
 					": " + ex.getError());
 		}
-		DLBBodyParser parser = new DLBBodyParser(null);
+		BodyParser parser = new BodyParser(null);
 		DLBNodeBody body;
 		try {
 			body = parser.parse(tokens, Collections.singletonList("input"));

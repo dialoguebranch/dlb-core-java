@@ -37,7 +37,7 @@ import nl.rrd.utils.expressions.Expression;
 import nl.rrd.utils.expressions.Value;
 import nl.rrd.utils.expressions.types.AssignExpression;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.parser.DLBBodyParser;
+import com.dialoguebranch.parser.BodyParser;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
@@ -200,8 +200,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 				cmdStartToken, content, "if");
 		checkNoAssignment(cmdStartToken, parsedIf.name, parsedIf.expression);
 		while (true) {
-			DLBBodyParser bodyParser = new DLBBodyParser(nodeState);
-			DLBBodyParser.ParseUntilCommandClauseResult bodyParse =
+			BodyParser bodyParser = new BodyParser(nodeState);
+			BodyParser.ParseUntilCommandClauseResult bodyParse =
 					bodyParser.parseUntilCommandClause(tokens,
 					Arrays.asList("action", "if", "random", "set"),
 					Arrays.asList("elseif", "else", "endif"));
