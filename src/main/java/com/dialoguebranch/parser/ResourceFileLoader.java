@@ -72,7 +72,7 @@ import java.util.Map;
  *
  * @author Dennis Hofs (RRD)
  */
-public class ResourceFileLoader implements DLBFileLoader {
+public class ResourceFileLoader implements FileLoader {
 	private static final String INDEX_FILE = "dialogues.json";
 
 	private String resourcePath;

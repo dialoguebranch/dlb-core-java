@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * An implementation of a {@link DLBFileLoader} that can generate a list of
+ * An implementation of a {@link FileLoader} that can generate a list of
  * {@link DialogueBranchFileDescriptor}s by finding all .dlb and .json files in a given directory.
  * The directory provided when creating this {@link DirectoryFileLoader} is assumed to have one
  * or many subdirectories, representing different languages, that contain .dlb and/or .json files.
@@ -69,7 +69,7 @@ import java.util.List;
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public record DirectoryFileLoader(File rootDirectory) implements DLBFileLoader {
+public record DirectoryFileLoader(File rootDirectory) implements FileLoader {
 
 	// -----------------------------------------------------------
 	// -------------------- Getters & Setters --------------------

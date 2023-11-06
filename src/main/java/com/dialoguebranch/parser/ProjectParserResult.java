@@ -47,7 +47,7 @@ import java.util.Map;
  */
 public class ProjectParserResult {
 
-	private DLBFileLoader fileLoader;
+	private FileLoader fileLoader;
 	private DLBProject project = null;
 	private Map<String,List<ParseException>> parseErrors = new LinkedHashMap<>();
 	private Map<String,List<String>> warnings = new LinkedHashMap<>();
@@ -63,10 +63,10 @@ public class ProjectParserResult {
 
 	/**
 	 * Creates an instance of a {@link ProjectParserResult} with a given {@code fileLoader},
-	 * indicating which {@link DLBFileLoader} was used in the creation of these results.
-	 * @param fileLoader the {@link DLBFileLoader} implementation.
+	 * indicating which {@link FileLoader} was used in the creation of these results.
+	 * @param fileLoader the {@link FileLoader} implementation.
 	 */
-	public ProjectParserResult(DLBFileLoader fileLoader) {
+	public ProjectParserResult(FileLoader fileLoader) {
 		this.fileLoader = fileLoader;
 	}
 
@@ -75,15 +75,15 @@ public class ProjectParserResult {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the {@link DLBFileLoader} implementation that was used for generating this
+	 * Returns the {@link FileLoader} implementation that was used for generating this
 	 * {@link ProjectParserResult}.
-	 * @return the {@link DLBFileLoader} implementation.
+	 * @return the {@link FileLoader} implementation.
 	 */
-	public DLBFileLoader getFileLoader() {
+	public FileLoader getFileLoader() {
 		return fileLoader;
 	}
 
-	public void setFileLoader(DLBFileLoader fileLoader) {
+	public void setFileLoader(FileLoader fileLoader) {
 		this.fileLoader = fileLoader;
 	}
 
