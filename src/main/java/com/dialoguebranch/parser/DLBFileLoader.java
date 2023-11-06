@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * A DialogueBranch file loader is used by a {@link ProjectParser} to list and open
  * DialogueBranch dialogue files (.dlb) and translation files (.json) within a DialogueBranch
- * project. The default implementation is {@link DLBResourceFileLoader}, which can load files from
+ * project. The default implementation is {@link ResourceFileLoader}, which can load files from
  * resources on the classpath.
  *
  * @author Dennis Hofs (RRD)
