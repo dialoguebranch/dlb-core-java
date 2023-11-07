@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.parser;
 
-import com.dialoguebranch.exception.DLBNodeParseException;
+import com.dialoguebranch.exception.NodeParseException;
 import com.dialoguebranch.model.DLBDialogue;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
@@ -159,7 +159,7 @@ public class DialogueBranchParser implements AutoCloseable {
 	
 	private static class ReadDLBNodeResult {
 		public DLBNode node = null;
-		public DLBNodeParseException parseException = null;
+		public NodeParseException parseException = null;
 		public boolean readNodeEnd = false;
 	}
 	
@@ -246,19 +246,19 @@ public class DialogueBranchParser implements AutoCloseable {
 	}
 	
 	/**
-	 * Creates a {@link DLBNodeParseException} with message "Error in node ..." If the
+	 * Creates a {@link NodeParseException} with message "Error in node ..." If the
 	 * node title is unknown, it can be set to null.
 	 * 
 	 * @param nodeTitle the node title or null
 	 * @param ex the parse error
-	 * @return the DLBNodeParseException
+	 * @return the NodeParseException
 	 */
-	private DLBNodeParseException createDLBNodeParseException(
+	private NodeParseException createDLBNodeParseException(
 			String nodeTitle, LineNumberParseException ex) {
 		String msg = "Error in node";
 		if (nodeTitle != null)
 			msg += " " + nodeTitle;
-		return new DLBNodeParseException(msg + ": " + ex.getMessage(),
+		return new NodeParseException(msg + ": " + ex.getMessage(),
 				nodeTitle, ex);
 	}
 	

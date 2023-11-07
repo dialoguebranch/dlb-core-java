@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.execution;
 
+import com.dialoguebranch.exception.ExecutionException;
 import com.dialoguebranch.model.*;
 import com.dialoguebranch.model.command.DLBCommand;
 import com.dialoguebranch.model.command.DLBInputCommand;
@@ -34,7 +35,6 @@ import com.dialoguebranch.model.command.DLBSetCommand;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.exception.DLBException;
 
 import java.time.ZonedDateTime;
 import java.util.LinkedHashMap;
@@ -142,10 +142,10 @@ public class ActiveDialogue {
 	 * @param eventTime the timestamp (in the time zone of the user) of the event that triggered
 	 *                  this start of the DialogueBranch dialogue.
 	 * @return the initial {@link DLBNode}.
-	 * @throws DLBException if the request is invalid
+	 * @throws ExecutionException if the request is invalid
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public DLBNode startDialogue(ZonedDateTime eventTime) throws DLBException, EvaluationException {
+	public DLBNode startDialogue(ZonedDateTime eventTime) throws ExecutionException, EvaluationException {
 		return startDialogue(null, eventTime);
 	}
 	
@@ -165,18 +165,18 @@ public class ActiveDialogue {
 	 * @return the {@link DLBNode} object representing the given "starting node" after it has been
 	 * 		   executed by the DialogueBranch parser (e.g. after control statements have been
 	 * 		   resolved)
-	 * @throws DLBException if the request is invalid
+	 * @throws ExecutionException if the request is invalid
 	 * @throws EvaluationException if an expression cannot be evaluated during execution of the node
 	 */
 	public DLBNode startDialogue(String startNodeId, ZonedDateTime eventTime)
-			throws DLBException, EvaluationException {
+			throws ExecutionException, EvaluationException {
 		DLBNode nextNode;
 		if (startNodeId == null) {
 			nextNode = dialogueDefinition.getStartNode();
 		} else {
 			nextNode = dialogueDefinition.getNodeById(startNodeId);
 			if (nextNode == null) {
-				throw new DLBException(DLBException.Type.NODE_NOT_FOUND,
+				throw new ExecutionException(ExecutionException.Type.NODE_NOT_FOUND,
 						String.format("Node \"%s\" not found in dialogue \"%s\"",
 								startNodeId, dialogueDefinition.getDialogueName()));
 			}
@@ -259,12 +259,12 @@ public class ActiveDialogue {
 	 *
 	 * @param replyId the reply id as provided e.g. by a client application.
 	 * @return the statement {@link String} corresponding to the reply identified by {@code replyId}
-	 * @throws DLBException if no reply with the specified {@code replyId} is found
+	 * @throws ExecutionException if no reply with the specified {@code replyId} is found
 	 */
-	public String getUserStatementFromReplyId(int replyId) throws DLBException {
+	public String getUserStatementFromReplyId(int replyId) throws ExecutionException {
 		DLBReply selectedReply = currentNode.getBody().findReplyById(replyId);
 		if (selectedReply == null) {
-			throw new DLBException(DLBException.Type.REPLY_NOT_FOUND,
+			throw new ExecutionException(ExecutionException.Type.REPLY_NOT_FOUND,
 					String.format("Reply with ID %s not found in dialogue \"%s\", node \"%s\"",
 					replyId, dialogueDefinition.getDialogueName(), currentNode.getTitle()));
 		}

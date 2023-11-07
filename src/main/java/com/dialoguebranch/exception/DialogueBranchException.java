@@ -28,30 +28,13 @@
 
 package com.dialoguebranch.exception;
 
-import java.io.Serial;
+public abstract class DialogueBranchException extends Exception {
 
-/**
- * Exception that may be thrown whenever the user is providing invalid input in any Dialogue Branch
- * related context.
- *
- * @author Harm op den Akker (Fruit Tree Labs)
- */
-public class DLBInvalidInputException extends Exception {
+    public DialogueBranchException(String message) {
+        super(message);
+    }
 
-	@Serial
-	private static final long serialVersionUID = 1L;
-
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
-
-	/**
-	 * Creates an instance of a {@link DLBInvalidInputException} with a given message.
-	 *
-	 * @param message the error message describing which input was invalid.
-	 */
-	public DLBInvalidInputException(String message) {
-		super(message);
-	}
-
+    public DialogueBranchException(String message, Throwable cause) {
+        super(message,cause);
+    }
 }

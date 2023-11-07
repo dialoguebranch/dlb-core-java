@@ -38,7 +38,7 @@ import java.io.Serial;
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBNodeParseException extends ParseException {
+public class NodeParseException extends ParseException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class DLBNodeParseException extends ParseException {
 	 * @param nodeTitle the node title or {@code null}
 	 * @param cause the parse error
 	 */
-	public DLBNodeParseException(String message, String nodeTitle, LineNumberParseException cause) {
+	public NodeParseException(String message, String nodeTitle, LineNumberParseException cause) {
 		super(message, cause);
 		this.nodeTitle = nodeTitle;
 	}
@@ -76,10 +76,10 @@ public class DLBNodeParseException extends ParseException {
 	}
 
 	/**
-	 * Returns the cause of this {@link DLBNodeParseException} as a
+	 * Returns the cause of this {@link NodeParseException} as a
 	 * {@link LineNumberParseException}.
 	 * 
-	 * @return the {@link LineNumberParseException} that caused this {@link DLBNodeParseException}
+	 * @return the {@link LineNumberParseException} that caused this {@link NodeParseException}
 	 */
 	public LineNumberParseException getLineNumberParseException() {
 		return (LineNumberParseException)getCause();

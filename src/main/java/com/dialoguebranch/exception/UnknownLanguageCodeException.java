@@ -35,7 +35,7 @@ import java.io.Serial;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBUnknownLanguageCodeException extends Exception {
+public class UnknownLanguageCodeException extends DialogueBranchException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -52,7 +52,7 @@ public class DLBUnknownLanguageCodeException extends Exception {
 	 * @param message the message
 	 * @param languageCode the unknown language code
 	 */
-	public DLBUnknownLanguageCodeException(String message, String languageCode) {
+	public UnknownLanguageCodeException(String message, String languageCode) {
 		super(message);
 		this.languageCode = languageCode;
 	}
@@ -62,7 +62,7 @@ public class DLBUnknownLanguageCodeException extends Exception {
 	// -----------------------------------------------------------
 
 	/**
-	 * Return the language code associated with this {@link DLBUnknownLanguageCodeException}.
+	 * Return the language code associated with this {@link UnknownLanguageCodeException}.
 	 *
 	 * @return the language code or {@code null}.
 	 */

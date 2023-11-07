@@ -2,12 +2,13 @@
  *
  *                   Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
+ *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
- *      as outlined below. Based on original source code licensed under the following terms:
+ *                                        as outlined below.
  *
  *                                            ----------
  *
- * Copyright 2019-2022 WOOL Foundation - Licensed under the MIT License:
+ * Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
  * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -30,67 +31,27 @@ package com.dialoguebranch.exception;
 import java.io.Serial;
 
 /**
- * A {@link DLBException} is an exception that can be thrown during execution of a Dialogue Branch
- * dialogue.
+ * Exception that may be thrown whenever the user is providing invalid input in any Dialogue Branch
+ * related context.
  *
- * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBException extends Exception {
+public class InvalidInputException extends DialogueBranchException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * A {@link DLBException.Type} defines the different types of exception that can be thrown by
-	 * the Dialogue Branch libraries and software.
-	 */
-	public enum Type {
-		AGENT_NOT_FOUND,
-		DIALOGUE_NOT_FOUND,
-		NODE_NOT_FOUND,
-		REPLY_NOT_FOUND,
-		INTERACTION_NOT_FOUND,
-		NO_ACTIVE_DIALOGUE
-	}
-	
-	private final Type type;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link DLBException} with a given {@link Type} and {@code message}.
-	 * @param type the type of the exception
-	 * @param message the error message
+	 * Creates an instance of a {@link InvalidInputException} with a given message.
+	 *
+	 * @param message the error message describing which input was invalid.
 	 */
-	public DLBException(Type type, String message) {
+	public InvalidInputException(String message) {
 		super(message);
-		this.type = type;
 	}
 
-	/**
-	 * Creates an instance of a {@link DLBException} with a given {@link Type}, {@code message} and
-	 * {@code cause}.
-	 * @param type the type of the exception
-	 * @param message the error message
-	 * @param cause the cause of the exception
-	 */
-	public DLBException(Type type, String message, Throwable cause) {
-		super(message, cause);
-		this.type = type;
-	}
-
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
-
-	/**
-	 * Returns the {@link Type} of this {@link DLBException}.
-	 * @return the {@link Type} of this {@link DLBException}.
-	 */
-	public Type getType() {
-		return type;
-	}
 }

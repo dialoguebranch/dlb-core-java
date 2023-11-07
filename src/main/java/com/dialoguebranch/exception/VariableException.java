@@ -30,43 +30,43 @@ package com.dialoguebranch.exception;
 import java.io.Serial;
 
 /**
- * An exception that indicates that a DialogueBranch project is trying to define two languages with
- * the same language code, or similar errors.
- *
+ * This exception can be thrown when the content of the variable store is not as expected. It can
+ * mean that a variable is not defined or its value is invalid.
+ * 
+ * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DuplicateLanguageCodeException extends DialogueBranchException {
+public class VariableException extends RuntimeException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
-	private final String languageCode;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Constructs a new exception for the specified language code.
-	 *
-	 * @param message the message
-	 * @param languageCode the duplicate language code
+	 * Creates an instance of a {@link VariableException} with given {@code message}.
+	 * @param message the error message
 	 */
-	public DuplicateLanguageCodeException(String message, String languageCode) {
+	public VariableException(String message) {
 		super(message);
-		this.languageCode = languageCode;
 	}
-
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
 
 	/**
-	 * Return the language code associated with this {@link DuplicateLanguageCodeException}.
-	 *
-	 * @return the language code or {@code null}.
+	 * Creates an instance of a {@link VariableException} with given {@code cause}.
+	 * @param cause the cause of the exception
 	 */
-	public String getLanguageCode() {
-		return languageCode;
+	public VariableException(Throwable cause) {
+		super(cause);
 	}
 
+	/**
+	 * Creates an instance of a {@link VariableException} with given {@code message} and {@code cause}.
+	 * @param message the error message
+	 * @param cause the cause of the exception
+	 */
+	public VariableException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

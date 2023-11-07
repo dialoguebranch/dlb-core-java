@@ -32,7 +32,7 @@ import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
 import nl.rrd.utils.xml.SimpleSAXHandler;
 import nl.rrd.utils.xml.XMLWriter;
 import com.dialoguebranch.exception.DuplicateLanguageCodeException;
-import com.dialoguebranch.exception.DLBUnknownLanguageCodeException;
+import com.dialoguebranch.exception.UnknownLanguageCodeException;
 import org.xml.sax.Attributes;
 
 import java.io.IOException;
@@ -263,16 +263,16 @@ public class DLBProjectMetaData {
 	 * @param sourceLanguageCode the language code of the source language for which to look up its
 	 *                           {@link LanguageSet}.
 	 * @return the {@link LanguageSet} with a source language with the given {@code code}.
-	 * @throws DLBUnknownLanguageCodeException if no language set exists with the given source
+	 * @throws UnknownLanguageCodeException if no language set exists with the given source
 	 *                                         language code.
 	 */
 	public LanguageSet getLanguageSetForSourceLanguage(String sourceLanguageCode)
-			throws DLBUnknownLanguageCodeException {
+			throws UnknownLanguageCodeException {
 		for(LanguageSet languageSet : languageMap.getLanguageSets()) {
 			if(languageSet.getSourceLanguage().getCode().equals(sourceLanguageCode))
 				return languageSet;
 		}
-		throw new DLBUnknownLanguageCodeException("No language set found with source language '"
+		throw new UnknownLanguageCodeException("No language set found with source language '"
 				+sourceLanguageCode+"'.",sourceLanguageCode);
 	}
 

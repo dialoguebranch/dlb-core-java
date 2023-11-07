@@ -30,43 +30,70 @@ package com.dialoguebranch.exception;
 import java.io.Serial;
 
 /**
- * This exception can be thrown when the content of the variable store is not as expected. It can
- * mean that a variable is not defined or its value is invalid.
- * 
+ * An {@link ExecutionException} is an exception that can be thrown during execution of a Dialogue
+ * Branch script.
+ *
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBVariableException extends RuntimeException {
+public class ExecutionException extends DialogueBranchException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
+
+	/**
+	 * An {@link ExecutionException.Type} is a further refinement of the type of execution error
+	 * that has occurred.
+	 */
+	public enum Type {
+		AGENT_NOT_FOUND,
+		DIALOGUE_NOT_FOUND,
+		NODE_NOT_FOUND,
+		REPLY_NOT_FOUND,
+		INTERACTION_NOT_FOUND,
+		NO_ACTIVE_DIALOGUE
+	}
+	
+	private final Type type;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link DLBVariableException} with given {@code message}.
+	 * Creates an instance of an {@link ExecutionException} with a given {@link Type} and
+	 * {@code message}.
+	 *
+	 * @param type the type of the exception
 	 * @param message the error message
 	 */
-	public DLBVariableException(String message) {
+	public ExecutionException(Type type, String message) {
 		super(message);
+		this.type = type;
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBVariableException} with given {@code cause}.
-	 * @param cause the cause of the exception
-	 */
-	public DLBVariableException(Throwable cause) {
-		super(cause);
-	}
-
-	/**
-	 * Creates an instance of a {@link DLBVariableException} with given {@code message} and {@code cause}.
+	 * Creates an instance of an {@link ExecutionException} with a given {@link Type},
+	 * {@code message} and {@code cause}.
+	 *
+	 * @param type the type of the exception
 	 * @param message the error message
 	 * @param cause the cause of the exception
 	 */
-	public DLBVariableException(String message, Throwable cause) {
+	public ExecutionException(Type type, String message, Throwable cause) {
 		super(message, cause);
+		this.type = type;
+	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
+	/**
+	 * Returns the {@link Type} of this {@link ExecutionException}.
+	 * @return the {@link Type} of this {@link ExecutionException}.
+	 */
+	public Type getType() {
+		return type;
 	}
 }
