@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.parser.DialogueBranchParser;
 import com.dialoguebranch.parser.ParserResult;
@@ -109,7 +109,7 @@ public class POEditorTools {
 	 */
 	public List<DLBTranslationTerm> extractTranslationTermsFromDLBScript(File dlbScriptFile) throws IOException {
 		// Read in the dialogue from the .dlb script file
-		DLBDialogue dialogue = readDialogueFile(dlbScriptFile);
+		Dialogue dialogue = readDialogueFile(dlbScriptFile);
 
 		System.out.println("===== Processing: " + dialogue.getDialogueName() + " with " + dialogue.getNodeCount() + " nodes. =====");
 
@@ -141,13 +141,13 @@ public class POEditorTools {
 	 * @throws IOException in case of a read error for any of the .dlb scripts.
 	 */
 	public Set<File> getCompleteReferencedDialoguesSet(Set<File> allDialogueFiles, File dlbScriptFile) throws IOException {
-		DLBDialogue DLBDialogue = readDialogueFile(dlbScriptFile);
+		Dialogue dialogue = readDialogueFile(dlbScriptFile);
 
 		// Include the given root dlbScriptFile if not already in the result set
 		allDialogueFiles.add(dlbScriptFile);
 
 		// Get all dialogues that are referenced from the given dlbScriptFile
-		Set<String> referencedDialogues = DLBDialogue.getDialoguesReferenced();
+		Set<String> referencedDialogues = dialogue.getDialoguesReferenced();
 		for(String referencedDialogue : referencedDialogues) {
 			File referencedDialogueFile = new File(dlbScriptFile.getParent() + File.separator + referencedDialogue + ".dlb");
 			if(!allDialogueFiles.contains(referencedDialogueFile)) {
@@ -160,12 +160,12 @@ public class POEditorTools {
 	}
 
 	/**
-	 * Returns a {@link DLBDialogue} object as read in from a DialogueBranch script identified by the
+	 * Returns a {@link Dialogue} object as read in from a DialogueBranch script identified by the
 	 * given {@code fileName}.
 	 * @param dlbScriptFile the .dlb script {@link File} to read
-	 * @return a {@link DLBDialogue} object representation of the given .dlb script
+	 * @return a {@link Dialogue} object representation of the given .dlb script
 	 */
-	public DLBDialogue readDialogueFile (File dlbScriptFile) {
+	public Dialogue readDialogueFile (File dlbScriptFile) {
 		try(DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(dlbScriptFile)) {
 			ParserResult parserResult = dialogueBranchParser.readDialogue();
 			return parserResult.getDialogue();

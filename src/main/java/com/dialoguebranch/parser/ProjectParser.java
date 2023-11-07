@@ -38,8 +38,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.DLBFileType;
-import com.dialoguebranch.model.DialogueBranchFileDescriptor;
+import com.dialoguebranch.model.FileType;
+import com.dialoguebranch.model.FileDescriptor;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.DLBContextTranslation;
@@ -48,7 +48,7 @@ import com.dialoguebranch.i18n.DLBTranslationContext;
 import com.dialoguebranch.i18n.DLBTranslationParser;
 import com.dialoguebranch.i18n.DLBTranslationParserResult;
 import com.dialoguebranch.i18n.DLBTranslator;
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBProject;
 
 /**
@@ -61,10 +61,10 @@ import com.dialoguebranch.model.DLBProject;
 public class ProjectParser {
 	private final FileLoader fileLoader;
 
-	private final Map<DialogueBranchFileDescriptor, DLBDialogue> dialogues = new LinkedHashMap<>();
-	private final Map<DialogueBranchFileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
+	private final Map<FileDescriptor, Dialogue> dialogues = new LinkedHashMap<>();
+	private final Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
 			translations = new LinkedHashMap<>();
-	private final Map<DialogueBranchFileDescriptor, DLBDialogue> translatedDialogues = new LinkedHashMap<>();
+	private final Map<FileDescriptor, Dialogue> translatedDialogues = new LinkedHashMap<>();
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
@@ -86,7 +86,7 @@ public class ProjectParser {
 	public ProjectParserResult parse() throws IOException {
 		ProjectParserResult projectParserResult = new ProjectParserResult(fileLoader);
 
-		List<DialogueBranchFileDescriptor> files = fileLoader.listDialogueBranchFiles();
+		List<FileDescriptor> files = fileLoader.listDialogueBranchFiles();
 
 		parseFiles(files, projectParserResult);
 
@@ -101,15 +101,15 @@ public class ProjectParser {
 		DLBProject project = new DLBProject();
 		project.setDialogues(translatedDialogues);
 
-		Map<DialogueBranchFileDescriptor, DLBDialogue> sourceDialogues = new LinkedHashMap<>();
-		for (DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
+		Map<FileDescriptor, Dialogue> sourceDialogues = new LinkedHashMap<>();
+		for (FileDescriptor fileDescription : dialogues.keySet()) {
 			sourceDialogues.put(fileDescription, dialogues.get(fileDescription));
 		}
 		project.setSourceDialogues(sourceDialogues);
 
-		Map<DialogueBranchFileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>> dlgTranslations =
+		Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>> dlgTranslations =
 				new LinkedHashMap<>();
-		for (DialogueBranchFileDescriptor fileDescription : translations.keySet()) {
+		for (FileDescriptor fileDescription : translations.keySet()) {
 			dlgTranslations.put(fileDescription, translations.get(fileDescription));
 		}
 
@@ -129,22 +129,22 @@ public class ProjectParser {
 	 * @param readResult the read result
 	 * @throws IOException if a reading error occurs
 	 */
-	private void parseFiles(List<DialogueBranchFileDescriptor> fileDescriptions,
+	private void parseFiles(List<FileDescriptor> fileDescriptions,
 							ProjectParserResult readResult) throws IOException {
-		Set<DialogueBranchFileDescriptor> fileDescriptionsSet = new HashSet<>();
-		List<DialogueBranchFileDescriptor> dialogueFiles = new ArrayList<>();
-		List<DialogueBranchFileDescriptor> translationFiles = new ArrayList<>();
+		Set<FileDescriptor> fileDescriptionsSet = new HashSet<>();
+		List<FileDescriptor> dialogueFiles = new ArrayList<>();
+		List<FileDescriptor> translationFiles = new ArrayList<>();
 
 		// Split the given fileDescriptions into dialogueFiles and translationFiles
-		for (DialogueBranchFileDescriptor fileDescription : fileDescriptions) {
-			if (fileDescription.getFileType() == DLBFileType.SCRIPT)
+		for (FileDescriptor fileDescription : fileDescriptions) {
+			if (fileDescription.getFileType() == FileType.SCRIPT)
 				dialogueFiles.add(fileDescription);
-			else if (fileDescription.getFileType() == DLBFileType.TRANSLATION)
+			else if (fileDescription.getFileType() == FileType.TRANSLATION)
 				translationFiles.add(fileDescription);
 		}
 
 		Set<String> dialogueNames = new HashSet<>();
-		for (DialogueBranchFileDescriptor fileDescription : dialogueFiles) {
+		for (FileDescriptor fileDescription : dialogueFiles) {
 			fileDescriptionsSet.add(fileDescription);
 			ParserResult dlgReadResult = parseDialogueFile(fileDescription);
 			if (dlgReadResult.getParseErrors().isEmpty()) {
@@ -157,8 +157,8 @@ public class ProjectParser {
 
 		if (readResult.getParseErrors().isEmpty()) {
 			// validate referenced dialogues in external node pointers
-			for (DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
-				DLBDialogue dlg = dialogues.get(fileDescription);
+			for (FileDescriptor fileDescription : dialogues.keySet()) {
+				Dialogue dlg = dialogues.get(fileDescription);
 				for (String refName : dlg.getDialoguesReferenced()) {
 					if (!dialogueNames.contains(refName)) {
 						getParseErrors(readResult, fileDescription).add(
@@ -170,7 +170,7 @@ public class ProjectParser {
 			}
 		}
 
-		for (DialogueBranchFileDescriptor fileDescription : translationFiles) {
+		for (FileDescriptor fileDescription : translationFiles) {
 			if (fileDescriptionsSet.contains(fileDescription)) {
 				getParseErrors(readResult, fileDescription).add(new ParseException(
 					String.format("Found both translation file \"%s\" and dialogue file \"%s.dlb\"",
@@ -192,7 +192,7 @@ public class ProjectParser {
 	}
 
 	private List<ParseException> getParseErrors(ProjectParserResult readResult,
-												DialogueBranchFileDescriptor fileDescription) {
+												FileDescriptor fileDescription) {
 		String path = fileDescriptionToPath(fileDescription);
 		List<ParseException> errors = readResult.getParseErrors().get(path);
 		if (errors != null)
@@ -203,7 +203,7 @@ public class ProjectParser {
 	}
 
 	private List<String> getWarnings(ProjectParserResult readResult,
-									 DialogueBranchFileDescriptor fileDescription) {
+									 FileDescriptor fileDescription) {
 		String path = fileDescriptionToPath(fileDescription);
 		List<String> warnings = readResult.getWarnings().get(path);
 		if (warnings != null)
@@ -223,13 +223,13 @@ public class ProjectParser {
 	 * @param readResult the read result
 	 */
 	private void createTranslatedDialogues(ProjectParserResult readResult) {
-		for (DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
-			DLBDialogue dlg = dialogues.get(fileDescription);
+		for (FileDescriptor fileDescription : dialogues.keySet()) {
+			Dialogue dlg = dialogues.get(fileDescription);
 			translatedDialogues.put(fileDescription, dlg);
 		}
 
-		for (DialogueBranchFileDescriptor fileDescription : translations.keySet()) {
-			DLBDialogue source = findSourceDialogue(fileDescription.getDialogueName());
+		for (FileDescriptor fileDescription : translations.keySet()) {
+			Dialogue source = findSourceDialogue(fileDescription.getDialogueName());
 			if (source == null) {
 				getParseErrors(readResult, fileDescription).add(new ParseException(
 						"No source dialogue found for translation: " + fileDescription));
@@ -237,14 +237,14 @@ public class ProjectParser {
 			}
 			DLBTranslator translator = new DLBTranslator(
 					new DLBTranslationContext(), translations.get(fileDescription));
-			DLBDialogue translated = translator.translate(source);
+			Dialogue translated = translator.translate(source);
 			translatedDialogues.put(fileDescription, translated);
 		}
 	}
 
-	private DLBDialogue findSourceDialogue(String dlgName) {
-		List<DialogueBranchFileDescriptor> matches = new ArrayList<>();
-		for (DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
+	private Dialogue findSourceDialogue(String dlgName) {
+		List<FileDescriptor> matches = new ArrayList<>();
+		for (FileDescriptor fileDescription : dialogues.keySet()) {
 			String currDlgName = fileDescription.getDialogueName();
 			if (currDlgName.equals(dlgName))
 				matches.add(fileDescription);
@@ -253,8 +253,8 @@ public class ProjectParser {
 			return null;
 		if (matches.size() == 1)
 			return dialogues.get(matches.get(0));
-		Map<String, DialogueBranchFileDescriptor> lngMap = new HashMap<>();
-		for (DialogueBranchFileDescriptor match : matches) {
+		Map<String, FileDescriptor> lngMap = new HashMap<>();
+		for (FileDescriptor match : matches) {
 			lngMap.put(match.getLanguage(), match);
 		}
 		I18nLanguageFinder finder = new I18nLanguageFinder(new ArrayList<>(
@@ -267,7 +267,7 @@ public class ProjectParser {
 			return dialogues.get(lngMap.get(language));
 	}
 
-	private ParserResult parseDialogueFile(DialogueBranchFileDescriptor description)
+	private ParserResult parseDialogueFile(FileDescriptor description)
 			throws IOException {
 		String dlgName = description.getDialogueName();
 		try (DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(dlgName,
@@ -276,14 +276,14 @@ public class ProjectParser {
 		}
 	}
 
-	private DLBTranslationParserResult parseTranslationFile(DialogueBranchFileDescriptor description)
+	private DLBTranslationParserResult parseTranslationFile(FileDescriptor description)
 			throws IOException {
 		try (Reader reader = fileLoader.openFile(description)) {
 			return DLBTranslationParser.parse(reader);
 		}
 	}
 
-	private String fileDescriptionToPath(DialogueBranchFileDescriptor fileDescription) {
+	private String fileDescriptionToPath(FileDescriptor fileDescription) {
 		return fileDescription.getLanguage() + "/" + fileDescription.getFilePath();
 	}
 }

@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An {@link ActiveDialogue} is a wrapper around a {@link DLBDialogue}, which contains a static
+ * An {@link ActiveDialogue} is a wrapper around a {@link Dialogue}, which contains a static
  * definition of a dialogue (referred to as the {@code dialogueDefinition}). The
  * {@link ActiveDialogue} also contains utility functions to keep track of the state during
  * "execution" of the dialogue.
@@ -52,8 +52,8 @@ import java.util.Map;
  */
 public class ActiveDialogue {
 
-	private final DialogueBranchFileDescriptor dialogueFileDescription;
-	private final DLBDialogue dialogueDefinition;
+	private final FileDescriptor dialogueFileDescription;
+	private final Dialogue dialogueDefinition;
 	private DLBNode currentNode;
 	private DLBVariableStore dlbVariableStore;
 
@@ -63,14 +63,14 @@ public class ActiveDialogue {
 
 	/**
 	 * Creates an instance of an {@link ActiveDialogue} with a given
-	 * {@link DialogueBranchFileDescriptor} and {@link DLBDialogue}.
+	 * {@link FileDescriptor} and {@link Dialogue}.
 	 *
-	 * @param dialogueFileDescription the {@link DialogueBranchFileDescriptor} containing metadata
+	 * @param dialogueFileDescription the {@link FileDescriptor} containing metadata
 	 *                                of the dialogue file used in this {@link ActiveDialogue}.
 	 * @param dialogueDefinition the dialogue definition
 	 */
-	public ActiveDialogue(DialogueBranchFileDescriptor dialogueFileDescription,
-						  DLBDialogue dialogueDefinition) {
+	public ActiveDialogue(FileDescriptor dialogueFileDescription,
+						  Dialogue dialogueDefinition) {
 		this.dialogueFileDescription = dialogueFileDescription;
 		this.dialogueDefinition = dialogueDefinition;
 	}
@@ -80,20 +80,20 @@ public class ActiveDialogue {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the {@link DialogueBranchFileDescriptor} of the dialogue file corresponding to this
+	 * Returns the {@link FileDescriptor} of the dialogue file corresponding to this
 	 * {@link ActiveDialogue} containing metadata for the file.
-	 * @return the dialogue file description as a {@link DialogueBranchFileDescriptor}
+	 * @return the dialogue file description as a {@link FileDescriptor}
 	 */
-	public DialogueBranchFileDescriptor getDialogueFileDescription() {
+	public FileDescriptor getDialogueFileDescription() {
 		return dialogueFileDescription;
 	}
 
 	/**
-	 * Returns the {@link DLBDialogue} containing the definition of the dialogue being run through
+	 * Returns the {@link Dialogue} containing the definition of the dialogue being run through
 	 * this {@link ActiveDialogue} object.
-	 * @return the dialogue definition as a {@link DLBDialogue}
+	 * @return the dialogue definition as a {@link Dialogue}
 	 */
-	public DLBDialogue getDialogueDefinition() {
+	public Dialogue getDialogueDefinition() {
 		return dialogueDefinition;
 	}
 
@@ -227,7 +227,7 @@ public class ActiveDialogue {
 	public DLBNode progressDialogue(NodePointerInternal nodePointer, ZonedDateTime eventTime)
 			throws EvaluationException {
 		DLBNode nextNode = null;
-		if (!nodePointer.getNodeId().equalsIgnoreCase(DLBConstants.DLB_NODE_END_ID))
+		if (!nodePointer.getNodeId().equalsIgnoreCase(Constants.DLB_NODE_END_ID))
 			nextNode = dialogueDefinition.getNodeById(nodePointer.getNodeId());
 		this.currentNode = nextNode;
 		if (nextNode != null) this.currentNode = executeDLBNode(nextNode, eventTime);
@@ -253,9 +253,9 @@ public class ActiveDialogue {
 	 * Returns the statement corresponding to a given {@code replyId}. In any given state of the
 	 * conversation, the user's client may return a replyId corresponding to a specific reply option
 	 * in the current node. This method retrieves the corresponding statement to that reply, which
-	 * may be the statement as defined in the {@link DLBDialogue}, or it may be a constant defining
+	 * may be the statement as defined in the {@link Dialogue}, or it may be a constant defining
 	 * that this was an "Auto Forward" reply without a specified statement (see
-	 * {@link DLBConstants#DLB_REPLY_STATEMENT_AUTOFORWARD}).
+	 * {@link Constants#DLB_REPLY_STATEMENT_AUTOFORWARD}).
 	 *
 	 * @param replyId the reply id as provided e.g. by a client application.
 	 * @return the statement {@link String} corresponding to the reply identified by {@code replyId}
@@ -269,7 +269,7 @@ public class ActiveDialogue {
 					replyId, dialogueDefinition.getDialogueName(), currentNode.getTitle()));
 		}
 		if (selectedReply.getStatement() == null)
-			return DLBConstants.DLB_REPLY_STATEMENT_AUTOFORWARD;
+			return Constants.DLB_REPLY_STATEMENT_AUTOFORWARD;
 		StringBuilder result = new StringBuilder();
 		List<DLBNodeBody.Segment> segments = selectedReply.getStatement()
 				.getSegments();

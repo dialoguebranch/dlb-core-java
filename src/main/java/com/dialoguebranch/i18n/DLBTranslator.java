@@ -31,7 +31,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBVariableString;
@@ -95,8 +95,8 @@ public class DLBTranslator {
 	 * @param dialogue the dialogue
 	 * @return the translated dialogue
 	 */
-	public DLBDialogue translate(DLBDialogue dialogue) {
-		dialogue = new DLBDialogue(dialogue);
+	public Dialogue translate(Dialogue dialogue) {
+		dialogue = new Dialogue(dialogue);
 		for (DLBNode node : dialogue.getNodes()) {
 			translateBody(node.getHeader().getSpeaker(),
 					DLBSourceTranslatable.USER, node.getBody());

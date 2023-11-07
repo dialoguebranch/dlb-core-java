@@ -39,13 +39,13 @@ import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.model.nodepointer.NodePointerExternal;
 
 /**
- * Object representation of a DialogueBranch Dialogue definition. A {@link DLBDialogue} has a name
+ * Object representation of a DialogueBranch Dialogue definition. A {@link Dialogue} has a name
  * and an (unordered) list of {@link DLBNode}s. One of these {@link DLBNode}s should have as title
  * "Start".
  * 
  * @author Harm op den Akker (Roessingh Research and Development)
  */
-public class DLBDialogue {
+public class Dialogue {
 	
 	private String dialogueName;
 	private Map<String, DLBNode> nodes = new LinkedHashMap<>(); // map from lower-case node titles to nodes
@@ -57,27 +57,27 @@ public class DLBDialogue {
 	// ---------- Constructors:
 	
 	/**
-	 * Creates an empty instance of a {@link DLBDialogue}.
+	 * Creates an empty instance of a {@link Dialogue}.
 	 */
-	public DLBDialogue() {
+	public Dialogue() {
 	}
 	
 	/**
-	 * Creates an instance of a {@link DLBDialogue} with a given {@code dialogueName}.
+	 * Creates an instance of a {@link Dialogue} with a given {@code dialogueName}.
 	 *
-	 * @param dialogueName the name of this {@link DLBDialogue}.
+	 * @param dialogueName the name of this {@link Dialogue}.
 	 */
-	public DLBDialogue(String dialogueName) {
+	public Dialogue(String dialogueName) {
 		this.dialogueName = dialogueName;
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBDialogue}, instantiated with the contents of the given
-	 * {@code other} {@link DLBDialogue}.
+	 * Creates an instance of a {@link Dialogue}, instantiated with the contents of the given
+	 * {@code other} {@link Dialogue}.
 	 *
-	 * @param other the {@link DLBDialogue} with which to instantiate this {@link DLBDialogue}
+	 * @param other the {@link Dialogue} with which to instantiate this {@link Dialogue}
 	 */
-	public DLBDialogue(DLBDialogue other) {
+	public Dialogue(Dialogue other) {
 		dialogueName = other.dialogueName;
 		for (String key : other.nodes.keySet()) {
 			nodes.put(key, new DLBNode(other.nodes.get(key)));
@@ -91,18 +91,18 @@ public class DLBDialogue {
 	// ---------- Getters:
 	
 	/**
-	 * Returns the name of this {@link DLBDialogue}.
+	 * Returns the name of this {@link Dialogue}.
 	 *
-	 * @return the name of this {@link DLBDialogue}.
+	 * @return the name of this {@link Dialogue}.
 	 */
 	public String getDialogueName() {
 		return this.dialogueName;
 	}
 	
 	/**
-	 * Returns the starting {@link DLBNode} for this {@link DLBDialogue}.
+	 * Returns the starting {@link DLBNode} for this {@link Dialogue}.
 	 *
-	 * @return the starting {@link DLBNode} for this {@link DLBDialogue}.
+	 * @return the starting {@link DLBNode} for this {@link Dialogue}.
 	 */
 	public DLBNode getStartNode() {
 		return nodes.get("start");
@@ -129,8 +129,7 @@ public class DLBDialogue {
 		for (NodePointer nodePointer : nodePointers) {
 			if (!(nodePointer instanceof NodePointerExternal))
 				continue;
-			NodePointerExternal extPointer =
-					(NodePointerExternal)nodePointer;
+			NodePointerExternal extPointer = (NodePointerExternal)nodePointer;
 			dialoguesReferenced.add(extPointer.getDialogueId());
 		}
 	}
@@ -155,9 +154,9 @@ public class DLBDialogue {
 
 	/**
 	 * Returns a {@link Set} of {@link String}s containing all the names of dialogues
-	 * that are referenced by this {@link DLBDialogue}. These names do not include path and
+	 * that are referenced by this {@link Dialogue}. These names do not include path and
 	 * file extension information.
-	 * @return all DialogueBranch dialogues referenced directly from this {@link DLBDialogue}.
+	 * @return all DialogueBranch dialogues referenced directly from this {@link Dialogue}.
 	 */
 	public Set<String> getDialoguesReferenced() {
 		return Collections.unmodifiableSet(dialoguesReferenced);
@@ -166,8 +165,8 @@ public class DLBDialogue {
 	// ---------- Setters:
 	
 	/**
-	 * Sets the name of this {@link DLBDialogue}.
-	 * @param dialogueName the name of this {@link DLBDialogue}.
+	 * Sets the name of this {@link Dialogue}.
+	 * @param dialogueName the name of this {@link Dialogue}.
 	 */
 	public void setDialogueName(String dialogueName) {
 		this.dialogueName = dialogueName;
@@ -189,45 +188,45 @@ public class DLBDialogue {
 	}
 	
 	/**
-	 * Returns the total number of nodes in this {@link DLBDialogue}.
+	 * Returns the total number of nodes in this {@link Dialogue}.
 	 *
-	 * @return the total number of nodes in this {@link DLBDialogue}.
+	 * @return the total number of nodes in this {@link Dialogue}.
 	 */
 	public int getNodeCount() {
 		return nodes.size();
 	}
 	
 	/**
-	 * Returns the total number of speakers present in this {@link DLBDialogue}.
+	 * Returns the total number of speakers present in this {@link Dialogue}.
 	 *
-	 * @return the total number of speakers present in this {@link DLBDialogue}.
+	 * @return the total number of speakers present in this {@link Dialogue}.
 	 */
 	public int getSpeakerCount() {
 		return speakers.size();
 	}
 	
 	/**
-	 * Returns the total number of different dialogues referenced from this {@link DLBDialogue}.
+	 * Returns the total number of different dialogues referenced from this {@link Dialogue}.
 	 *
-	 * @return the total number of different dialogues referenced from this {@link DLBDialogue}.
+	 * @return the total number of different dialogues referenced from this {@link Dialogue}.
 	 */
 	public int getDialoguesReferencedCount() {
 		return dialoguesReferenced.size();
 	}
 	
 	/**
-	 * Returns the total number of different variables needed in executing this {@link DLBDialogue}.
+	 * Returns the total number of different variables needed in executing this {@link Dialogue}.
 	 *
-	 * @return the total number of different variables needed in executing this {@link DLBDialogue}.
+	 * @return the total number of different variables needed in executing this {@link Dialogue}.
 	 */
 	public int getVariablesNeededCount() {
 		return variablesNeeded.size();
 	}
 	
 	/**
-	 * Returns the total number of different variables written in executing this {@link DLBDialogue}.
+	 * Returns the total number of different variables written in executing this {@link Dialogue}.
 	 *
-	 * @return the total number of different variables written in executing this {@link DLBDialogue}.
+	 * @return the total number of different variables written in executing this {@link Dialogue}.
 	 */
 	public int getVariablesWrittenCount() {
 		return variablesWritten.size();
@@ -235,7 +234,7 @@ public class DLBDialogue {
 	
 	/**
 	 * Returns a human-readable multi-line summary string, representing the contents of this
-	 * {@link DLBDialogue}.
+	 * {@link Dialogue}.
 	 */
 	public String toString() {
 		String summaryString = "";

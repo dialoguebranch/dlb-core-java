@@ -32,7 +32,7 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- * A {@link DialogueBranchFileDescriptor} contains metadata for a Dialogue Branch file that can either be a
+ * A {@link FileDescriptor} contains metadata for a Dialogue Branch file that can either be a
  * Script file (.dlb) or a Translation file (.json). It has three properties:
  * <ul>
  *   <li>{@code language} - the name of the language folder in which the file was found</li>
@@ -40,43 +40,43 @@ import java.util.Objects;
  *   <li>{@code filePath} - the complete path to the file, relative to the language folder,
  *   including the file extension</li>
  *
- *   <li>{@code fileType} - either {@link DLBFileType#SCRIPT} or {@link DLBFileType#TRANSLATION}
+ *   <li>{@code fileType} - either {@link FileType#SCRIPT} or {@link FileType#TRANSLATION}
  *   indicating the type of the file</li>
  * </ul>
  *
  * Additionally, one can obtain the unique "dialogue identifier" by calling
- * {@link DialogueBranchFileDescriptor#getDialogueName()} which will return the name of the dialogue without
+ * {@link FileDescriptor#getDialogueName()} which will return the name of the dialogue without
  * its file extension (but including any subdirectories under the language directory in which it
  * resides).
  *
  * @author Harm op den Akker (Fruit Tree Labs).
  */
-public class DialogueBranchFileDescriptor {
+public class FileDescriptor {
 	
 	private String language;
 	private String filePath;
-	private DLBFileType fileType;
+	private FileType fileType;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an empty instance of a {@link DialogueBranchFileDescriptor}.
+	 * Creates an empty instance of a {@link FileDescriptor}.
 	 */
-	public DialogueBranchFileDescriptor() {	}
+	public FileDescriptor() {	}
 
 	/**
-	 * Creates an instance of a {@link DialogueBranchFileDescriptor} with a given {@code language},
+	 * Creates an instance of a {@link FileDescriptor} with a given {@code language},
 	 * {@code filePath} and {@code fileType}.
 	 * @param language the name of the "language directory", which is the direct subdirectory of the
 	 *                 project's root directory (e.g. "en" - for English).
 	 * @param filePath the path to the file, relative to the language directory and including the
 	 *                 file extension (e.g. "subdirectory/basic.dlb").
-	 * @param fileType the type of the file as either {@link DLBFileType#SCRIPT} or
-	 *                 {@link DLBFileType#TRANSLATION}.
+	 * @param fileType the type of the file as either {@link FileType#SCRIPT} or
+	 *                 {@link FileType#TRANSLATION}.
 	 */
-	public DialogueBranchFileDescriptor(String language, String filePath, DLBFileType fileType) {
+	public FileDescriptor(String language, String filePath, FileType fileType) {
 		this.setLanguage(language);
 		this.setFilePath(filePath);
 		this.fileType = fileType;
@@ -87,60 +87,60 @@ public class DialogueBranchFileDescriptor {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the language of this {@link DialogueBranchFileDescriptor}, which is the name of the "language
+	 * Returns the language of this {@link FileDescriptor}, which is the name of the "language
 	 * directory", which is the direct subdirectory of the project's root directory (e.g. "en" - for
 	 * English).
-	 * @return the language of this {@link DialogueBranchFileDescriptor}.
+	 * @return the language of this {@link FileDescriptor}.
 	 */
 	public String getLanguage() {
 		return this.language;
 	}
 
 	/**
-	 * Sets the language of this {@link DialogueBranchFileDescriptor}, which is the name of the "language
+	 * Sets the language of this {@link FileDescriptor}, which is the name of the "language
 	 * directory", which is the direct subdirectory of the project's root directory (e.g. "en" - for
 	 * English).
-	 * @param language the language of this {@link DialogueBranchFileDescriptor}.
+	 * @param language the language of this {@link FileDescriptor}.
 	 */
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
 	/**
-	 * Returns the file path of this {@link DialogueBranchFileDescriptor} which is the path to the file,
+	 * Returns the file path of this {@link FileDescriptor} which is the path to the file,
 	 * relative to the language directory and including the file extension
 	 * (e.g. "subdirectory/basic.dlb").
-	 * @return the file path of this {@link DialogueBranchFileDescriptor}.
+	 * @return the file path of this {@link FileDescriptor}.
 	 */
 	public String getFilePath() {
 		return this.filePath;
 	}
 
 	/**
-	 * Sets the file path of this {@link DialogueBranchFileDescriptor} which is the path to the file,
+	 * Sets the file path of this {@link FileDescriptor} which is the path to the file,
 	 * relative to the language directory and including the file extension
 	 * (e.g. "subdirectory/basic.dlb").
-	 * @param filePath the file path of this {@link DialogueBranchFileDescriptor}.
+	 * @param filePath the file path of this {@link FileDescriptor}.
 	 */
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
 
 	/**
-	 * Returns the type of this {@link DialogueBranchFileDescriptor} as either {@link DLBFileType#SCRIPT} or
-	 * {@link DLBFileType#TRANSLATION}.
-	 * @return the type of this {@link DialogueBranchFileDescriptor}.
+	 * Returns the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
+	 * {@link FileType#TRANSLATION}.
+	 * @return the type of this {@link FileDescriptor}.
 	 */
-	public DLBFileType getFileType() {
+	public FileType getFileType() {
 		return fileType;
 	}
 
 	/**
-	 * Sets the type of this {@link DialogueBranchFileDescriptor} as either {@link DLBFileType#SCRIPT} or
-	 * {@link DLBFileType#TRANSLATION}.
-	 * @param fileType the type of this {@link DialogueBranchFileDescriptor}.
+	 * Sets the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
+	 * {@link FileType#TRANSLATION}.
+	 * @param fileType the type of this {@link FileDescriptor}.
 	 */
-	public void setFileType(DLBFileType fileType) {
+	public void setFileType(FileType fileType) {
 		this.fileType = fileType;
 	}
 
@@ -149,10 +149,10 @@ public class DialogueBranchFileDescriptor {
 	// -------------------------------------------------------
 
 	/**
-	 * Returns the "Dialogue Name" associated with this {@link DialogueBranchFileDescriptor}, which is the
+	 * Returns the "Dialogue Name" associated with this {@link FileDescriptor}, which is the
 	 * relative path of the dialogue file (relative to the language folder), including the file
 	 * name, without the extension. For example, for a .dlb script file located at /project-folder/
-	 * en/subfolder/script.dlb, this method will return "subfolder/script".
+	 * en/sub-folder/script.dlb, this method will return "sub-folder/script".
 	 * @return the uniquely identifying dialogue name.
 	 */
 	public String getDialogueName() {
@@ -176,7 +176,7 @@ public class DialogueBranchFileDescriptor {
 			return true;
 		if (obj == null || obj.getClass() != getClass())
 			return false;
-		DialogueBranchFileDescriptor other = (DialogueBranchFileDescriptor)obj;
+		FileDescriptor other = (FileDescriptor)obj;
 		if (!language.equals(other.language))
 			return false;
 		if (!filePath.equals(other.filePath))

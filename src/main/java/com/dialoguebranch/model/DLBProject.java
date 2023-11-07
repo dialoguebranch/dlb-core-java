@@ -44,9 +44,9 @@ import com.dialoguebranch.i18n.DLBTranslatable;
  */
 public class DLBProject {
 	private DLBProjectMetaData metaData;
-	private Map<DialogueBranchFileDescriptor, DLBDialogue> dialogues = new LinkedHashMap<>();
-	private Map<DialogueBranchFileDescriptor, DLBDialogue> sourceDialogues = new LinkedHashMap<>();
-	private Map<DialogueBranchFileDescriptor,
+	private Map<FileDescriptor, Dialogue> dialogues = new LinkedHashMap<>();
+	private Map<FileDescriptor, Dialogue> sourceDialogues = new LinkedHashMap<>();
+	private Map<FileDescriptor,
 			Map<DLBTranslatable,List<DLBContextTranslation>>> translations = new LinkedHashMap<>();
 
 	// --------------------------------------------------------
@@ -69,7 +69,7 @@ public class DLBProject {
 	 *
 	 * @return the available dialogues (source and translations with default context)
 	 */
-	public Map<DialogueBranchFileDescriptor, DLBDialogue> getDialogues() {
+	public Map<FileDescriptor, Dialogue> getDialogues() {
 		return dialogues;
 	}
 
@@ -79,7 +79,7 @@ public class DLBProject {
 	 *
 	 * @param dialogues the available dialogues (source and translations with default context)
 	 */
-	public void setDialogues(Map<DialogueBranchFileDescriptor, DLBDialogue> dialogues) {
+	public void setDialogues(Map<FileDescriptor, Dialogue> dialogues) {
 		this.dialogues = dialogues;
 	}
 
@@ -88,7 +88,7 @@ public class DLBProject {
 	 *
 	 * @return the source dialogues (no translations)
 	 */
-	public Map<DialogueBranchFileDescriptor, DLBDialogue> getSourceDialogues() {
+	public Map<FileDescriptor, Dialogue> getSourceDialogues() {
 		return sourceDialogues;
 	}
 
@@ -97,7 +97,7 @@ public class DLBProject {
 	 *
 	 * @param sourceDialogues the source dialogues (no translations)
 	 */
-	public void setSourceDialogues(Map<DialogueBranchFileDescriptor, DLBDialogue> sourceDialogues) {
+	public void setSourceDialogues(Map<FileDescriptor, Dialogue> sourceDialogues) {
 		this.sourceDialogues = sourceDialogues;
 	}
 
@@ -110,7 +110,7 @@ public class DLBProject {
 	 *
 	 * @return the translations
 	 */
-	public Map<DialogueBranchFileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
+	public Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
 	getTranslations() {
 		return translations;
 	}
@@ -125,7 +125,7 @@ public class DLBProject {
 	 * @param translations the translations
 	 */
 	public void setTranslations(
-			Map<DialogueBranchFileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
+			Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
 					translations) {
 		this.translations = translations;
 	}
@@ -154,7 +154,7 @@ public class DLBProject {
 	/**
 	 * Returns a list of all supported languages in this {@link DLBProject}. In the case of a
 	 * "simple" Dialogue Branch project (i.e. a folder with .dlb and possibly .json files without a
-	 * specific metadata file), this list is derived from the list of {@link DialogueBranchFileDescriptor}s in
+	 * specific metadata file), this list is derived from the list of {@link FileDescriptor}s in
 	 * this {@link DLBProject}. If a {@link DLBProjectMetaData} has been set (and a language map has
 	 * been defined therein), this information will be used instead.
 	 * @return a list of all supported languages in this {@link DLBProject}.
@@ -164,7 +164,7 @@ public class DLBProject {
 
 		// If no metaData has been defined, scrape languages from the set of available dialogues
 		if(metaData == null || metaData.getDLBLanguageMap() == null) {
-			for(DialogueBranchFileDescriptor fileDescription : dialogues.keySet()) {
+			for(FileDescriptor fileDescription : dialogues.keySet()) {
 				if(!result.contains(fileDescription.getLanguage()))
 					result.add(fileDescription.getLanguage());
 			}
@@ -191,9 +191,9 @@ public class DLBProject {
 	 * @param context the translation context
 	 * @return the translated dialogue or null
 	 */
-	public DLBDialogue getTranslatedDialogue(DialogueBranchFileDescriptor dialogueDescription,
-                                             DLBTranslationContext context) {
-		DLBDialogue dialogue = sourceDialogues.get(dialogueDescription);
+	public Dialogue getTranslatedDialogue(FileDescriptor dialogueDescription,
+										  DLBTranslationContext context) {
+		Dialogue dialogue = sourceDialogues.get(dialogueDescription);
 		if (dialogue != null)
 			return dialogue;
 		Map<DLBTranslatable,List<DLBContextTranslation>> translations =
@@ -207,9 +207,9 @@ public class DLBProject {
 		return translator.translate(dialogue);
 	}
 
-	private DLBDialogue findSourceDialogue(String dialogueName) {
-		List<DialogueBranchFileDescriptor> matches = new ArrayList<>();
-		for (DialogueBranchFileDescriptor description : sourceDialogues.keySet()) {
+	private Dialogue findSourceDialogue(String dialogueName) {
+		List<FileDescriptor> matches = new ArrayList<>();
+		for (FileDescriptor description : sourceDialogues.keySet()) {
 			if (description.getFilePath().equals(dialogueName))
 				matches.add(description);
 		}
@@ -217,8 +217,8 @@ public class DLBProject {
 			return null;
 		if (matches.size() == 1)
 			return dialogues.get(matches.get(0));
-		Map<String, DialogueBranchFileDescriptor> lngMap = new HashMap<>();
-		for (DialogueBranchFileDescriptor match : matches) {
+		Map<String, FileDescriptor> lngMap = new HashMap<>();
+		for (FileDescriptor match : matches) {
 			lngMap.put(match.getLanguage(), match);
 		}
 		I18nLanguageFinder finder = new I18nLanguageFinder(new ArrayList<>(lngMap.keySet()));

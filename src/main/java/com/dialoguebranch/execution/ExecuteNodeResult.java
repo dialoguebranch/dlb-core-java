@@ -27,8 +27,8 @@
 
 package com.dialoguebranch.execution;
 
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBLoggedDialogue;
 
-public record ExecuteNodeResult(DLBDialogue dialogue, com.dialoguebranch.model.DLBNode DLBNode,
-								DLBLoggedDialogue loggedDialogue, int interactionIndex) { }
+public record ExecuteNodeResult(Dialogue dialogue, com.dialoguebranch.model.DLBNode DLBNode,
+                                DLBLoggedDialogue loggedDialogue, int interactionIndex) { }

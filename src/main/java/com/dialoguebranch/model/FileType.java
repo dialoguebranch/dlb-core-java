@@ -1,6 +1,6 @@
 package com.dialoguebranch.model;
 
-public enum DLBFileType {
+public enum FileType {
 	SCRIPT,
 	TRANSLATION
 }

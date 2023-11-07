@@ -28,7 +28,7 @@
 package com.dialoguebranch.model;
 
 /**
- * A {@link DLBNode} represents a single step in a {@link DLBDialogue} definition.
+ * A {@link DLBNode} represents a single step in a {@link Dialogue} definition.
  *
  * @author Harm op den Akker (Roessingh Research and Development)
  */

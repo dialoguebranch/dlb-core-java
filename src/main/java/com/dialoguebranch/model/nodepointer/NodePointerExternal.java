@@ -28,7 +28,7 @@
 package com.dialoguebranch.model.nodepointer;
 
 import nl.rrd.utils.exception.ParseException;
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBReply;
 
 import java.util.ArrayList;
@@ -61,8 +61,8 @@ public class NodePointerExternal extends NodePointer {
 	// ---------- Getters:
 
 	/**
-	 * Returns the identifier of the {@link DLBDialogue} that this pointer refers to.
-	 * @return the identifier of the {@link DLBDialogue} that this pointer refers to.
+	 * Returns the identifier of the {@link Dialogue} that this pointer refers to.
+	 * @return the identifier of the {@link Dialogue} that this pointer refers to.
 	 */
 	public String getDialogueId() {
 		return this.dialogueId;

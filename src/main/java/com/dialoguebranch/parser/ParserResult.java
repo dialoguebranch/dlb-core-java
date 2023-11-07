@@ -28,20 +28,20 @@
 package com.dialoguebranch.parser;
 
 import nl.rrd.utils.exception.ParseException;
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A {@link ParserResult} object contains the results of parsing a .dlb file, including the
- * resulting {@link DLBDialogue} and a list of {@link ParseException}s.
+ * resulting {@link Dialogue} and a list of {@link ParseException}s.
  *
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class ParserResult {
 
-    private DLBDialogue dialogue;
+    private Dialogue dialogue;
     private final List<ParseException> parseErrors;
 
     /**
@@ -52,10 +52,10 @@ public class ParserResult {
     }
 
     /**
-     * Returns the {@link DLBDialogue} that is part of this {@link ParserResult}.
-     * @return the {@link DLBDialogue} that is part of this {@link ParserResult}.
+     * Returns the {@link Dialogue} that is part of this {@link ParserResult}.
+     * @return the {@link Dialogue} that is part of this {@link ParserResult}.
      */
-    public DLBDialogue getDialogue() {
+    public Dialogue getDialogue() {
         return dialogue;
     }
 
@@ -69,10 +69,10 @@ public class ParserResult {
     }
 
     /**
-     * Sets the {@link DLBDialogue} that is part of this {@link ParserResult}.
-     * @param dialogue the {@link DLBDialogue} that is part of this {@link ParserResult}.
+     * Sets the {@link Dialogue} that is part of this {@link ParserResult}.
+     * @param dialogue the {@link Dialogue} that is part of this {@link ParserResult}.
      */
-    public void setDialogue(DLBDialogue dialogue) {
+    public void setDialogue(Dialogue dialogue) {
         this.dialogue = dialogue;
     }
 

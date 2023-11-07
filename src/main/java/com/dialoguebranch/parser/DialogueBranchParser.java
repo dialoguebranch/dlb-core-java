@@ -28,7 +28,7 @@
 package com.dialoguebranch.parser;
 
 import com.dialoguebranch.exception.NodeParseException;
-import com.dialoguebranch.model.DLBDialogue;
+import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBNodeHeader;
@@ -52,7 +52,7 @@ public class DialogueBranchParser implements AutoCloseable {
 	private String dialogueName;
 	private LineColumnNumberReader reader;
 	
-	private DLBDialogue dialogue = null;
+	private Dialogue dialogue = null;
 	private List<NodeState.NodePointerToken> nodePointerTokens = null;
 	
 	public DialogueBranchParser(String filename) throws FileNotFoundException {
@@ -115,7 +115,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			result.getParseErrors().add(new ParseException(
 					"Invalid dialogue name: " + dialogueName));
 		}
-		DLBDialogue dialogue = new DLBDialogue(dialogueName);
+		Dialogue dialogue = new Dialogue(dialogueName);
 		this.dialogue = dialogue;
 		nodePointerTokens = new ArrayList<>();
 		boolean foundNodeError = false;
