@@ -51,14 +51,14 @@ import com.dialoguebranch.parser.BodyToken;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBSetCommand extends DLBExpressionCommand {
+public class SetCommand extends ExpressionCommand {
 	private AssignExpression expression;
 	
-	public DLBSetCommand(AssignExpression expression) {
+	public SetCommand(AssignExpression expression) {
 		this.expression = expression;
 	}
 
-	public DLBSetCommand(DLBSetCommand other) {
+	public SetCommand(SetCommand other) {
 		this.expression = other.expression;
 	}
 
@@ -101,12 +101,12 @@ public class DLBSetCommand extends DLBExpressionCommand {
 	}
 
 	@Override
-	public DLBSetCommand clone() {
-		return new DLBSetCommand(this);
+	public SetCommand clone() {
+		return new SetCommand(this);
 	}
 
-	public static DLBSetCommand parse(BodyToken cmdStartToken,
-                                      CurrentIterator<BodyToken> tokens, NodeState nodeState)
+	public static SetCommand parse(BodyToken cmdStartToken,
+								   CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		ReadContentResult content = readCommandContent(cmdStartToken, tokens);
 		ParseContentResult parsed = parseCommandContentExpression(cmdStartToken,
@@ -118,7 +118,7 @@ public class DLBSetCommand extends DLBExpressionCommand {
 		}
 		AssignExpression assignExpr = (AssignExpression)parsed.expression;
 		checkNoAssignment(cmdStartToken, assignExpr.getValueOperand());
-		return new DLBSetCommand(assignExpr);
+		return new SetCommand(assignExpr);
 	}
 
 	private static void checkNoAssignment(BodyToken cmdStartToken,

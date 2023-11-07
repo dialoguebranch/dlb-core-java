@@ -45,15 +45,15 @@ import java.util.*;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBRandomCommand extends DLBAttributesCommand {
+public class RandomCommand extends AttributesCommand {
 	private final Random random = new Random();
 
 	private List<Clause> clauses = new ArrayList<>();
 
-	public DLBRandomCommand() {
+	public RandomCommand() {
 	}
 
-	public DLBRandomCommand(DLBRandomCommand other) {
+	public RandomCommand(RandomCommand other) {
 		for (Clause clause : other.clauses) {
 			this.clauses.add(new Clause(clause));
 		}
@@ -159,12 +159,12 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 		return result.toString();
 	}
 
-	public static DLBRandomCommand parse(BodyToken cmdStartToken,
-                                         CurrentIterator<BodyToken> tokens, NodeState nodeState)
+	public static RandomCommand parse(BodyToken cmdStartToken,
+									  CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
-		DLBRandomCommand command = new DLBRandomCommand();
+		RandomCommand command = new RandomCommand();
 		Float weight = readFloatAttr("weight", attrs, cmdStartToken, false, 0f,
 				null);
 		if (weight == null)
@@ -198,8 +198,8 @@ public class DLBRandomCommand extends DLBAttributesCommand {
 	}
 
 	@Override
-	public DLBRandomCommand clone() {
-		return new DLBRandomCommand(this);
+	public RandomCommand clone() {
+		return new RandomCommand(this);
 	}
 
 	/**

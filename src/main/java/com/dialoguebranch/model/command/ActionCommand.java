@@ -60,7 +60,7 @@ import com.dialoguebranch.model.DLBVariableString;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBActionCommand extends DLBAttributesCommand {
+public class ActionCommand extends AttributesCommand {
 	public static final String TYPE_IMAGE = "image";
 	public static final String TYPE_VIDEO = "video";
 	public static final String TYPE_LINK = "link";
@@ -74,18 +74,18 @@ public class DLBActionCommand extends DLBAttributesCommand {
 	private Map<String, DLBVariableString> parameters = new LinkedHashMap<>();
 
 	/**
-	 * Creates an instance of a {@link DLBActionCommand} with given {@code type} and
+	 * Creates an instance of a {@link ActionCommand} with given {@code type} and
 	 * {@code value}.
-	 * @param type the type of this {@link DLBActionCommand} as a String, which should be
+	 * @param type the type of this {@link ActionCommand} as a String, which should be
 	 *                one of "image", "video", or "generic".
 	 * @param value the value of this command
 	 */
-	public DLBActionCommand(String type, DLBVariableString value) {
+	public ActionCommand(String type, DLBVariableString value) {
 		this.type = type;
 		this.value = value;
 	}
 
-	public DLBActionCommand(DLBActionCommand other) {
+	public ActionCommand(ActionCommand other) {
 		this.type = other.type;
 		this.value = new DLBVariableString(other.value);
 		for (String key : other.parameters.keySet()) {
@@ -95,17 +95,17 @@ public class DLBActionCommand extends DLBAttributesCommand {
 	}
 
 	/**
-	 * Returns the type of this {@link DLBActionCommand} as a String.
-	 * @return the type of this {@link DLBActionCommand} as a String.
+	 * Returns the type of this {@link ActionCommand} as a String.
+	 * @return the type of this {@link ActionCommand} as a String.
 	 */
 	public String getType() {
 		return type;
 	}
 
 	/**
-	 * Sets the type of this {@link DLBActionCommand}, which should be one of "image",
+	 * Sets the type of this {@link ActionCommand}, which should be one of "image",
 	 * "video", or "generic".
-	 * @param type the type of this {@link DLBActionCommand}.
+	 * @param type the type of this {@link ActionCommand}.
 	 */
 	public void setType(String type) {
 		this.type = type;
@@ -155,14 +155,14 @@ public class DLBActionCommand extends DLBAttributesCommand {
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
 			DLBNodeBody processedBody) throws EvaluationException {
-		DLBActionCommand processedCommand = executeReplyCommand(variables);
+		ActionCommand processedCommand = executeReplyCommand(variables);
 		processedBody.addSegment(new DLBNodeBody.CommandSegment(
 				processedCommand));
 	}
 
-	public DLBActionCommand executeReplyCommand(Map<String,Object> variables)
+	public ActionCommand executeReplyCommand(Map<String,Object> variables)
 			throws EvaluationException {
-		DLBActionCommand processedCommand = new DLBActionCommand(type,
+		ActionCommand processedCommand = new ActionCommand(type,
 				value.execute(variables));
 		for (String param : parameters.keySet()) {
 			DLBVariableString value = parameters.get(param);
@@ -185,8 +185,8 @@ public class DLBActionCommand extends DLBAttributesCommand {
 		return result.toString();
 	}
 	
-	public static DLBActionCommand parse(BodyToken cmdStartToken,
-                                         CurrentIterator<BodyToken> tokens, NodeState nodeState)
+	public static ActionCommand parse(BodyToken cmdStartToken,
+									  CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
@@ -201,7 +201,7 @@ public class DLBActionCommand extends DLBAttributesCommand {
 		DLBVariableString value = readAttr("value", attrs, cmdStartToken,
 				true);
 		attrs.remove("value");
-		DLBActionCommand command = new DLBActionCommand(type, value);
+		ActionCommand command = new ActionCommand(type, value);
 		for (String attr : attrs.keySet()) {
 			token = attrs.get(attr);
 			command.addParameter(attr, (DLBVariableString)token.getValue());
@@ -210,7 +210,7 @@ public class DLBActionCommand extends DLBAttributesCommand {
 	}
 
 	@Override
-	public DLBActionCommand clone() {
-		return new DLBActionCommand(this);
+	public ActionCommand clone() {
+		return new ActionCommand(this);
 	}
 }

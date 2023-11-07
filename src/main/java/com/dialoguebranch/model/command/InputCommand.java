@@ -48,7 +48,7 @@ import java.util.Set;
  * 
  * @author Dennis Hofs (RRD)
  */
-public abstract class DLBInputCommand extends DLBAttributesCommand {
+public abstract class InputCommand extends AttributesCommand {
 	public static final String TYPE_EMAIL = "email";
 	public static final String TYPE_TEXT = "text";
 	public static final String TYPE_LONGTEXT = "longtext";
@@ -62,11 +62,11 @@ public abstract class DLBInputCommand extends DLBAttributesCommand {
 	private String type;
 	private String description = null;
 
-	public DLBInputCommand(String type) {
+	public InputCommand(String type) {
 		this.type = type;
 	}
 
-	public DLBInputCommand(DLBInputCommand other) {
+	public InputCommand(InputCommand other) {
 		this.type = other.type;
 		this.description = other.description;
 	}
@@ -147,8 +147,8 @@ public abstract class DLBInputCommand extends DLBAttributesCommand {
 	public void getNodePointers(Set<DLBNodePointer> pointers) {
 	}
 
-	public static DLBInputCommand parse(BodyToken cmdStartToken,
-                                        CurrentIterator<BodyToken> tokens, NodeState nodeState)
+	public static InputCommand parse(BodyToken cmdStartToken,
+									 CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
 		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
 				tokens);
@@ -159,25 +159,25 @@ public abstract class DLBInputCommand extends DLBAttributesCommand {
 					"Invalid value for attribute \"type\": " + type,
 					token.getLineNumber(), token.getColNumber());
 		}
-		DLBInputCommand result;
+		InputCommand result;
 		switch (type) {
 			case TYPE_EMAIL:
-				result = DLBInputEmailCommand.parse(cmdStartToken, attrs);
+				result = InputEmailCommand.parse(cmdStartToken, attrs);
 				break;
 			case TYPE_TEXT:
-				result = DLBInputTextCommand.parse(cmdStartToken, attrs);
+				result = InputTextCommand.parse(cmdStartToken, attrs);
 				break;
 			case TYPE_LONGTEXT:
-				result = DLBInputLongtextCommand.parse(cmdStartToken, attrs);
+				result = InputLongtextCommand.parse(cmdStartToken, attrs);
 				break;
 			case TYPE_NUMERIC:
-				result = DLBInputNumericCommand.parse(cmdStartToken, attrs);
+				result = InputNumericCommand.parse(cmdStartToken, attrs);
 				break;
 			case TYPE_SET:
-				result = DLBInputSetCommand.parse(cmdStartToken, attrs);
+				result = InputSetCommand.parse(cmdStartToken, attrs);
 				break;
 			case TYPE_TIME:
-				result = DLBInputTimeCommand.parse(cmdStartToken, attrs);
+				result = InputTimeCommand.parse(cmdStartToken, attrs);
 				break;
 			default:
 				throw new RuntimeException("Unsupported value for input type: " + type);

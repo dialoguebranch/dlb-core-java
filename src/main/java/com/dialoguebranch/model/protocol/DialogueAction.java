@@ -28,14 +28,14 @@
 package com.dialoguebranch.model.protocol;
 
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.model.command.DLBActionCommand;
+import com.dialoguebranch.model.command.ActionCommand;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * This class is used for dialogue actions that are sent to the client in the
- * web service protocol. It mirrors {@link DLBActionCommand}
+ * web service protocol. It mirrors {@link ActionCommand}
  * except that any variables in strings have been resolved.
  *
  * @author Dennis Hofs (RRD)
@@ -48,7 +48,7 @@ public class DialogueAction {
 	public DialogueAction() {
 	}
 	
-	public DialogueAction(DLBActionCommand actionCommand) {
+	public DialogueAction(ActionCommand actionCommand) {
 		type = actionCommand.getType();
 		value = actionCommand.getValue().evaluate(null);
 		Map<String, DLBVariableString> cmdParams =

@@ -41,7 +41,7 @@ import com.dialoguebranch.model.DLBReply;
  * 
  * @author Dennis Hofs (RRD)
  */
-public abstract class DLBCommand implements Cloneable {
+public abstract class Command implements Cloneable {
 
 	/**
 	 * Tries to find a reply with the specified ID within this command. If no
@@ -96,5 +96,5 @@ public abstract class DLBCommand implements Cloneable {
 	 * @return a deep copy of this command
 	 */
 	@Override
-	public abstract DLBCommand clone();
+	public abstract Command clone();
 }

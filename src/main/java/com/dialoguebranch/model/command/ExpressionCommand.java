@@ -39,7 +39,7 @@ import com.dialoguebranch.parser.BodyToken;
 import java.io.IOException;
 import java.io.StringReader;
 
-public abstract class DLBExpressionCommand extends DLBCommand {
+public abstract class ExpressionCommand extends Command {
 
 	/**
 	 * Reads the content of a command as a code string. When this method

@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.command.DLBCommand;
-import com.dialoguebranch.model.command.DLBInputCommand;
-import com.dialoguebranch.model.command.DLBSetCommand;
+import com.dialoguebranch.model.command.Command;
+import com.dialoguebranch.model.command.InputCommand;
+import com.dialoguebranch.model.command.SetCommand;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.command.DLBActionCommand;
+import com.dialoguebranch.model.command.ActionCommand;
 
 /**
  * TODO: It may be nice to make DLBReply Abstract with different implementing subclasses, e.g.
@@ -48,14 +48,14 @@ import com.dialoguebranch.model.command.DLBActionCommand;
  * but a node may have at most one reply without a statement, which is known as
  * an auto-forward reply.
  * 
- * <p>The statement may contain a {@link DLBInputCommand} (see {@link DLBNodeBody}).</p>
+ * <p>The statement may contain a {@link InputCommand} (see {@link DLBNodeBody}).</p>
  * 
  * <p>The reply may also have commands that should be performed when the reply
  * is chosen. This can be:</p>
  * 
  * <ul>
- *   <li>{@link DLBActionCommand}</li>
- *   <li>{@link DLBSetCommand}</li>
+ *   <li>{@link ActionCommand}</li>
+ *   <li>{@link SetCommand}</li>
  * </ul>
  * 
  * @author Dennis Hofs (RRD)
@@ -65,7 +65,7 @@ public class DLBReply {
 	private int replyId;
 	private DLBNodeBody statement = null;
 	private DLBNodePointer nodePointer;
-	private List<DLBCommand> commands = new ArrayList<>();
+	private List<Command> commands = new ArrayList<>();
 
 	/**
 	 * Constructs a new reply.
@@ -97,7 +97,7 @@ public class DLBReply {
 		if (other.statement != null)
 			this.statement = new DLBNodeBody(other.statement);
 		this.nodePointer = other.nodePointer.clone();
-		for (DLBCommand cmd : other.commands) {
+		for (Command cmd : other.commands) {
 			this.commands.add(cmd.clone());
 		}
 	}
@@ -164,7 +164,7 @@ public class DLBReply {
 	 * 
 	 * @return the commands that should be executed when this reply is chosen
 	 */
-	public List<DLBCommand> getCommands() {
+	public List<Command> getCommands() {
 		return commands;
 	}
 
@@ -174,7 +174,7 @@ public class DLBReply {
 	 * @param commands the commands that should be executed when this reply is
 	 * chosen
 	 */
-	public void setCommands(List<DLBCommand> commands) {
+	public void setCommands(List<Command> commands) {
 		this.commands = commands;
 	}
 	
@@ -184,7 +184,7 @@ public class DLBReply {
 	 * @param command the command that should be executed when this reply is
 	 * chosen
 	 */
-	public void addCommand(DLBCommand command) {
+	public void addCommand(Command command) {
 		commands.add(command);
 	}
 	
@@ -197,7 +197,7 @@ public class DLBReply {
 	public void getReadVariableNames(Set<String> varNames) {
 		if (statement != null)
 			statement.getReadVariableNames(varNames);
-		for (DLBCommand command : commands) {
+		for (Command command : commands) {
 			command.getReadVariableNames(varNames);
 		}
 	}
@@ -211,7 +211,7 @@ public class DLBReply {
 	public void getWriteVariableNames(Set<String> varNames) {
 		if (statement != null)
 			statement.getWriteVariableNames(varNames);
-		for (DLBCommand command : commands) {
+		for (Command command : commands) {
 			command.getWriteVariableNames(varNames);
 		}
 	}
@@ -235,9 +235,9 @@ public class DLBReply {
 		statement.execute(variables, false, processedStatement);
 		DLBReply result = new DLBReply(replyId, processedStatement,
 				nodePointer);
-		for (DLBCommand command : commands) {
-			if (command instanceof DLBActionCommand) {
-				DLBActionCommand actionCmd = (DLBActionCommand)command;
+		for (Command command : commands) {
+			if (command instanceof ActionCommand) {
+				ActionCommand actionCmd = (ActionCommand)command;
 				result.addCommand(actionCmd.executeReplyCommand(variables));
 			} else {
 				result.addCommand(command);
@@ -254,7 +254,7 @@ public class DLBReply {
 		result.append(nodePointer.toString());
 		if (!commands.isEmpty()) {
 			result.append("|");
-			for (DLBCommand command : commands) {
+			for (Command command : commands) {
 				result.append(command.toString());
 			}
 		}

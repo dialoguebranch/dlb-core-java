@@ -39,14 +39,14 @@ import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
 
-public class DLBInputSetCommand extends DLBInputCommand {
+public class InputSetCommand extends InputCommand {
 	private List<Option> options = new ArrayList<>();
 
-	public DLBInputSetCommand() {
+	public InputSetCommand() {
 		super(TYPE_SET);
 	}
 
-	public DLBInputSetCommand(DLBInputSetCommand other) {
+	public InputSetCommand(InputSetCommand other) {
 		super(other);
 		for (Option option : other.options) {
 			this.options.add(new Option(option));
@@ -104,7 +104,7 @@ public class DLBInputSetCommand extends DLBInputCommand {
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
 			DLBNodeBody processedBody) throws EvaluationException {
-		DLBInputSetCommand processedCmd = new DLBInputSetCommand();
+		InputSetCommand processedCmd = new InputSetCommand();
 		for (Option option : options) {
 			Option processedOption = new Option();
 			processedOption.setVariableName(option.getVariableName());
@@ -130,13 +130,13 @@ public class DLBInputSetCommand extends DLBInputCommand {
 	}
 
 	@Override
-	public DLBInputSetCommand clone() {
-		return new DLBInputSetCommand(this);
+	public InputSetCommand clone() {
+		return new InputSetCommand(this);
 	}
 
-	public static DLBInputSetCommand parse(BodyToken cmdStartToken,
-                                           Map<String, BodyToken> attrs) throws LineNumberParseException {
-		DLBInputSetCommand result = new DLBInputSetCommand();
+	public static InputSetCommand parse(BodyToken cmdStartToken,
+										Map<String, BodyToken> attrs) throws LineNumberParseException {
+		InputSetCommand result = new InputSetCommand();
 		int index = 1;
 		while (true) {
 			BodyToken valueToken = attrs.get("value" + index);

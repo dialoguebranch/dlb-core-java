@@ -28,7 +28,7 @@
 package com.dialoguebranch.i18n;
 
 import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.command.DLBInputCommand;
+import com.dialoguebranch.model.command.InputCommand;
 
 import java.util.List;
 
@@ -38,8 +38,8 @@ import java.util.List;
  *
  * <p>The class contains {@link DLBNodeBody.TextSegment TextSegment}s (with
  * plain text and variables) and {@link DLBNodeBody.CommandSegment
- * CommandSegment}s where the command is a {@link DLBInputCommand
- * DLBInputCommand}.</p>
+ * CommandSegment}s where the command is a {@link InputCommand
+ * InputCommand}.</p>
  *
  * <p>Instances of this class can be obtained from {@link
  * DLBTranslatableExtractor DLBTranslatableExtractor} or {@link

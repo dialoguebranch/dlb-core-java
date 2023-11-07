@@ -43,7 +43,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DLBInputTimeCommand extends DLBInputCommand {
+public class InputTimeCommand extends InputCommand {
 	public static final String TIME_NOW = "now";
 
 	private String variableName;
@@ -52,12 +52,12 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 	private DLBVariableString minTime = null;
 	private DLBVariableString maxTime = null;
 
-	public DLBInputTimeCommand(String variableName) {
+	public InputTimeCommand(String variableName) {
 		super(TYPE_TIME);
 		this.variableName = variableName;
 	}
 
-	public DLBInputTimeCommand(DLBInputTimeCommand other) {
+	public InputTimeCommand(InputTimeCommand other) {
 		super(other);
 		this.variableName = other.variableName;
 		this.granularityMinutes = other.granularityMinutes;
@@ -148,7 +148,7 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
 			DLBNodeBody processedBody) throws EvaluationException {
-		DLBInputTimeCommand processedCmd = new DLBInputTimeCommand(
+		InputTimeCommand processedCmd = new InputTimeCommand(
 				variableName);
 		processedCmd.granularityMinutes = granularityMinutes;
 		if (startTime != null) {
@@ -165,8 +165,8 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 	}
 
 	@Override
-	public DLBInputTimeCommand clone() {
-		return new DLBInputTimeCommand(this);
+	public InputTimeCommand clone() {
+		return new InputTimeCommand(this);
 	}
 
 	private static DLBVariableString evaluateTime(String text)
@@ -202,11 +202,11 @@ public class DLBInputTimeCommand extends DLBInputCommand {
 		return builder.toString();
 	}
 
-	public static DLBInputTimeCommand parse(BodyToken cmdStartToken,
-                                            Map<String, BodyToken> attrs) throws LineNumberParseException {
+	public static InputTimeCommand parse(BodyToken cmdStartToken,
+										 Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
-		DLBInputTimeCommand command = new DLBInputTimeCommand(variableName);
+		InputTimeCommand command = new InputTimeCommand(variableName);
 		Integer granularityMinutes = readIntAttr("granularityMinutes", attrs,
 				cmdStartToken, false, 1, null);
 		if (granularityMinutes != null)

@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.model.protocol;
 
+import com.dialoguebranch.model.command.InputCommand;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -38,8 +39,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.json.JsonMapper;
 import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.command.DLBActionCommand;
-import com.dialoguebranch.model.command.DLBInputCommand;
+import com.dialoguebranch.model.command.ActionCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -57,9 +57,9 @@ import java.util.Map;
  *   <li>{@link TextSegment TextSegment}: Corresponds to a {@link DLBNodeBody.TextSegment} with
  *   variables resolved.</li>
  *   <li>{@link ActionSegment}: Contains a {@link DialogueAction DialogueAction}, which corresponds
- *   to a {@link DLBActionCommand} with variables resolved. Action segments should not occur in
+ *   to a {@link ActionCommand} with variables resolved. Action segments should not occur in
  *   statements that are part of a {@link ReplyMessage ReplyMessage}.</li>
- *   <li>{@link InputSegment InputSegment}: Corresponds to a {@link DLBInputCommand} with variables
+ *   <li>{@link InputSegment InputSegment}: Corresponds to a {@link InputCommand} with variables
  *   resolved.</li>
  * </ul>
  *
@@ -83,7 +83,7 @@ public class DialogueStatement {
 		segments.add(segment);
 	}
 	
-	public void addInputSegment(DLBInputCommand inputCommand) {
+	public void addInputSegment(InputCommand inputCommand) {
 		InputSegment segment = new InputSegment();
 		segment.setInputType(inputCommand.getType());
 		segment.setDescription(inputCommand.getDescription());
@@ -91,7 +91,7 @@ public class DialogueStatement {
 		segments.add(segment);
 	}
 	
-	public void addActionSegment(DLBActionCommand actionCommand) {
+	public void addActionSegment(ActionCommand actionCommand) {
 		ActionSegment segment = new ActionSegment();
 		segment.setAction(new DialogueAction(actionCommand));
 		segments.add(segment);
@@ -146,7 +146,7 @@ public class DialogueStatement {
 
 		/**
 		 * Returns the input type. This should be one of the TYPE_* constants
-		 * defined in {@link DLBInputCommand}.
+		 * defined in {@link InputCommand}.
 		 *
 		 * @return the input type
 		 */
@@ -156,7 +156,7 @@ public class DialogueStatement {
 
 		/**
 		 * Sets the input type. This should be one of the TYPE_* constants
-		 * defined in {@link DLBInputCommand}.
+		 * defined in {@link InputCommand}.
 		 *
 		 * @param inputType the input type
 		 */

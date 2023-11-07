@@ -72,7 +72,7 @@ public class CommandParser {
 	 * @return the command
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public DLBCommand parseFromName(BodyToken startToken, CurrentIterator<BodyToken> tokens)
+	public Command parseFromName(BodyToken startToken, CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		BodyToken token = tokens.getCurrent();
 		String name = getCommandName(startToken, token);
@@ -81,11 +81,11 @@ public class CommandParser {
 					token.getLineNumber(), token.getColNumber());
 		}
         return switch (name) {
-            case "action" -> DLBActionCommand.parse(startToken, tokens, nodeState);
-            case "if" -> DLBIfCommand.parse(startToken, tokens, nodeState);
-            case "input" -> DLBInputCommand.parse(startToken, tokens, nodeState);
-            case "random" -> DLBRandomCommand.parse(startToken, tokens, nodeState);
-            case "set" -> DLBSetCommand.parse(startToken, tokens, nodeState);
+            case "action" -> ActionCommand.parse(startToken, tokens, nodeState);
+            case "if" -> IfCommand.parse(startToken, tokens, nodeState);
+            case "input" -> InputCommand.parse(startToken, tokens, nodeState);
+            case "random" -> RandomCommand.parse(startToken, tokens, nodeState);
+            case "set" -> SetCommand.parse(startToken, tokens, nodeState);
             default -> throw new LineNumberParseException("Unknown command: " + name,
                     token.getLineNumber(), token.getColNumber());
         };
@@ -101,7 +101,7 @@ public class CommandParser {
 	 * @return the command
 	 * @throws LineNumberParseException if a parsing error occurs
 	 */
-	public DLBCommand parseFromStart(CurrentIterator<BodyToken> tokens)
+	public Command parseFromStart(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		BodyToken startToken = tokens.getCurrent();
 		tokens.moveNext();

@@ -39,7 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class DLBInputAbstractTextCommand extends DLBInputCommand {
+public abstract class InputAbstractTextCommand extends InputCommand {
 	private String variableName;
 	private Integer min = null;
 	private Integer max = null;
@@ -53,12 +53,12 @@ public abstract class DLBInputAbstractTextCommand extends DLBInputCommand {
 	private Boolean forceCapWords = Boolean.FALSE;
 	private Boolean forceCapSentences = Boolean.FALSE;
 
-	public DLBInputAbstractTextCommand(String type, String variableName) {
+	public InputAbstractTextCommand(String type, String variableName) {
 		super(type);
 		this.variableName = variableName;
 	}
 
-	public DLBInputAbstractTextCommand(DLBInputAbstractTextCommand other) {
+	public InputAbstractTextCommand(InputAbstractTextCommand other) {
 		super(other);
 		this.variableName = other.variableName;
 		this.min = other.min;
@@ -372,8 +372,8 @@ public abstract class DLBInputAbstractTextCommand extends DLBInputCommand {
 		return result;
 	}
 
-	public static void parseAttributes(DLBInputAbstractTextCommand command,
-                                       BodyToken cmdStartToken, Map<String, BodyToken> attrs)
+	public static void parseAttributes(InputAbstractTextCommand command,
+									   BodyToken cmdStartToken, Map<String, BodyToken> attrs)
 			throws LineNumberParseException {
 		command.setMin(readIntAttr("min", attrs, cmdStartToken, false, null, null));
 		command.setMax(readIntAttr("max", attrs, cmdStartToken, false, null, null));

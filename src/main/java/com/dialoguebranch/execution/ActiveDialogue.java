@@ -29,9 +29,9 @@ package com.dialoguebranch.execution;
 
 import com.dialoguebranch.exception.ExecutionException;
 import com.dialoguebranch.model.*;
-import com.dialoguebranch.model.command.DLBCommand;
-import com.dialoguebranch.model.command.DLBInputCommand;
-import com.dialoguebranch.model.command.DLBSetCommand;
+import com.dialoguebranch.model.command.Command;
+import com.dialoguebranch.model.command.InputCommand;
+import com.dialoguebranch.model.command.SetCommand;
 import com.dialoguebranch.model.nodepointer.DLBNodePointer;
 import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
 import nl.rrd.utils.expressions.EvaluationException;
@@ -202,8 +202,8 @@ public class ActiveDialogue {
 		Map<String,Object> variableMap =
 				dlbVariableStore.getModifiableMap(true, eventTime,
 					DLBVariableStoreChange.Source.DLB_SCRIPT);
-		for (DLBCommand command : selectedDLBReply.getCommands()) {
-			if (command instanceof DLBSetCommand setCommand) {
+		for (Command command : selectedDLBReply.getCommands()) {
+			if (command instanceof SetCommand setCommand) {
 				setCommand.getExpression().evaluate(variableMap);
 			}
 		}
@@ -280,8 +280,8 @@ public class ActiveDialogue {
 				DLBNodeBody.CommandSegment cmdSegment =
 						(DLBNodeBody.CommandSegment)segment;
 				// a reply statement can only contain an "input" command
-				DLBInputCommand command =
-						(DLBInputCommand)cmdSegment.getCommand();
+				InputCommand command =
+						(InputCommand)cmdSegment.getCommand();
 				result.append(command.getStatementLog(dlbVariableStore));
 			}
 		}

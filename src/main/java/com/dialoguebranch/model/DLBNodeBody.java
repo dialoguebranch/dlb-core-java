@@ -41,7 +41,7 @@ import java.util.*;
  * <ul>
  *   <li>Directly in the node. In this case it specifies the agent statement with possible commands
  *   and user replies.</li>
- *   <li>As part of a clause in a {@link DLBIfCommand} or {@link DLBRandomCommand}. The content is
+ *   <li>As part of a clause in a {@link IfCommand} or {@link RandomCommand}. The content is
  *   the same as directly in the node. The only difference is that it is performed
  *   conditionally.</li>
  *   <li>As part of a {@link DLBReply}. In this case it specifies the user statement with possible
@@ -63,22 +63,22 @@ import java.util.*;
  * automatically merged into one.</p>
  * 
  * <p>The type of commands depend on the context. Directly in the node or in a
- * {@link DLBIfCommand} or {@link DLBRandomCommand}, it can be:</p>
+ * {@link IfCommand} or {@link RandomCommand}, it can be:</p>
  * 
  * <ul>
- *   <li>{@link DLBActionCommand}: Actions to perform along with the agent's text statement.</li>
- *   <li>{@link DLBIfCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
+ *   <li>{@link ActionCommand}: Actions to perform along with the agent's text statement.</li>
+ *   <li>{@link IfCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
  *   conditional statements, replies and commands.</li>
- *   <li>{@link DLBRandomCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
+ *   <li>{@link RandomCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
  *   statements, replies and commands.</li>
- *   <li>{@link DLBSetCommand}: Sets a variable value.</li>
+ *   <li>{@link SetCommand}: Sets a variable value.</li>
  * </ul>
  * 
  * <p>As part of a reply (remember the earlier remarks about commands in a
  * reply), it can be:</p>
  * 
  * <ul>
- *   <li>{@link DLBInputCommand}: Allow user to provide input other than just clicking the reply
+ *   <li>{@link InputCommand}: Allow user to provide input other than just clicking the reply
  *   option.</li>
  * </ul>
  * 
@@ -255,7 +255,7 @@ public class DLBNodeBody {
 		for (Segment segment : segments) {
 			if (!(segment instanceof CommandSegment))
 				continue;
-			DLBCommand command = ((CommandSegment)segment).command;
+			Command command = ((CommandSegment)segment).command;
 			command.getNodePointers(pointers);
 		}
 		for (DLBReply reply : replies) {
@@ -457,9 +457,9 @@ public class DLBNodeBody {
 	}
 	
 	public static class CommandSegment extends Segment {
-		private DLBCommand command;
+		private Command command;
 		
-		public CommandSegment(DLBCommand command) {
+		public CommandSegment(Command command) {
 			this.command = command;
 		}
 
@@ -467,7 +467,7 @@ public class DLBNodeBody {
 			this.command = other.command.clone();
 		}
 
-		public DLBCommand getCommand() {
+		public Command getCommand() {
 			return command;
 		}
 		

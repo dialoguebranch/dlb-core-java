@@ -36,7 +36,7 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
 
-public abstract class DLBAttributesCommand extends DLBCommand {
+public abstract class AttributesCommand extends Command {
 
 	/**
 	 * Parses a command that is formatted like:<br />

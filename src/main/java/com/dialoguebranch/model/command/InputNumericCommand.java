@@ -27,29 +27,33 @@
 
 package com.dialoguebranch.model.command;
 
+import com.dialoguebranch.model.DLBNodeBody;
 import nl.rrd.utils.exception.LineNumberParseException;
-import nl.rrd.utils.expressions.EvaluationException;
-import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.execution.DLBVariable;
 import com.dialoguebranch.execution.DLBVariableStore;
-import com.dialoguebranch.model.DLBNodeBody;
+import nl.rrd.utils.expressions.EvaluationException;
+import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DLBInputEmailCommand extends DLBInputCommand {
+public class InputNumericCommand extends InputCommand {
 	private String variableName;
+	private Integer min = null;
+	private Integer max = null;
 
-	public DLBInputEmailCommand(String variableName) {
-		super(TYPE_EMAIL);
+	public InputNumericCommand(String variableName) {
+		super(TYPE_NUMERIC);
 		this.variableName = variableName;
 	}
 
-	public DLBInputEmailCommand(DLBInputEmailCommand other) {
+	public InputNumericCommand(InputNumericCommand other) {
 		super(other);
 		this.variableName = other.variableName;
+		this.min = other.min;
+		this.max = other.max;
 	}
 
 	public String getVariableName() {
@@ -60,18 +64,29 @@ public class DLBInputEmailCommand extends DLBInputCommand {
 		this.variableName = variableName;
 	}
 
+	public Integer getMin() {
+		return min;
+	}
+
+	public void setMin(Integer min) {
+		this.min = min;
+	}
+
+	public Integer getMax() {
+		return max;
+	}
+
+	public void setMax(Integer max) {
+		this.max = max;
+	}
+
 	@Override
 	public Map<String, ?> getParameters() {
 		Map<String,Object> result = new LinkedHashMap<>();
 		result.put("variableName", variableName);
+		result.put("min", min);
+		result.put("max", max);
 		return result;
-	}
-
-	@Override
-	public String getStatementLog(DLBVariableStore varStore) {
-		DLBVariable DLBVariable = varStore.getDLBVariable(variableName);
-		Value value = new Value(DLBVariable.getValue());
-		return value.toString();
 	}
 
 	@Override
@@ -90,21 +105,41 @@ public class DLBInputEmailCommand extends DLBInputCommand {
 	}
 
 	@Override
-	public DLBInputEmailCommand clone() {
-		return new DLBInputEmailCommand(this);
+	public String getStatementLog(DLBVariableStore varStore) {
+		DLBVariable DLBVariable = varStore.getDLBVariable(variableName);
+		Value value = new Value(DLBVariable.getValue());
+		return value.toString();
 	}
 
 	@Override
 	public String toString() {
 		String result = toStringStart();
-		result += " value=\"$" + variableName + "\">>";
+		result += " value=\"$" + variableName + "\"";
+		if (min != null)
+			result += " min=\"" + min + "\"";
+		if (max != null)
+			result += " max=\"" + max + "\"";
+		result += ">>";
 		return result;
 	}
 
-	public static DLBInputCommand parse(BodyToken cmdStartToken,
-                                        Map<String, BodyToken> attrs) throws LineNumberParseException {
+	@Override
+	public InputNumericCommand clone() {
+		return new InputNumericCommand(this);
+	}
+
+	public static InputCommand parse(BodyToken cmdStartToken,
+									 Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
-		return new DLBInputEmailCommand(variableName);
+		InputNumericCommand command = new InputNumericCommand(
+				variableName);
+		Integer min = readIntAttr("min", attrs, cmdStartToken, false, null,
+				null);
+		command.setMin(min);
+		Integer max = readIntAttr("max", attrs, cmdStartToken, false, null,
+				null);
+		command.setMax(max);
+		return command;
 	}
 }

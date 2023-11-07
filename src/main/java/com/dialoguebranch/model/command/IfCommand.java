@@ -48,14 +48,14 @@ import java.util.*;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBIfCommand extends DLBExpressionCommand {
+public class IfCommand extends ExpressionCommand {
 	private List<Clause> ifClauses = new ArrayList<>();
 	private DLBNodeBody elseClause = null;
 
-	public DLBIfCommand() {
+	public IfCommand() {
 	}
 
-	public DLBIfCommand(DLBIfCommand other) {
+	public IfCommand(IfCommand other) {
 		for (Clause ifClause : other.ifClauses) {
 			this.ifClauses.add(new Clause(ifClause));
 		}
@@ -191,10 +191,10 @@ public class DLBIfCommand extends DLBExpressionCommand {
 		return result.toString();
 	}
 
-	public static DLBIfCommand parse(BodyToken cmdStartToken,
-                                     CurrentIterator<BodyToken> tokens, NodeState nodeState)
+	public static IfCommand parse(BodyToken cmdStartToken,
+								  CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
-		DLBIfCommand command = new DLBIfCommand();
+		IfCommand command = new IfCommand();
 		ReadContentResult content = readCommandContent(cmdStartToken, tokens);
 		ParseContentResult parsedIf = parseCommandContentExpression(
 				cmdStartToken, content, "if");
@@ -265,8 +265,8 @@ public class DLBIfCommand extends DLBExpressionCommand {
 	}
 
 	@Override
-	public DLBIfCommand clone() {
-		return new DLBIfCommand(this);
+	public IfCommand clone() {
+		return new IfCommand(this);
 	}
 
 	/**

@@ -27,14 +27,14 @@
 
 package com.dialoguebranch.i18n;
 
-import com.dialoguebranch.model.command.DLBCommand;
+import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.model.DLBVariableString;
-import com.dialoguebranch.model.command.DLBIfCommand;
-import com.dialoguebranch.model.command.DLBInputCommand;
-import com.dialoguebranch.model.command.DLBRandomCommand;
+import com.dialoguebranch.model.command.IfCommand;
+import com.dialoguebranch.model.command.InputCommand;
+import com.dialoguebranch.model.command.RandomCommand;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,20 +66,20 @@ public class DLBTranslatableExtractor {
 			} else if (segment instanceof DLBNodeBody.CommandSegment) {
 				DLBNodeBody.CommandSegment cmdSegment =
 						(DLBNodeBody.CommandSegment)segment;
-				DLBCommand cmd = cmdSegment.getCommand();
-				if (cmd instanceof DLBIfCommand) {
-					DLBIfCommand ifCmd = (DLBIfCommand)cmd;
+				Command cmd = cmdSegment.getCommand();
+				if (cmd instanceof IfCommand) {
+					IfCommand ifCmd = (IfCommand)cmd;
 					finishCurrentTranslatableSegment(speaker, addressee, body,
 							current, result);
 					result.addAll(getTranslatableSegmentsFromIfCommand(speaker,
 							addressee, ifCmd));
-				} else if (cmd instanceof DLBRandomCommand) {
-					DLBRandomCommand rndCmd = (DLBRandomCommand)cmd;
+				} else if (cmd instanceof RandomCommand) {
+					RandomCommand rndCmd = (RandomCommand)cmd;
 					finishCurrentTranslatableSegment(speaker, addressee, body,
 							current, result);
 					result.addAll(getTranslatableSegmentsFromRandomCommand(
 							speaker, addressee, rndCmd));
-				} else if (cmd instanceof DLBInputCommand) {
+				} else if (cmd instanceof InputCommand) {
 					current.add(segment);
 				}
 			}
@@ -96,9 +96,9 @@ public class DLBTranslatableExtractor {
 	}
 
 	private List<DLBSourceTranslatable> getTranslatableSegmentsFromIfCommand(
-			String speaker, String addressee, DLBIfCommand ifCmd) {
+			String speaker, String addressee, IfCommand ifCmd) {
 		List<DLBSourceTranslatable> result = new ArrayList<>();
-		for (DLBIfCommand.Clause clause : ifCmd.getIfClauses()) {
+		for (IfCommand.Clause clause : ifCmd.getIfClauses()) {
 			result.addAll(extractFromBody(speaker, addressee,
 					clause.getStatement()));
 		}
@@ -110,9 +110,9 @@ public class DLBTranslatableExtractor {
 	}
 
 	private List<DLBSourceTranslatable> getTranslatableSegmentsFromRandomCommand(
-			String speaker, String addressee, DLBRandomCommand rndCmd) {
+			String speaker, String addressee, RandomCommand rndCmd) {
 		List<DLBSourceTranslatable> result = new ArrayList<>();
-		for (DLBRandomCommand.Clause clause : rndCmd.getClauses()) {
+		for (RandomCommand.Clause clause : rndCmd.getClauses()) {
 			result.addAll(extractFromBody(speaker, addressee,
 					clause.getStatement()));
 		}
@@ -143,7 +143,7 @@ public class DLBTranslatableExtractor {
 			} else if (segment instanceof DLBNodeBody.CommandSegment) {
 				DLBNodeBody.CommandSegment cmdSegment =
 						(DLBNodeBody.CommandSegment)segment;
-				if (cmdSegment.getCommand() instanceof DLBInputCommand)
+				if (cmdSegment.getCommand() instanceof InputCommand)
 					return true;
 			}
 		}

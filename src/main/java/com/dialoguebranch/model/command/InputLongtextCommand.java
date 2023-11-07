@@ -32,25 +32,25 @@ import com.dialoguebranch.parser.BodyToken;
 
 import java.util.Map;
 
-public class DLBInputTextCommand extends DLBInputAbstractTextCommand {
-	public DLBInputTextCommand(String variableName) {
-		super(TYPE_TEXT, variableName);
+public class InputLongtextCommand extends InputAbstractTextCommand {
+	public InputLongtextCommand(String variableName) {
+		super(TYPE_LONGTEXT, variableName);
 	}
 
-	public DLBInputTextCommand(DLBInputTextCommand other) {
+	public InputLongtextCommand(InputLongtextCommand other) {
 		super(other);
 	}
 
 	@Override
-	public DLBInputTextCommand clone() {
-		return new DLBInputTextCommand(this);
+	public InputLongtextCommand clone() {
+		return new InputLongtextCommand(this);
 	}
 
-	public static DLBInputCommand parse(BodyToken cmdStartToken,
-                                        Map<String, BodyToken> attrs) throws LineNumberParseException {
+	public static InputCommand parse(BodyToken cmdStartToken,
+									 Map<String, BodyToken> attrs) throws LineNumberParseException {
 		String variableName = readVariableAttr("value", attrs, cmdStartToken,
 				true);
-		DLBInputTextCommand command = new DLBInputTextCommand(variableName);
+		InputLongtextCommand command = new InputLongtextCommand(variableName);
 		parseAttributes(command, cmdStartToken,
 				attrs);
 		return command;

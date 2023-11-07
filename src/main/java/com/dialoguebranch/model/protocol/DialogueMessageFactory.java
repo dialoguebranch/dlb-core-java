@@ -27,13 +27,13 @@
 
 package com.dialoguebranch.model.protocol;
 
-import com.dialoguebranch.model.command.DLBCommand;
+import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.execution.ExecuteNodeResult;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.command.DLBActionCommand;
-import com.dialoguebranch.model.command.DLBInputCommand;
+import com.dialoguebranch.model.command.ActionCommand;
+import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
 
 public class DialogueMessageFactory {
@@ -80,11 +80,11 @@ public class DialogueMessageFactory {
 			} else {
 				DLBNodeBody.CommandSegment cmdSegment =
 						(DLBNodeBody.CommandSegment)segment;
-				DLBCommand cmd = cmdSegment.getCommand();
-				if (cmd instanceof DLBActionCommand) {
-					statement.addActionSegment((DLBActionCommand)cmd);
-				} else if (cmd instanceof DLBInputCommand) {
-					statement.addInputSegment((DLBInputCommand)cmd);
+				Command cmd = cmdSegment.getCommand();
+				if (cmd instanceof ActionCommand) {
+					statement.addActionSegment((ActionCommand)cmd);
+				} else if (cmd instanceof InputCommand) {
+					statement.addInputSegment((InputCommand)cmd);
 				}
 			}
 		}
@@ -104,10 +104,10 @@ public class DialogueMessageFactory {
 			if (pointer.getNodeId().equalsIgnoreCase("end"))
 				replyMsg.setEndsDialogue(true);
 		}
-		for (DLBCommand cmd : reply.getCommands()) {
-			if (!(cmd instanceof DLBActionCommand))
+		for (Command cmd : reply.getCommands()) {
+			if (!(cmd instanceof ActionCommand))
 				continue;
-			DLBActionCommand actionCmd = (DLBActionCommand)cmd;
+			ActionCommand actionCmd = (ActionCommand)cmd;
 			replyMsg.addAction(new DialogueAction(actionCmd));
 		}
 		return replyMsg;

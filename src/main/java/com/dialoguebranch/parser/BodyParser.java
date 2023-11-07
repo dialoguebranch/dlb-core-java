@@ -29,7 +29,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.command.DLBCommand;
+import com.dialoguebranch.model.command.Command;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.model.DLBVariableString;
@@ -129,7 +129,7 @@ public class BodyParser {
 					throw new LineNumberParseException(
 							"Found << after reply", token.getLineNumber(), token.getColNumber());
 				} else {
-					DLBCommand command = cmdParser.parseFromName(token, tokens);
+					Command command = cmdParser.parseFromName(token, tokens);
 					result.body.addSegment(new DLBNodeBody.CommandSegment(command));
 				}
 				break;
