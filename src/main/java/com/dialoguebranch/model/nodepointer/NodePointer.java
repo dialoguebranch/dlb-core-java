@@ -30,32 +30,44 @@ package com.dialoguebranch.model.nodepointer;
 import com.dialoguebranch.model.DLBNode;
 
 /**
- * An abstract representation of a pointer to a next node. 
+ * An abstract representation of a pointer to a next node, that can either be an
+ * {@link NodePointerInternal} that links to a node withing the same dialogue, or a
+ * {@link NodePointerExternal} linking to a node in another dialogue branch script.
  * 
- * @author Tessa Beinema
- * @see DLBNodePointerInternal
- * @see DLBNodePointerExternal
+ * @author Tessa Beinema (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
+ *
+ * @see NodePointerInternal
+ * @see NodePointerExternal
  */
-public abstract class DLBNodePointer implements Cloneable {
+public abstract class NodePointer implements Cloneable {
 	
 	protected String nodeId;
 
-	// ---------- Constructors:
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
 	
 	/**
-	 * Creates an instance of a {@link DLBNodePointer} with given {@code nodeId}.
-	 * @param nodeId the unique identifier of the {@link DLBNode} that this NodePointer
-	 * refers to.
+	 * Creates an instance of a {@link NodePointer} with given {@code nodeId}.
+	 * @param nodeId the unique identifier of the {@link DLBNode} that this NodePointer refers to.
 	 */
-	public DLBNodePointer(String nodeId) {
+	public NodePointer(String nodeId) {
 		this.nodeId = nodeId;
 	}
 
-	public DLBNodePointer(DLBNodePointer other) {
+	/**
+	 * Creates an instance of a {@link NodePointer}, instantiated with the information of the
+	 * {@code other} {@link NodePointer}.
+	 * @param other the other {@link NodePointer} from which to instantiate this.
+	 */
+	public NodePointer(NodePointer other) {
 		this.nodeId = other.nodeId;
 	}
-	
-	// ---------- Getters:
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns the identifier of the {@link DLBNode} that this pointer refers to.
@@ -65,8 +77,6 @@ public abstract class DLBNodePointer implements Cloneable {
 		return this.nodeId;
 	}
 	
-	// ---------- Setters:
-	
 	/**
 	 * Sets the identifier of the {@link DLBNode} that this pointer refers to.
 	 * @param nodeId the identifier of the {@link DLBNode} that this pointer refers to.
@@ -74,6 +84,10 @@ public abstract class DLBNodePointer implements Cloneable {
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;
 	}
+
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
 
 	@Override
 	public int hashCode() {
@@ -88,12 +102,12 @@ public abstract class DLBNodePointer implements Cloneable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		DLBNodePointer other = (DLBNodePointer)obj;
+		NodePointer other = (NodePointer)obj;
 		if (!nodeId.equals(other.nodeId))
 			return false;
 		return true;
 	}
 
 	@Override
-	public abstract DLBNodePointer clone();
+	public abstract NodePointer clone();
 }

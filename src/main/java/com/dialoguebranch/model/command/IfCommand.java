@@ -28,7 +28,7 @@
 package com.dialoguebranch.model.command;
 
 import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
@@ -149,7 +149,7 @@ public class IfCommand extends ExpressionCommand {
 	}
 
 	@Override
-	public void getNodePointers(Set<DLBNodePointer> pointers) {
+	public void getNodePointers(Set<NodePointer> pointers) {
 		for (Clause clause : ifClauses) {
 			clause.statement.getNodePointers(pointers);
 		}

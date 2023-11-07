@@ -35,7 +35,7 @@ import java.util.Set;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.BodyToken;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
@@ -149,7 +149,7 @@ public class ActionCommand extends AttributesCommand {
 	}
 
 	@Override
-	public void getNodePointers(Set<DLBNodePointer> pointers) {
+	public void getNodePointers(Set<NodePointer> pointers) {
 	}
 
 	@Override

@@ -28,7 +28,7 @@
 package com.dialoguebranch.model.command;
 
 import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
@@ -144,7 +144,7 @@ public abstract class InputCommand extends AttributesCommand {
 	}
 
 	@Override
-	public void getNodePointers(Set<DLBNodePointer> pointers) {
+	public void getNodePointers(Set<NodePointer> pointers) {
 	}
 
 	public static InputCommand parse(BodyToken cmdStartToken,

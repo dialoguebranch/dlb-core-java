@@ -32,7 +32,7 @@ import com.dialoguebranch.model.DLBDialogue;
 import com.dialoguebranch.model.DLBNode;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBNodeHeader;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
+import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.io.LineColumnNumberReader;
@@ -138,7 +138,7 @@ public class DialogueBranchParser implements AutoCloseable {
 					reader.getLineNum(), reader.getColNum()));
 		}
 		for (NodeState.NodePointerToken pointerToken : nodePointerTokens) {
-			if (!(pointerToken.pointer() instanceof DLBNodePointerInternal pointer))
+			if (!(pointerToken.pointer() instanceof NodePointerInternal pointer))
 				continue;
 			if (dialogue.nodeExists(pointer.getNodeId()))
 				continue;

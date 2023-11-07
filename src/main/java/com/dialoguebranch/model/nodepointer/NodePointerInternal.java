@@ -35,13 +35,13 @@ import com.dialoguebranch.model.DLBReply;
  * @author Tessa Beinema
  * @see DLBReply
  */
-public class DLBNodePointerInternal extends DLBNodePointer {
+public class NodePointerInternal extends NodePointer {
 	
-	public DLBNodePointerInternal(String nodeId) {
+	public NodePointerInternal(String nodeId) {
 		super(nodeId);
 	}
 
-	public DLBNodePointerInternal(DLBNodePointerInternal other) {
+	public NodePointerInternal(NodePointerInternal other) {
 		super(other);
 	}
 	
@@ -53,7 +53,7 @@ public class DLBNodePointerInternal extends DLBNodePointer {
 	}
 
 	@Override
-	public DLBNodePointerInternal clone() {
-		return new DLBNodePointerInternal(this);
+	public NodePointerInternal clone() {
+		return new NodePointerInternal(this);
 	}
 }

@@ -30,22 +30,22 @@ package com.dialoguebranch.model.command;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
 
 /**
- * Base class for commands that are specified with &lt;&lt;...&gt;&gt; in DialogueBranch
- * statements and replies.
+ * Base class for commands that are specified with &lt;&lt;...&gt;&gt; in DialogueBranch statements
+ * and replies.
  * 
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
  */
 public abstract class Command implements Cloneable {
 
 	/**
-	 * Tries to find a reply with the specified ID within this command. If no
-	 * such reply is found, this method returns null.
+	 * Tries to find a reply with the specified ID within this command. If no such reply is found,
+	 * this method returns {@code null}.
 	 * 
 	 * @param replyId the reply ID
 	 * @return the reply or null
@@ -74,14 +74,13 @@ public abstract class Command implements Cloneable {
 	 * 
 	 * @param pointers the list to which the node pointers are added
 	 */
-	public abstract void getNodePointers(Set<DLBNodePointer> pointers);
+	public abstract void getNodePointers(Set<NodePointer> pointers);
 
 	/**
-	 * This method is called if this command occurs in a statement body. It
-	 * executes the command with respect to the specified variable map. Any
-	 * body content that should be sent to the client, is added to
-	 * "processedBody". This content can be text or client commands, with all
-	 * variables resolved.
+	 * This method is called if this command occurs in a statement body. It executes the command
+	 * with respect to the specified variable map. Any content in the body that should be sent to
+	 * the client, is added to the {@code processedBody} {@link DLBNodeBody} object. This content
+	 * can be text or client commands, with all variables resolved.
 	 * 
 	 * @param variables the variable map
 	 * @param processedBody the processed body

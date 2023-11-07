@@ -35,7 +35,7 @@ import java.util.Set;
 import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.command.SetCommand;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.command.ActionCommand;
 
@@ -64,7 +64,7 @@ import com.dialoguebranch.model.command.ActionCommand;
 public class DLBReply {
 	private int replyId;
 	private DLBNodeBody statement = null;
-	private DLBNodePointer nodePointer;
+	private NodePointer nodePointer;
 	private List<Command> commands = new ArrayList<>();
 
 	/**
@@ -75,7 +75,7 @@ public class DLBReply {
 	 * @param nodePointer the next node when the reply is chosen
 	 */
 	public DLBReply(int replyId, DLBNodeBody statement,
-					DLBNodePointer nodePointer) {
+					NodePointer nodePointer) {
 		this.replyId = replyId;
 		this.statement = statement;
 		this.nodePointer = nodePointer;
@@ -87,7 +87,7 @@ public class DLBReply {
 	 * @param replyId the reply ID
 	 * @param nodePointer the next node when the reply is chosen
 	 */
-	public DLBReply(int replyId, DLBNodePointer nodePointer) {
+	public DLBReply(int replyId, NodePointer nodePointer) {
 		this.replyId = replyId;
 		this.nodePointer = nodePointer;
 	}
@@ -146,7 +146,7 @@ public class DLBReply {
 	 * 
 	 * @return the next node when this reply is chosen
 	 */
-	public DLBNodePointer getNodePointer() {
+	public NodePointer getNodePointer() {
 		return nodePointer;
 	}
 
@@ -155,7 +155,7 @@ public class DLBReply {
 	 * 
 	 * @param nodePointer the next node when this reply is chosen
 	 */
-	public void setNodePointer(DLBNodePointer nodePointer) {
+	public void setNodePointer(NodePointer nodePointer) {
 		this.nodePointer = nodePointer;
 	}
 

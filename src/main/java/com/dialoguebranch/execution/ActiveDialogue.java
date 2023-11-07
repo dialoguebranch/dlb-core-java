@@ -32,8 +32,8 @@ import com.dialoguebranch.model.*;
 import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.command.SetCommand;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
+import com.dialoguebranch.model.nodepointer.NodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 import nl.rrd.utils.expressions.EvaluationException;
 
 import java.time.ZonedDateTime;
@@ -193,10 +193,10 @@ public class ActiveDialogue {
 	 * @param replyId the reply ID
 	 * @param eventTime the time (in the user's timezone) of the event that triggered this
 	 *                  processing of the reply.
-	 * @return The {@link DLBNodePointer} pointing to the next DialogueBranch Node
+	 * @return The {@link NodePointer} pointing to the next DialogueBranch Node
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public DLBNodePointer processReplyAndGetNodePointer(int replyId, ZonedDateTime eventTime)
+	public NodePointer processReplyAndGetNodePointer(int replyId, ZonedDateTime eventTime)
 			throws EvaluationException {
 		DLBReply selectedDLBReply = currentNode.getBody().findReplyById(replyId);
 		Map<String,Object> variableMap =
@@ -224,7 +224,7 @@ public class ActiveDialogue {
 	 * @return the next {@link DLBNode} that follows on the selected reply or {@code null}
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public DLBNode progressDialogue(DLBNodePointerInternal nodePointer, ZonedDateTime eventTime)
+	public DLBNode progressDialogue(NodePointerInternal nodePointer, ZonedDateTime eventTime)
 			throws EvaluationException {
 		DLBNode nextNode = null;
 		if (!nodePointer.getNodeId().equalsIgnoreCase(DLBConstants.DLB_NODE_END_ID))

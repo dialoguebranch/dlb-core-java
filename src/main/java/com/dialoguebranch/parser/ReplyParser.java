@@ -33,9 +33,9 @@ import java.util.List;
 
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerExternal;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
+import com.dialoguebranch.model.nodepointer.NodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointerExternal;
+import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
@@ -55,7 +55,7 @@ public class ReplyParser {
 			throws LineNumberParseException {
 		readSections(tokens);
 		DLBNodeBody statement = parseStatement();
-		DLBNodePointer nodePointer = parseNodePointer();
+		NodePointer nodePointer = parseNodePointer();
 		DLBReply reply = new DLBReply(nodeState.createNextReplyId(),
 				statement, nodePointer);
 		if (commandSection != null)
@@ -128,7 +128,7 @@ public class ReplyParser {
 			return result;
 	}
 	
-	private DLBNodePointer parseNodePointer() throws LineNumberParseException {
+	private NodePointer parseNodePointer() throws LineNumberParseException {
 		BodyToken.trimWhitespace(nodePointerSection.tokens);
 		if (nodePointerSection.tokens.size() == 0) {
 			throw new LineNumberParseException("Empty node pointer in reply",
@@ -144,14 +144,14 @@ public class ReplyParser {
 					nodePointerToken.getColNumber());
 		}
 		String nodePointerStr = (String)nodePointerToken.getValue();
-		DLBNodePointer result;
+		NodePointer result;
 		if (nodePointerStr.matches(DialogueBranchParser.NODE_NAME_REGEX)) {
-			result = new DLBNodePointerInternal(nodePointerStr);
+			result = new NodePointerInternal(nodePointerStr);
 		} else if (nodePointerStr.matches(
 				DialogueBranchParser.EXTERNAL_NODE_POINTER_REGEX)) {
 			int sep = nodePointerStr.lastIndexOf('.');
 			try {
-				result = new DLBNodePointerExternal(
+				result = new NodePointerExternal(
 						nodeState.getDialogueName(),
 						nodePointerStr.substring(0, sep),
 						nodePointerStr.substring(sep + 1));

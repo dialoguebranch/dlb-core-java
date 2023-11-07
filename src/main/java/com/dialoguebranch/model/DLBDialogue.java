@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerExternal;
+import com.dialoguebranch.model.nodepointer.NodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointerExternal;
 
 /**
  * Object representation of a DialogueBranch Dialogue definition. A {@link DLBDialogue} has a name
@@ -124,13 +124,13 @@ public class DLBDialogue {
 			speakers.add(node.getHeader().getSpeaker());
 		node.getBody().getReadVariableNames(variablesNeeded);
 		node.getBody().getWriteVariableNames(variablesWritten);
-		Set<DLBNodePointer> nodePointers = new HashSet<>();
+		Set<NodePointer> nodePointers = new HashSet<>();
 		node.getBody().getNodePointers(nodePointers);
-		for (DLBNodePointer nodePointer : nodePointers) {
-			if (!(nodePointer instanceof DLBNodePointerExternal))
+		for (NodePointer nodePointer : nodePointers) {
+			if (!(nodePointer instanceof NodePointerExternal))
 				continue;
-			DLBNodePointerExternal extPointer =
-					(DLBNodePointerExternal)nodePointer;
+			NodePointerExternal extPointer =
+					(NodePointerExternal)nodePointer;
 			dialoguesReferenced.add(extPointer.getDialogueId());
 		}
 	}

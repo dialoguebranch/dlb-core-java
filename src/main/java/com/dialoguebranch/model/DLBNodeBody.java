@@ -28,10 +28,10 @@
 package com.dialoguebranch.model;
 
 import com.dialoguebranch.model.command.*;
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerExternal;
-import com.dialoguebranch.model.nodepointer.DLBNodePointerInternal;
+import com.dialoguebranch.model.nodepointer.NodePointerExternal;
+import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 
 import java.util.*;
 
@@ -224,26 +224,26 @@ public class DLBNodeBody {
 		}
 	}
 	
-	public List<DLBNodePointer> getNodePointers() {
-		Set<DLBNodePointer> set = new HashSet<>();
+	public List<NodePointer> getNodePointers() {
+		Set<NodePointer> set = new HashSet<>();
 		getNodePointers(set);
-		List<DLBNodePointer> result = new ArrayList<>(set);
+		List<NodePointer> result = new ArrayList<>(set);
 		Collections.sort(result, this::compareNodePointers);
 		return result;
 	}
 	
-	private int compareNodePointers(DLBNodePointer o1, DLBNodePointer o2) {
-		if (o1 instanceof DLBNodePointerInternal) {
-			if (o2 instanceof DLBNodePointerExternal)
+	private int compareNodePointers(NodePointer o1, NodePointer o2) {
+		if (o1 instanceof NodePointerInternal) {
+			if (o2 instanceof NodePointerExternal)
 				return -1;
-			DLBNodePointerInternal p1 = (DLBNodePointerInternal)o1;
-			DLBNodePointerInternal p2 = (DLBNodePointerInternal)o2;
+			NodePointerInternal p1 = (NodePointerInternal)o1;
+			NodePointerInternal p2 = (NodePointerInternal)o2;
 			return p1.getNodeId().compareTo(p2.getNodeId());
 		} else {
-			if (o2 instanceof DLBNodePointerInternal)
+			if (o2 instanceof NodePointerInternal)
 				return -1;
-			DLBNodePointerExternal p1 = (DLBNodePointerExternal)o1;
-			DLBNodePointerExternal p2 = (DLBNodePointerExternal)o2;
+			NodePointerExternal p1 = (NodePointerExternal)o1;
+			NodePointerExternal p2 = (NodePointerExternal)o2;
 			int result = p1.getDialogueId().compareTo(p2.getDialogueId());
 			if (result != 0)
 				return result;
@@ -251,7 +251,7 @@ public class DLBNodeBody {
 		}
 	}
 	
-	public void getNodePointers(Set<DLBNodePointer> pointers) {
+	public void getNodePointers(Set<NodePointer> pointers) {
 		for (Segment segment : segments) {
 			if (!(segment instanceof CommandSegment))
 				continue;

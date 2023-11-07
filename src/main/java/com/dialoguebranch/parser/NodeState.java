@@ -30,7 +30,7 @@ package com.dialoguebranch.parser;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dialoguebranch.model.nodepointer.DLBNodePointer;
+import com.dialoguebranch.model.nodepointer.NodePointer;
 
 public class NodeState {
 	private final String dialogueName;
@@ -89,9 +89,9 @@ public class NodeState {
 		return nodePointerTokens;
 	}
 	
-	public void addNodePointerToken(DLBNodePointer pointer, BodyToken token) {
+	public void addNodePointerToken(NodePointer pointer, BodyToken token) {
 		nodePointerTokens.add(new NodePointerToken(title, pointer, token));
 	}
 
-	public record NodePointerToken(String nodeTitle, DLBNodePointer pointer, BodyToken token) { }
+	public record NodePointerToken(String nodeTitle, NodePointer pointer, BodyToken token) { }
 }

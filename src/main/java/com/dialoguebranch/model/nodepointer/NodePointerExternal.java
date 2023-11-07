@@ -42,18 +42,18 @@ import java.util.List;
  * @author Tessa Beinema
  * @see DLBReply
  */
-public class DLBNodePointerExternal extends DLBNodePointer {
+public class NodePointerExternal extends NodePointer {
 	
 	private String dialogueId;
 	
-	public DLBNodePointerExternal(String containerDialogueId,
-								  String relNextDialogueId, String nodeId) throws ParseException {
+	public NodePointerExternal(String containerDialogueId,
+							   String relNextDialogueId, String nodeId) throws ParseException {
 		super(nodeId);
 		this.dialogueId = getAbsoluteDialogueId(containerDialogueId,
 				relNextDialogueId);
 	}
 
-	public DLBNodePointerExternal(DLBNodePointerExternal other) {
+	public NodePointerExternal(NodePointerExternal other) {
 		super(other);
 		this.dialogueId = other.dialogueId;
 	}
@@ -123,14 +123,14 @@ public class DLBNodePointerExternal extends DLBNodePointer {
 	public boolean equals(Object obj) {
 		if (!super.equals(obj))
 			return false;
-		DLBNodePointerExternal other = (DLBNodePointerExternal)obj;
+		NodePointerExternal other = (NodePointerExternal)obj;
 		if (!dialogueId.equals(other.dialogueId))
 			return false;
 		return true;
 	}
 
 	@Override
-	public DLBNodePointerExternal clone() {
-		return new DLBNodePointerExternal(this);
+	public NodePointerExternal clone() {
+		return new NodePointerExternal(this);
 	}
 }
