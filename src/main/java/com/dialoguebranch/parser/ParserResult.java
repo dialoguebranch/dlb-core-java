@@ -33,22 +33,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A {@link ParserResult} object contains the results of parsing a .dlb file, including
- * the resulting {@link DLBDialogue} and a list of {@link ParseException}s.
+ * A {@link ParserResult} object contains the results of parsing a .dlb file, including the
+ * resulting {@link DLBDialogue} and a list of {@link ParseException}s.
  *
- * @author Dennis Hofs
- * @author Harm op den Akker
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class ParserResult {
 
     private DLBDialogue dialogue;
-    private List<ParseException> parseErrors;
+    private final List<ParseException> parseErrors;
 
     /**
      * Creates an instance of an empty {@link ParserResult} object.
      */
     public ParserResult() {
-        parseErrors = new ArrayList<ParseException>();
+        parseErrors = new ArrayList<>();
     }
 
     /**
@@ -60,8 +60,8 @@ public class ParserResult {
     }
 
     /**
-     * Returns a {@link List} of {@link ParseException}s that have occurred during
-     * the parsing of the .dlb file.
+     * Returns a {@link List} of {@link ParseException}s that have occurred during the parsing of
+     * the .dlb file.
      * @return a {@link List} of {@link ParseException}s.
      */
     public List<ParseException> getParseErrors() {
@@ -75,4 +75,5 @@ public class ParserResult {
     public void setDialogue(DLBDialogue dialogue) {
         this.dialogue = dialogue;
     }
+
 }

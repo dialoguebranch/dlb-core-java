@@ -138,10 +138,8 @@ public class DialogueBranchParser implements AutoCloseable {
 					reader.getLineNum(), reader.getColNum()));
 		}
 		for (NodeState.NodePointerToken pointerToken : nodePointerTokens) {
-			if (!(pointerToken.pointer() instanceof DLBNodePointerInternal))
+			if (!(pointerToken.pointer() instanceof DLBNodePointerInternal pointer))
 				continue;
-			DLBNodePointerInternal pointer =
-					(DLBNodePointerInternal)pointerToken.pointer();
 			if (dialogue.nodeExists(pointer.getNodeId()))
 				continue;
 			BodyToken token = pointerToken.token();
@@ -293,13 +291,11 @@ public class DialogueBranchParser implements AutoCloseable {
 		String valueUntrimmed = line.substring(sep + 1);
 		String value = valueUntrimmed.trim();
 		int valueCol = sep + 2 + skipWhitespace(valueUntrimmed, 0);
-		if (key.length() == 0) {
-			throw new LineNumberParseException("Found empty header name",
-					lineNum, 0);
+		if (key.isEmpty()) {
+			throw new LineNumberParseException("Found empty header name", lineNum, 0);
 		}
 		if (headerMap.containsKey(key)) {
-			throw new LineNumberParseException("Found duplicate header: " + key,
-					lineNum, keyIndex);
+			throw new LineNumberParseException("Found duplicate header: " + key, lineNum, keyIndex);
 		}
 		if (key.equals("title")) {
 			if (!value.matches(NODE_NAME_REGEX)) {
@@ -308,8 +304,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			}
 			if (dialogue.nodeExists(value)) {
 				throw new LineNumberParseException(
-						"Found duplicate node title: " + value, lineNum,
-						valueCol);
+						"Found duplicate node title: " + value, lineNum, valueCol);
 			}
 			nodeState.setTitle(value);
 		} else if (key.equals("speaker")) {
@@ -331,15 +326,14 @@ public class DialogueBranchParser implements AutoCloseable {
 					lineNum, 1);
 		}
 		String speaker = nodeState.getSpeaker();
-		if (nodeState.getTitle().toLowerCase().equals("end")) {
+		if (nodeState.getTitle().equalsIgnoreCase("end")) {
 			speaker = null;
 		} else {
 			if (speaker == null) {
 				throw new LineNumberParseException(
-						"Required header \"speaker\" not found",
-						lineNum, 1);
+						"Required header \"speaker\" not found", lineNum, 1);
 			}
-			if (speaker.length() == 0) {
+			if (speaker.isEmpty()) {
 				throw new LineNumberParseException("Found empty speaker",
 						nodeState.getSpeakerLine(),
 						nodeState.getSpeakerColumn());
@@ -351,9 +345,9 @@ public class DialogueBranchParser implements AutoCloseable {
 	}
 	
 	/**
-	 * Removes a possible comment, and leading and trailing white space from a
-	 * string. This should not be used for body lines, because this method does
-	 * not check whether a comment marker (//) is inside a string literal.
+	 * Removes a possible comment, and leading and trailing white space from a string. This should
+	 * not be used for body lines, because this method does not check whether a comment marker (//)
+	 * is inside a string literal.
 	 *
 	 * @param s the string or null
 	 * @return the content or null
@@ -368,8 +362,8 @@ public class DialogueBranchParser implements AutoCloseable {
 	}
 	
 	/**
-	 * Reads whitespace characters from the specified index and returns the
-	 * number of characters read.
+	 * Reads whitespace characters from the specified index and returns the number of characters
+	 * read.
 	 * 
 	 * @param s the string
 	 * @param start the start index
@@ -401,7 +395,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			}
 			int c = reader.read();
 			if (c == -1) {
-				if (builder.length() == 0)
+				if (builder.isEmpty())
 					return null;
 				else
 					return builder.toString();
@@ -418,8 +412,7 @@ public class DialogueBranchParser implements AutoCloseable {
 	private static void showUsage() {
 		System.out.println("Usage:");
 		System.out.println("java " + DialogueBranchParser.class.getName() + " [options] <dialogue-branch-file>");
-		System.out.println("    Parse a .dlb file and print a summary of the dialogue");
-		System.out.println("");
+		System.out.println("    Parse a .dlb file and print a summary of the dialogue\n\n");
 		System.out.println("Options:");
 		System.out.println("-h -? --help");
 		System.out.println("    Print this usage message");
@@ -450,15 +443,18 @@ public class DialogueBranchParser implements AutoCloseable {
 		}
 		try {
 			file = file.getCanonicalFile();
-		} catch (IOException ex) {}
+		} catch (IOException ex) {
+			System.err.println("ERROR: File not found: " + filename);
+			System.exit(1);
+			return;
+		}
 		if (!file.isFile()) {
 			System.err.println("ERROR: Path is not a file: " + file.getAbsolutePath());
 			System.exit(1);
 			return;
 		}
 		ParserResult readResult;
-		try {
-			DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(file);
+		try (DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(file)) {
 			readResult = dialogueBranchParser.readDialogue();
 		} catch (IOException ex) {
 			System.err.println("ERROR: Can't read file: " +
