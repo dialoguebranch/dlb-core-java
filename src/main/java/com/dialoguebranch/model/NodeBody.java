@@ -36,7 +36,7 @@ import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 import java.util.*;
 
 /**
- * A node body can occur in three different contexts inside a {@link DLBNode}.
+ * A node body can occur in three different contexts inside a {@link Node}.
  * 
  * <ul>
  *   <li>Directly in the node. In this case it specifies the agent statement with possible commands
@@ -44,19 +44,19 @@ import java.util.*;
  *   <li>As part of a clause in a {@link IfCommand} or {@link RandomCommand}. The content is
  *   the same as directly in the node. The only difference is that it is performed
  *   conditionally.</li>
- *   <li>As part of a {@link DLBReply}. In this case it specifies the user statement with possible
+ *   <li>As part of a {@link Reply}. In this case it specifies the user statement with possible
  *   commands, but no replies. Note that the UI shows these statements as options immediately along
- *   with the agent statement. This {@link DLBNodeBody} does not contain commands that are to be
+ *   with the agent statement. This {@link NodeBody} does not contain commands that are to be
  *   performed when the reply is chosen. Such commands are specified separately in a
- *   {@link DLBReply}.</li>
+ *   {@link Reply}.</li>
  * </ul>
  * 
  * <p>The body contains a statement as a list of segments where each segment is one of:</p>
  * 
  * <ul>
- *   <li>{@link DLBNodeBody.TextSegment TextSegment}: a {@link DLBVariableString} with text and
+ *   <li>{@link NodeBody.TextSegment TextSegment}: a {@link VariableString} with text and
  *   variables</li>
- *   <li>{@link DLBNodeBody.CommandSegment CommandSegment}: a command (see below)</li>
+ *   <li>{@link NodeBody.CommandSegment CommandSegment}: a command (see below)</li>
  * </ul>
  * 
  * <p>The segments are always normalized so that subsequent text segments are
@@ -67,9 +67,9 @@ import java.util.*;
  * 
  * <ul>
  *   <li>{@link ActionCommand}: Actions to perform along with the agent's text statement.</li>
- *   <li>{@link IfCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
+ *   <li>{@link IfCommand}: Contains clauses, each with a {@link NodeBody} specifying
  *   conditional statements, replies and commands.</li>
- *   <li>{@link RandomCommand}: Contains clauses, each with a {@link DLBNodeBody} specifying
+ *   <li>{@link RandomCommand}: Contains clauses, each with a {@link NodeBody} specifying
  *   statements, replies and commands.</li>
  *   <li>{@link SetCommand}: Sets a variable value.</li>
  * </ul>
@@ -84,19 +84,19 @@ import java.util.*;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBNodeBody {
+public class NodeBody {
 	private List<Segment> segments = new ArrayList<>();
-	private List<DLBReply> replies = new ArrayList<>();
+	private List<Reply> replies = new ArrayList<>();
 
-	public DLBNodeBody() {
+	public NodeBody() {
 	}
 
-	public DLBNodeBody(DLBNodeBody other) {
+	public NodeBody(NodeBody other) {
 		for (Segment segment : other.segments) {
 			this.segments.add(segment.clone());
 		}
-		for (DLBReply reply : other.replies) {
-			this.replies.add(new DLBReply(reply));
+		for (Reply reply : other.replies) {
+			this.replies.add(new Reply(reply));
 		}
 	}
 
@@ -117,7 +117,7 @@ public class DLBNodeBody {
 				segment instanceof TextSegment) {
 			TextSegment lastTextSegment = (TextSegment)lastSegment;
 			TextSegment textSegment = (TextSegment)segment;
-			DLBVariableString text = new DLBVariableString();
+			VariableString text = new VariableString();
 			text.addSegments(lastTextSegment.text.getSegments());
 			text.addSegments(textSegment.text.getSegments());
 			TextSegment mergedSegment = new TextSegment(text);
@@ -136,35 +136,35 @@ public class DLBNodeBody {
 		if (!segments.isEmpty() && segments.get(0) instanceof TextSegment) {
 			TextSegment segment = (TextSegment)segments.get(0);
 			String text = segment.text.evaluate(null).replaceAll("^\\s+", "");
-			segment.text = new DLBVariableString(text);
+			segment.text = new VariableString(text);
 		}
 		if (!segments.isEmpty() && segments.get(segments.size() - 1)
 				instanceof TextSegment) {
 			TextSegment segment = (TextSegment)segments.get(
 					segments.size() - 1);
 			String text = segment.text.evaluate(null).replaceAll("\\s+$", "");
-			segment.text = new DLBVariableString(text);
+			segment.text = new VariableString(text);
 		}
 	}
 
-	public List<DLBReply> getReplies() {
+	public List<Reply> getReplies() {
 		return replies;
 	}
 	
-	public DLBReply findReplyById(int replyId) {
-		for (DLBReply reply : replies) {
+	public Reply findReplyById(int replyId) {
+		for (Reply reply : replies) {
 			if (reply.getReplyId() == replyId)
 				return reply;
 		}
 		for (Segment segment : segments) {
-			DLBReply reply = segment.findReplyById(replyId);
+			Reply reply = segment.findReplyById(replyId);
 			if (reply != null)
 				return reply;
 		}
 		return null;
 	}
 
-	public void addReply(DLBReply reply) {
+	public void addReply(Reply reply) {
 		replies.add(reply);
 	}
 
@@ -191,7 +191,7 @@ public class DLBNodeBody {
 		for (Segment segment : segments) {
 			segment.getReadVariableNames(varNames);
 		}
-		for (DLBReply reply : replies) {
+		for (Reply reply : replies) {
 			reply.getReadVariableNames(varNames);
 		}
 	}
@@ -219,7 +219,7 @@ public class DLBNodeBody {
 		for (Segment segment : segments) {
 			segment.getWriteVariableNames(varNames);
 		}
-		for (DLBReply reply : replies) {
+		for (Reply reply : replies) {
 			reply.getWriteVariableNames(varNames);
 		}
 	}
@@ -258,7 +258,7 @@ public class DLBNodeBody {
 			Command command = ((CommandSegment)segment).command;
 			command.getNodePointers(pointers);
 		}
-		for (DLBReply reply : replies) {
+		for (Reply reply : replies) {
 			pointers.add(reply.getNodePointer());
 		}
 	}
@@ -288,7 +288,7 @@ public class DLBNodeBody {
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
 	public void execute(Map<String,Object> variables, boolean trimText,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		for (Segment segment : segments) {
 			if (segment instanceof TextSegment) {
 				executeTextSegment((TextSegment)segment, variables,
@@ -298,7 +298,7 @@ public class DLBNodeBody {
 						processedBody);
 			}
 		}
-		for (DLBReply reply : replies) {
+		for (Reply reply : replies) {
 			processedBody.addReply(reply.execute(variables));
 		}
 		if (trimText)
@@ -306,14 +306,14 @@ public class DLBNodeBody {
 	}
 	
 	private void executeTextSegment(TextSegment segment,
-			Map<String,Object> variables, DLBNodeBody processedBody) {
+			Map<String,Object> variables, NodeBody processedBody) {
 		TextSegment processedText = new TextSegment(
 				segment.text.execute(variables));
 		processedBody.addSegment(processedText);
 	}
 	
 	private void executeCommandSegment(CommandSegment segment,
-			Map<String,Object> variables, DLBNodeBody processedBody)
+			Map<String,Object> variables, NodeBody processedBody)
 			throws EvaluationException {
 		segment.command.executeBodyCommand(variables, processedBody);
 	}
@@ -322,7 +322,7 @@ public class DLBNodeBody {
 		trimWhitespace(segments);
 	}
 
-	public static void trimWhitespace(List<DLBNodeBody.Segment> segments) {
+	public static void trimWhitespace(List<NodeBody.Segment> segments) {
 		removeLeadingWhitespace(segments);
 		removeTrailingWhitespace(segments);
 	}
@@ -331,13 +331,13 @@ public class DLBNodeBody {
 		removeLeadingWhitespace(segments);
 	}
 
-	public static void removeLeadingWhitespace(List<DLBNodeBody.Segment> segments) {
+	public static void removeLeadingWhitespace(List<NodeBody.Segment> segments) {
 		while (!segments.isEmpty()) {
 			Segment segment = segments.get(0);
 			if (!(segment instanceof TextSegment))
 				return;
 			TextSegment textSegment = (TextSegment)segment;
-			DLBVariableString text = textSegment.getText();
+			VariableString text = textSegment.getText();
 			text.removeLeadingWhitespace();
 			if (!text.getSegments().isEmpty())
 				return;
@@ -349,13 +349,13 @@ public class DLBNodeBody {
 		removeTrailingWhitespace(segments);
 	}
 
-	public static void removeTrailingWhitespace(List<DLBNodeBody.Segment> segments) {
+	public static void removeTrailingWhitespace(List<NodeBody.Segment> segments) {
 		while (!segments.isEmpty()) {
 			Segment segment = segments.get(segments.size() - 1);
 			if (!(segment instanceof TextSegment))
 				return;
 			TextSegment textSegment = (TextSegment)segment;
-			DLBVariableString text = textSegment.getText();
+			VariableString text = textSegment.getText();
 			text.removeTrailingWhitespace();
 			if (!text.getSegments().isEmpty())
 				return;
@@ -370,7 +370,7 @@ public class DLBNodeBody {
 		for (Segment segment : segments) {
 			builder.append(segment.toString());
 		}
-		for (DLBReply reply : replies) {
+		for (Reply reply : replies) {
 			builder.append(newline);
 			builder.append(reply);
 		}
@@ -385,7 +385,7 @@ public class DLBNodeBody {
 		 * @param replyId the reply ID
 		 * @return the reply or null
 		 */
-		public abstract DLBReply findReplyById(int replyId);
+		public abstract Reply findReplyById(int replyId);
 
 		/**
 		 * Retrieves all variable names that are read in this segment and adds
@@ -413,26 +413,26 @@ public class DLBNodeBody {
 	}
 	
 	public static class TextSegment extends Segment {
-		private DLBVariableString text;
+		private VariableString text;
 		
-		public TextSegment(DLBVariableString text) {
+		public TextSegment(VariableString text) {
 			this.text = text;
 		}
 
 		public TextSegment(TextSegment other) {
-			this.text = new DLBVariableString(other.text);
+			this.text = new VariableString(other.text);
 		}
 
-		public DLBVariableString getText() {
+		public VariableString getText() {
 			return text;
 		}
 
-		public void setText(DLBVariableString text) {
+		public void setText(VariableString text) {
 			this.text = text;
 		}
 		
 		@Override
-		public DLBReply findReplyById(int replyId) {
+		public Reply findReplyById(int replyId) {
 			return null;
 		}
 
@@ -472,7 +472,7 @@ public class DLBNodeBody {
 		}
 		
 		@Override
-		public DLBReply findReplyById(int replyId) {
+		public Reply findReplyById(int replyId) {
 			return command.findReplyById(replyId);
 		}
 

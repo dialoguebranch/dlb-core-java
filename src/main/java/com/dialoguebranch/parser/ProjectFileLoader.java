@@ -30,7 +30,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.FileDescriptor;
 import com.dialoguebranch.model.FileType;
-import com.dialoguebranch.model.DLBProjectMetaData;
+import com.dialoguebranch.model.ProjectMetaData;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.xml.SimpleSAXHandler;
 import nl.rrd.utils.xml.SimpleSAXParser;
@@ -43,7 +43,7 @@ import java.util.List;
 public class ProjectFileLoader implements FileLoader {
 
 	private final File projectMetadataFile;
-	private final DLBProjectMetaData projectMetaData;
+	private final ProjectMetaData projectMetaData;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
@@ -51,7 +51,7 @@ public class ProjectFileLoader implements FileLoader {
 
 	/**
 	 * Creates an instance of a {@link ProjectFileLoader} with a given pointer to a project metadata
-	 * xml file, which is immediately parsed into a {@link DLBProjectMetaData} object.
+	 * xml file, which is immediately parsed into a {@link ProjectMetaData} object.
 	 * @param projectMetadataFile the Dialogue Branch project metadata .xml file
 	 * @throws IOException in case of a read error when parsing the project metadata file.
 	 * @throws ParseException in case of a parse error when parsing the project metadata file.
@@ -77,9 +77,9 @@ public class ProjectFileLoader implements FileLoader {
 	/**
 	 * Returns the Dialogue Branch project metadata object from which this {@link ProjectFileLoader}
 	 * can load its resource files.
-	 * @return the Dialogue Branch Project MetaData {@link DLBProjectMetaData} object.
+	 * @return the Dialogue Branch Project MetaData {@link ProjectMetaData} object.
 	 */
-	public DLBProjectMetaData getProjectMetaData() {
+	public ProjectMetaData getProjectMetaData() {
 		return projectMetaData;
 	}
 
@@ -122,11 +122,11 @@ public class ProjectFileLoader implements FileLoader {
 	// -------------------- Other Functions --------------------
 	// ---------------------------------------------------------
 
-	public static DLBProjectMetaData loadProjectMetaDataFile(File metaDataFile)
+	public static ProjectMetaData loadProjectMetaDataFile(File metaDataFile)
 			throws IOException, ParseException {
-		SimpleSAXHandler<DLBProjectMetaData> xmlHandler = DLBProjectMetaData.getXMLHandler();
-		SimpleSAXParser<DLBProjectMetaData> parser = new SimpleSAXParser<>(xmlHandler);
-		DLBProjectMetaData result = parser.parse(metaDataFile);
+		SimpleSAXHandler<ProjectMetaData> xmlHandler = ProjectMetaData.getXMLHandler();
+		SimpleSAXParser<ProjectMetaData> parser = new SimpleSAXParser<>(xmlHandler);
+		ProjectMetaData result = parser.parse(metaDataFile);
 		result.setBasePath(metaDataFile.getParent());
 		return result;
 	}

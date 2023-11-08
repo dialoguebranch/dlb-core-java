@@ -28,7 +28,7 @@
 package com.dialoguebranch.i18n;
 
 import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.DLBNode;
+import com.dialoguebranch.model.Node;
 import com.dialoguebranch.parser.DialogueBranchParser;
 import com.dialoguebranch.parser.ParserResult;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -116,7 +116,7 @@ public class POEditorTools {
 		ArrayList<TranslationTerm> terms = new ArrayList<>();
 
 
-		for (DLBNode node : dialogue.getNodes()) {
+		for (Node node : dialogue.getNodes()) {
 			TranslatableExtractor extractor = new TranslatableExtractor();
 			List<SourceTranslatable> translatables = extractor.extractFromBody(
 					node.getHeader().getSpeaker(), SourceTranslatable.USER, node.getBody());

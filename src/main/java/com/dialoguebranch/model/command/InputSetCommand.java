@@ -27,14 +27,14 @@
 
 package com.dialoguebranch.model.command;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.VariableString;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
 import nl.rrd.utils.json.JsonMapper;
 import com.dialoguebranch.execution.Variable;
 import com.dialoguebranch.execution.VariableStore;
-import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.*;
@@ -103,7 +103,7 @@ public class InputSetCommand extends InputCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		InputSetCommand processedCmd = new InputSetCommand();
 		for (Option option : options) {
 			Option processedOption = new Option();
@@ -111,7 +111,7 @@ public class InputSetCommand extends InputCommand {
 			processedOption.setText(option.getText().execute(variables));
 			processedCmd.options.add(processedOption);
 		}
-		processedBody.addSegment(new DLBNodeBody.CommandSegment(processedCmd));
+		processedBody.addSegment(new NodeBody.CommandSegment(processedCmd));
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class InputSetCommand extends InputCommand {
 
 	public static class Option {
 		private String variableName = null;
-		private DLBVariableString text = null;
+		private VariableString text = null;
 
 		public Option() {
 		}
@@ -174,7 +174,7 @@ public class InputSetCommand extends InputCommand {
 		public Option(Option other) {
 			this.variableName = other.variableName;
 			if (other.text != null)
-				this.text = new DLBVariableString(other.text);
+				this.text = new VariableString(other.text);
 		}
 
 		public String getVariableName() {
@@ -185,11 +185,11 @@ public class InputSetCommand extends InputCommand {
 			this.variableName = variableName;
 		}
 
-		public DLBVariableString getText() {
+		public VariableString getText() {
 			return text;
 		}
 
-		public void setText(DLBVariableString text) {
+		public void setText(VariableString text) {
 			this.text = text;
 		}
 	}

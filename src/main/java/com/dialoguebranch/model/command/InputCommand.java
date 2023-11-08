@@ -27,14 +27,14 @@
 
 package com.dialoguebranch.model.command;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
+import com.dialoguebranch.model.VariableString;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import com.dialoguebranch.execution.VariableStore;
-import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.Arrays;
@@ -44,7 +44,7 @@ import java.util.Set;
 
 /**
  * This class models the &lt;&lt;input ...&gt;&gt; command in DialogueBranch. It can
- * be part of a {@link DLBNodeBody} inside a reply.
+ * be part of a {@link NodeBody} inside a reply.
  * 
  * @author Dennis Hofs (RRD)
  */
@@ -117,7 +117,7 @@ public abstract class InputCommand extends AttributesCommand {
 	 * Returns the parameters for this input command to send to the client. This
 	 * is a map from parameter names to values. A value can be any JSON type.
 	 * This method should only be called on a command that has already been
-	 * executed with {@link #executeBodyCommand(Map, DLBNodeBody)
+	 * executed with {@link #executeBodyCommand(Map, NodeBody)
 	 * executeBodyCommand()}. This means that any variables in parameter values
 	 * have already been resolved.
 	 *
@@ -129,7 +129,7 @@ public abstract class InputCommand extends AttributesCommand {
 	 * Returns the string to use in the user statement log in place of this
 	 * input command. It can use variable values from the specified variable
 	 * store. This method should only be called on a command that has already
-	 * been executed with {@link #executeBodyCommand(Map, DLBNodeBody)
+	 * been executed with {@link #executeBodyCommand(Map, NodeBody)
 	 * executeBodyCommand()}. This means that any variables in parameter values
 	 * have already been resolved.
 	 *
@@ -139,7 +139,7 @@ public abstract class InputCommand extends AttributesCommand {
 	public abstract String getStatementLog(VariableStore varStore);
 
 	@Override
-	public DLBReply findReplyById(int replyId) {
+	public Reply findReplyById(int replyId) {
 		return null;
 	}
 
@@ -193,7 +193,7 @@ public abstract class InputCommand extends AttributesCommand {
 		String result = "<<input type=\"" + type + "\"";
 		if (description != null) {
 			char[] escapes = new char[] { '"' };
-			String escapedDescr = new DLBVariableString(description)
+			String escapedDescr = new VariableString(description)
 					.toString(escapes);
 			result += " description=\"" + escapedDescr + "\"";
 		}

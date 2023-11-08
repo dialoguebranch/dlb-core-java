@@ -32,7 +32,7 @@ import com.dialoguebranch.i18n.Translatable;
 import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.FileDescriptor;
 import nl.rrd.utils.exception.ParseException;
-import com.dialoguebranch.model.DLBProject;
+import com.dialoguebranch.model.Project;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -48,7 +48,7 @@ import java.util.Map;
 public class ProjectParserResult {
 
 	private FileLoader fileLoader;
-	private DLBProject project = null;
+	private Project project = null;
 	private Map<String,List<ParseException>> parseErrors = new LinkedHashMap<>();
 	private Map<String,List<String>> warnings = new LinkedHashMap<>();
 
@@ -92,7 +92,7 @@ public class ProjectParserResult {
 	 *
 	 * @return the project or null
 	 */
-	public DLBProject getProject() {
+	public Project getProject() {
 		return project;
 	}
 
@@ -101,7 +101,7 @@ public class ProjectParserResult {
 	 *
 	 * @param project the project
 	 */
-	public void setProject(DLBProject project) {
+	public void setProject(Project project) {
 		this.project = project;
 	}
 
@@ -203,7 +203,7 @@ public class ProjectParserResult {
 			}
 		}
 
-		DLBProject project = this.getProject();
+		Project project = this.getProject();
 		result.append("Project Summary:\n");
 		result.append("Location: ")
 				.append(projectLocationDescription)

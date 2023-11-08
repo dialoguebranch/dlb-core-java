@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.model.nodepointer.NodePointerExternal;
 import com.dialoguebranch.model.nodepointer.NodePointerInternal;
@@ -51,12 +51,12 @@ public class ReplyParser {
 		this.nodeState = nodeState;
 	}
 	
-	public DLBReply parse(CurrentIterator<BodyToken> tokens)
+	public Reply parse(CurrentIterator<BodyToken> tokens)
 			throws LineNumberParseException {
 		readSections(tokens);
-		DLBNodeBody statement = parseStatement();
+		NodeBody statement = parseStatement();
 		NodePointer nodePointer = parseNodePointer();
-		DLBReply reply = new DLBReply(nodeState.createNextReplyId(),
+		Reply reply = new Reply(nodeState.createNextReplyId(),
 				statement, nodePointer);
 		if (commandSection != null)
 			parseCommands(reply);
@@ -116,11 +116,11 @@ public class ReplyParser {
 		}
 	}
 	
-	private DLBNodeBody parseStatement() throws LineNumberParseException {
+	private NodeBody parseStatement() throws LineNumberParseException {
 		if (statementSection == null)
 			return null;
 		BodyParser bodyParser = new BodyParser(nodeState);
-		DLBNodeBody result = bodyParser.parse(statementSection.tokens,
+		NodeBody result = bodyParser.parse(statementSection.tokens,
 				Arrays.asList("input"));
 		if (result.getSegments().isEmpty())
 			return null;
@@ -171,7 +171,7 @@ public class ReplyParser {
 		return result;
 	}
 	
-	private void parseCommands(DLBReply reply) throws LineNumberParseException {
+	private void parseCommands(Reply reply) throws LineNumberParseException {
 		CurrentIterator<BodyToken> it = new CurrentIterator<>(
 				commandSection.tokens.iterator());
 		it.moveNext();

@@ -32,7 +32,7 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.execution.Variable;
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.util.LinkedHashMap;
@@ -85,8 +85,8 @@ public class InputEmailCommand extends InputCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
-		processedBody.addSegment(new DLBNodeBody.CommandSegment(this));
+			NodeBody processedBody) throws EvaluationException {
+		processedBody.addSegment(new NodeBody.CommandSegment(this));
 	}
 
 	@Override

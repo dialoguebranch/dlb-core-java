@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.json.JsonMapper;
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.command.ActionCommand;
 
 import java.io.IOException;
@@ -49,12 +49,12 @@ import java.util.Map;
 
 /**
  * This class is used for dialogue statements that are sent to the client in the web service
- * protocol. It mirrors the statement segments in a {@link DLBNodeBody}. The main difference is that
+ * protocol. It mirrors the statement segments in a {@link NodeBody}. The main difference is that
  * any variables have been resolved and commands such as "if", "set" and "random" have already been
  * executed. There are three types of segments:
  *
  * <ul>
- *   <li>{@link TextSegment TextSegment}: Corresponds to a {@link DLBNodeBody.TextSegment} with
+ *   <li>{@link TextSegment TextSegment}: Corresponds to a {@link NodeBody.TextSegment} with
  *   variables resolved.</li>
  *   <li>{@link ActionSegment}: Contains a {@link DialogueAction DialogueAction}, which corresponds
  *   to a {@link ActionCommand} with variables resolved. Action segments should not occur in

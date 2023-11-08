@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.model.VariableString;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.DataFormatter;
 
@@ -67,7 +68,7 @@ public class BodyToken {
 		REPLY_SEPARATOR,
 		
 		/**
-		 * Value: DLBVariableString
+		 * Value: VariableString
 		 */
 		QUOTED_STRING,
 		
@@ -173,7 +174,7 @@ public class BodyToken {
 	 *     <li>When the type is {@link Type#TEXT}, "value" is the text with escaped characters
 	 *     resolved as a {@link String}.</li>
 	 *     <li>When the type is {@link Type#QUOTED_STRING}, "value" is a
-	 *     {@link com.dialoguebranch.model.DLBVariableString}.</li>
+	 *     {@link VariableString}.</li>
 	 *     <li>When the type is {@link Type#VARIABLE}, the "value" is the variable name as a
 	 *     {@link String}.</li>
 	 * </ul>

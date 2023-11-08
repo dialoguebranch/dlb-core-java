@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.parser.BodyToken;
 import com.dialoguebranch.parser.BodyTokenizer;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -216,7 +216,7 @@ public class TranslationParser {
 					": " + ex.getError());
 		}
 		BodyParser parser = new BodyParser(null);
-		DLBNodeBody body;
+		NodeBody body;
 		try {
 			body = parser.parse(tokens, Collections.singletonList("input"));
 		} catch (LineNumberParseException ex) {

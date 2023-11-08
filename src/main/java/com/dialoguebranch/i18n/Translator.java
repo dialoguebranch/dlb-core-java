@@ -32,12 +32,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.DLBNode;
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBVariableString;
+import com.dialoguebranch.model.Node;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.VariableString;
 
 /**
- * This class can translate {@link DLBNode}s given a translation map.
+ * This class can translate {@link Node}s given a translation map.
  * The translation map can be obtained from a translation file using the {@link
  * TranslationParser}.
  *
@@ -97,7 +97,7 @@ public class Translator {
 	 */
 	public Dialogue translate(Dialogue dialogue) {
 		dialogue = new Dialogue(dialogue);
-		for (DLBNode node : dialogue.getNodes()) {
+		for (Node node : dialogue.getNodes()) {
 			translateBody(node.getHeader().getSpeaker(),
 					SourceTranslatable.USER, node.getBody());
 		}
@@ -112,15 +112,15 @@ public class Translator {
 	 * @param node the node
 	 * @return the translated node
 	 */
-	public DLBNode translate(DLBNode node) {
-		node = new DLBNode(node);
+	public Node translate(Node node) {
+		node = new Node(node);
 		translateBody(node.getHeader().getSpeaker(),
 				SourceTranslatable.USER, node.getBody());
 		return node;
 	}
 
 	private void translateBody(String speaker, String addressee,
-			DLBNodeBody body) {
+			NodeBody body) {
 		TranslatableExtractor extractor = new TranslatableExtractor();
 		List<SourceTranslatable> translatables = extractor.extractFromBody(
 				speaker, addressee, body);
@@ -148,29 +148,29 @@ public class Translator {
 		if (transList == null)
 			return;
 		Translatable translation = findContextTranslation(text, transList);
-		DLBNodeBody body = text.translatable().getParent();
-		List<DLBNodeBody.Segment> bodySegments = new ArrayList<>(
+		NodeBody body = text.translatable().getParent();
+		List<NodeBody.Segment> bodySegments = new ArrayList<>(
 				body.getSegments());
-		List<DLBNodeBody.Segment> textSegments = text.translatable()
+		List<NodeBody.Segment> textSegments = text.translatable()
 				.getSegments();
 		int insertIndex = body.getSegments().indexOf(textSegments.get(0));
-		for (DLBNodeBody.Segment segment : textSegments) {
+		for (NodeBody.Segment segment : textSegments) {
 			bodySegments.remove(segment);
 		}
 		if (preWhitespace.length() > 0) {
-			bodySegments.add(insertIndex++, new DLBNodeBody.TextSegment(
-					new DLBVariableString(preWhitespace)));
+			bodySegments.add(insertIndex++, new NodeBody.TextSegment(
+					new VariableString(preWhitespace)));
 		}
-		List<DLBNodeBody.Segment> transSegments = translation.getSegments();
-		for (DLBNodeBody.Segment transSegment : transSegments) {
+		List<NodeBody.Segment> transSegments = translation.getSegments();
+		for (NodeBody.Segment transSegment : transSegments) {
 			bodySegments.add(insertIndex++, transSegment);
 		}
 		if (postWhitespace.length() > 0) {
-			bodySegments.add(insertIndex, new DLBNodeBody.TextSegment(
-					new DLBVariableString(postWhitespace)));
+			bodySegments.add(insertIndex, new NodeBody.TextSegment(
+					new VariableString(postWhitespace)));
 		}
 		body.clearSegments();
-		for (DLBNodeBody.Segment segment : bodySegments) {
+		for (NodeBody.Segment segment : bodySegments) {
 			body.addSegment(segment);
 		}
 	}

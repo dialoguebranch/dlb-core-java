@@ -44,17 +44,17 @@ import nl.rrd.utils.expressions.Value;
  * 
  * @author Dennis Hofs (RRD)
  */
-public class DLBVariableString {
+public class VariableString {
 	private List<Segment> segments = new ArrayList<>();
 	
-	public DLBVariableString() {
+	public VariableString() {
 	}
 
-	public DLBVariableString(String text) {
+	public VariableString(String text) {
 		segments.add(new TextSegment(text));
 	}
 
-	public DLBVariableString(DLBVariableString other) {
+	public VariableString(VariableString other) {
 		for (Segment segment : other.segments) {
 			this.segments.add(segment.clone());
 		}
@@ -100,8 +100,8 @@ public class DLBVariableString {
 	 * @param variables the variable map (can be null)
 	 * @return the processed variable string
 	 */
-	public DLBVariableString execute(Map<String,Object> variables) {
-		DLBVariableString result = new DLBVariableString();
+	public VariableString execute(Map<String,Object> variables) {
+		VariableString result = new VariableString();
 		for (Segment segment : segments) {
 			if (segment instanceof TextSegment) {
 				result.addSegment(segment);
@@ -125,7 +125,7 @@ public class DLBVariableString {
 	 * @return the evaluated string
 	 */
 	public String evaluate(Map<String,Object> variables) {
-		DLBVariableString varStr = execute(variables);
+		VariableString varStr = execute(variables);
 		if (varStr.segments.isEmpty())
 			return "";
 		TextSegment segment = (TextSegment)varStr.segments.get(0);

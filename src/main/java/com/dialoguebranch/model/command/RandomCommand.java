@@ -27,13 +27,13 @@
 
 package com.dialoguebranch.model.command;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.parser.BodyParser;
 import com.dialoguebranch.parser.BodyToken;
 
@@ -41,7 +41,7 @@ import java.util.*;
 
 /**
  * This class models the &lt;&lt;random ...&gt;&gt; command in DialogueBranch. It can be
- * part of a {@link DLBNodeBody} (not inside a reply).
+ * part of a {@link NodeBody} (not inside a reply).
  * 
  * @author Dennis Hofs (RRD)
  */
@@ -87,9 +87,9 @@ public class RandomCommand extends AttributesCommand {
 	}
 
 	@Override
-	public DLBReply findReplyById(int replyId) {
+	public Reply findReplyById(int replyId) {
 		for (Clause clause : clauses) {
-			DLBReply reply = clause.statement.findReplyById(replyId);
+			Reply reply = clause.statement.findReplyById(replyId);
 			if (reply != null)
 				return reply;
 		}
@@ -119,7 +119,7 @@ public class RandomCommand extends AttributesCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		float totalWeight = 0;
 		for (Clause clause : clauses) {
 			totalWeight += clause.weight;
@@ -208,7 +208,7 @@ public class RandomCommand extends AttributesCommand {
 	 */
 	public static class Clause {
 		private float weight;
-		private DLBNodeBody statement;
+		private NodeBody statement;
 
 		/**
 		 * Constructs a new clause.
@@ -217,14 +217,14 @@ public class RandomCommand extends AttributesCommand {
 		 * @param statement the statement that should be output if this clause
 		 * is selected
 		 */
-		public Clause(float weight, DLBNodeBody statement) {
+		public Clause(float weight, NodeBody statement) {
 			this.weight = weight;
 			this.statement = statement;
 		}
 
 		public Clause(Clause other) {
 			this.weight = other.weight;
-			this.statement = new DLBNodeBody(other.statement);
+			this.statement = new NodeBody(other.statement);
 		}
 
 		/**
@@ -251,7 +251,7 @@ public class RandomCommand extends AttributesCommand {
 		 * 
 		 * @return the statement
 		 */
-		public DLBNodeBody getStatement() {
+		public NodeBody getStatement() {
 			return statement;
 		}
 
@@ -261,7 +261,7 @@ public class RandomCommand extends AttributesCommand {
 		 * 
 		 * @param statement the statement
 		 */
-		public void setStatement(DLBNodeBody statement) {
+		public void setStatement(NodeBody statement) {
 			this.statement = statement;
 		}
 	}

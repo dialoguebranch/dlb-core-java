@@ -27,12 +27,12 @@
 
 package com.dialoguebranch.parser;
 
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.command.Command;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
-import com.dialoguebranch.model.DLBVariableString;
+import com.dialoguebranch.model.VariableString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.List;
  * parsing Dialogue Branch commands and replies respectively. Information about the state of the
  * current node that is being parsed is kept in the provided {@link NodeState} object.
  *
- * <p>The {@link BodyParser} can generate a {@link DLBNodeBody} object from a given list of
+ * <p>The {@link BodyParser} can generate a {@link NodeBody} object from a given list of
  * {@link BodyToken}s and a list of command names that are valid in the given context. Which
  * commands are valid can differ depending on whether we are parsing the main part of a node body
  * (where we accept e.g. 'action', 'if', 'random' and 'set') or a statement section within a reply
@@ -66,13 +66,13 @@ public class BodyParser {
 	}
 
 	/**
-	 * Parses the given set of {@link BodyToken}s into a {@link DLBNodeBody}.
+	 * Parses the given set of {@link BodyToken}s into a {@link NodeBody}.
 	 * @param tokens the list of {@link BodyToken}s making up the node body.
 	 * @param validCommands a list of command names that are valid within the current context.
-	 * @return the {@link DLBNodeBody} resulting from parsing all given tokens.
+	 * @return the {@link NodeBody} resulting from parsing all given tokens.
 	 * @throws LineNumberParseException in case of any errors in the body.
 	 */
-	public DLBNodeBody parse(List<BodyToken> tokens, List<String> validCommands)
+	public NodeBody parse(List<BodyToken> tokens, List<String> validCommands)
 			throws LineNumberParseException {
 		CurrentIterator<BodyToken> it = new CurrentIterator<>(tokens.iterator());
 		it.moveNext();
@@ -103,15 +103,15 @@ public class BodyParser {
 			CurrentIterator<BodyToken> tokens, List<String> validCommands,
             List<String> validCommandClauses) throws LineNumberParseException {
 		ParseUntilCommandClauseResult result = new ParseUntilCommandClauseResult();
-		result.body = new DLBNodeBody();
+		result.body = new NodeBody();
 		while (result.cmdClauseStartToken == null && tokens.getCurrent() != null) {
 			BodyToken token = tokens.getCurrent();
 			switch (token.getType()) {
 			case TEXT:
 			case VARIABLE:
-				DLBVariableString text = parseTextSegment(tokens);
+				VariableString text = parseTextSegment(tokens);
 				if (result.body.getReplies().isEmpty()) {
-					result.body.addSegment(new DLBNodeBody.TextSegment(text));
+					result.body.addSegment(new NodeBody.TextSegment(text));
 				} else if (!text.isWhitespace()) {
 					throw new LineNumberParseException(
 							"Found content after reply", token.getLineNumber(),
@@ -130,7 +130,7 @@ public class BodyParser {
 							"Found << after reply", token.getLineNumber(), token.getColNumber());
 				} else {
 					Command command = cmdParser.parseFromName(token, tokens);
-					result.body.addSegment(new DLBNodeBody.CommandSegment(command));
+					result.body.addSegment(new NodeBody.CommandSegment(command));
 				}
 				break;
 			case REPLY_START:
@@ -140,7 +140,7 @@ public class BodyParser {
 							token.getColNumber());
 				}
 				ReplyParser replyParser = new ReplyParser(nodeState);
-				DLBReply reply = replyParser.parse(tokens);
+				Reply reply = replyParser.parse(tokens);
 				if (reply.getStatement() == null && hasAutoForwardReply(result.body)) {
 					throw new LineNumberParseException(
 							"Found more than one autoforward reply",
@@ -158,8 +158,8 @@ public class BodyParser {
 		return result;
 	}
 	
-	private boolean hasAutoForwardReply(DLBNodeBody body) {
-		for (DLBReply reply : body.getReplies()) {
+	private boolean hasAutoForwardReply(NodeBody body) {
+		for (Reply reply : body.getReplies()) {
 			if (reply.getStatement() == null)
 				return true;
 		}
@@ -167,22 +167,22 @@ public class BodyParser {
 	}
 
 	public static class ParseUntilCommandClauseResult {
-		public DLBNodeBody body;
+		public NodeBody body;
 		public BodyToken cmdClauseStartToken = null;
 		public String cmdClauseName = null;
 	}
 	
-	private DLBVariableString parseTextSegment(CurrentIterator<BodyToken> tokens) {
-		DLBVariableString string = new DLBVariableString();
+	private VariableString parseTextSegment(CurrentIterator<BodyToken> tokens) {
+		VariableString string = new VariableString();
 		boolean foundEnd = false;
 		while (!foundEnd && tokens.getCurrent() != null) {
 			BodyToken token = tokens.getCurrent();
 			switch (token.getType()) {
 			case TEXT:
-				string.addSegment(new DLBVariableString.TextSegment((String)token.getValue()));
+				string.addSegment(new VariableString.TextSegment((String)token.getValue()));
 				break;
 			case VARIABLE:
-				string.addSegment(new DLBVariableString.VariableSegment((String)token.getValue()));
+				string.addSegment(new VariableString.VariableSegment((String)token.getValue()));
 				break;
 			default:
 				foundEnd = true;

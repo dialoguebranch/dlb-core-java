@@ -30,7 +30,7 @@ package com.dialoguebranch.model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class DLBNodeHeader {
+public class NodeHeader {
 	
 	private String title;
 	private String speaker;
@@ -38,21 +38,21 @@ public class DLBNodeHeader {
 	
 	// ---------- Constructors:
 	
-	public DLBNodeHeader() {
+	public NodeHeader() {
 		optionalTags = new LinkedHashMap<>();
 	}
 	
-	public DLBNodeHeader(String title) {
+	public NodeHeader(String title) {
 		this.title = title;
 		optionalTags = new LinkedHashMap<>();
 	}
 	
-	public DLBNodeHeader(String title, Map<String,String> optionalTags) {
+	public NodeHeader(String title, Map<String,String> optionalTags) {
 		this.title = title;
 		this.optionalTags = optionalTags;
 	}
 
-	public DLBNodeHeader(DLBNodeHeader other) {
+	public NodeHeader(NodeHeader other) {
 		this.title = other.title;
 		this.speaker = other.speaker;
 		this.optionalTags = new LinkedHashMap<>(other.optionalTags);

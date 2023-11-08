@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.model.nodepointer;
 
-import com.dialoguebranch.model.DLBNode;
+import com.dialoguebranch.model.Node;
 
 /**
  * An abstract representation of a pointer to a next node, that can either be an
@@ -50,7 +50,7 @@ public abstract class NodePointer implements Cloneable {
 	
 	/**
 	 * Creates an instance of a {@link NodePointer} with given {@code nodeId}.
-	 * @param nodeId the unique identifier of the {@link DLBNode} that this NodePointer refers to.
+	 * @param nodeId the unique identifier of the {@link Node} that this NodePointer refers to.
 	 */
 	public NodePointer(String nodeId) {
 		this.nodeId = nodeId;
@@ -70,16 +70,16 @@ public abstract class NodePointer implements Cloneable {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the identifier of the {@link DLBNode} that this pointer refers to.
-	 * @return the identifier of the {@link DLBNode} that this pointer refers to.
+	 * Returns the identifier of the {@link Node} that this pointer refers to.
+	 * @return the identifier of the {@link Node} that this pointer refers to.
 	 */
 	public String getNodeId() {
 		return this.nodeId;
 	}
 	
 	/**
-	 * Sets the identifier of the {@link DLBNode} that this pointer refers to.
-	 * @param nodeId the identifier of the {@link DLBNode} that this pointer refers to.
+	 * Sets the identifier of the {@link Node} that this pointer refers to.
+	 * @param nodeId the identifier of the {@link Node} that this pointer refers to.
 	 */
 	public void setNodeId(String nodeId) {
 		this.nodeId = nodeId;

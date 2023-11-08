@@ -33,7 +33,7 @@ import java.util.Map;
 
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
-import com.dialoguebranch.model.DLBVariableString;
+import com.dialoguebranch.model.VariableString;
 import com.dialoguebranch.parser.BodyToken;
 
 public abstract class AttributesCommand extends Command {
@@ -120,9 +120,9 @@ public abstract class AttributesCommand extends Command {
 				cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 	}
 	
-	protected static DLBVariableString readAttr(String name,
-                                                Map<String, BodyToken> attrs, BodyToken cmdStartToken,
-                                                boolean require) throws LineNumberParseException {
+	protected static VariableString readAttr(String name,
+                                             Map<String, BodyToken> attrs, BodyToken cmdStartToken,
+                                             boolean require) throws LineNumberParseException {
 		if (!attrs.containsKey(name)) {
 			if (!require)
 				return null;
@@ -131,13 +131,13 @@ public abstract class AttributesCommand extends Command {
 					cmdStartToken.getLineNumber(), cmdStartToken.getColNumber());
 		}
 		BodyToken token = attrs.get(name);
-		return (DLBVariableString)token.getValue();
+		return (VariableString)token.getValue();
 	}
 	
 	protected static String readPlainTextAttr(String name,
                                               Map<String, BodyToken> attrs, BodyToken cmdStartToken,
                                               boolean require) throws LineNumberParseException {
-		DLBVariableString varStr = readAttr(name, attrs, cmdStartToken,
+		VariableString varStr = readAttr(name, attrs, cmdStartToken,
 				require);
 		if (varStr == null)
 			return null;
@@ -154,21 +154,21 @@ public abstract class AttributesCommand extends Command {
 	protected static String readVariableAttr(String name,
                                              Map<String, BodyToken> attrs, BodyToken cmdStartToken,
                                              boolean require) throws LineNumberParseException {
-		DLBVariableString varStr = readAttr(name, attrs, cmdStartToken,
+		VariableString varStr = readAttr(name, attrs, cmdStartToken,
 				require);
 		if (varStr == null)
 			return null;
 		BodyToken token = attrs.get(name);
-		List<DLBVariableString.Segment> segments = varStr.getSegments();
+		List<VariableString.Segment> segments = varStr.getSegments();
 		if (segments.size() != 1 || !(segments.get(0) instanceof
-				DLBVariableString.VariableSegment)) {
+				VariableString.VariableSegment)) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" is not a variable", name) +
 					": " + token.getText(), token.getLineNumber(),
 					token.getColNumber());
 		}
-		DLBVariableString.VariableSegment segment =
-				(DLBVariableString.VariableSegment)segments.get(0);
+		VariableString.VariableSegment segment =
+				(VariableString.VariableSegment)segments.get(0);
 		return segment.getVariableName();
 	}
 	

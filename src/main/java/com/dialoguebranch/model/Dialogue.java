@@ -40,7 +40,7 @@ import com.dialoguebranch.model.nodepointer.NodePointerExternal;
 
 /**
  * Object representation of a DialogueBranch Dialogue definition. A {@link Dialogue} has a name
- * and an (unordered) list of {@link DLBNode}s. One of these {@link DLBNode}s should have as title
+ * and an (unordered) list of {@link Node}s. One of these {@link Node}s should have as title
  * "Start".
  * 
  * @author Harm op den Akker (Roessingh Research and Development)
@@ -48,7 +48,7 @@ import com.dialoguebranch.model.nodepointer.NodePointerExternal;
 public class Dialogue {
 	
 	private String dialogueName;
-	private Map<String, DLBNode> nodes = new LinkedHashMap<>(); // map from lower-case node titles to nodes
+	private Map<String, Node> nodes = new LinkedHashMap<>(); // map from lower-case node titles to nodes
 	private Set<String> speakers = new HashSet<>();
 	private Set<String> variablesNeeded = new HashSet<>();
 	private Set<String> variablesWritten = new HashSet<>();
@@ -80,7 +80,7 @@ public class Dialogue {
 	public Dialogue(Dialogue other) {
 		dialogueName = other.dialogueName;
 		for (String key : other.nodes.keySet()) {
-			nodes.put(key, new DLBNode(other.nodes.get(key)));
+			nodes.put(key, new Node(other.nodes.get(key)));
 		}
 		speakers.addAll(other.speakers);
 		variablesNeeded.addAll(other.variablesNeeded);
@@ -100,11 +100,11 @@ public class Dialogue {
 	}
 	
 	/**
-	 * Returns the starting {@link DLBNode} for this {@link Dialogue}.
+	 * Returns the starting {@link Node} for this {@link Dialogue}.
 	 *
-	 * @return the starting {@link DLBNode} for this {@link Dialogue}.
+	 * @return the starting {@link Node} for this {@link Dialogue}.
 	 */
-	public DLBNode getStartNode() {
+	public Node getStartNode() {
 		return nodes.get("start");
 	}
 	
@@ -113,12 +113,12 @@ public class Dialogue {
 	 * 
 	 * @return the nodes as an unmodifiable list
 	 */
-	public List<DLBNode> getNodes() {
+	public List<Node> getNodes() {
 		return Collections.unmodifiableList(new ArrayList<>(nodes.values()));
 	}
 
 
-	public void addNode(DLBNode node) {
+	public void addNode(Node node) {
 		nodes.put(node.getTitle().toLowerCase(), node);
 		if (node.getHeader().getSpeaker() != null)
 			speakers.add(node.getHeader().getSpeaker());
@@ -179,11 +179,11 @@ public class Dialogue {
 	}
 
 	/**
-	 * Returns the {@link DLBNode} with the given identifier or title.
+	 * Returns the {@link Node} with the given identifier or title.
 	 * @param nodeId the node ID
 	 * @return the node
 	 */
-	public DLBNode getNodeById(String nodeId) {
+	public Node getNodeById(String nodeId) {
 		return nodes.get(nodeId.toLowerCase());
 	}
 	

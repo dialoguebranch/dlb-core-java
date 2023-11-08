@@ -27,13 +27,13 @@
 
 package com.dialoguebranch.model.nodepointer;
 
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.Reply;
 
 /**
  * A pointer to a node that is part of the same dialogue as the node that is being referred from. 
  * 
  * @author Tessa Beinema
- * @see DLBReply
+ * @see Reply
  */
 public class NodePointerInternal extends NodePointer {
 	

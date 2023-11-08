@@ -28,12 +28,12 @@
 package com.dialoguebranch.model.command;
 
 import com.dialoguebranch.execution.VariableStore;
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.VariableString;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
 import com.dialoguebranch.execution.Variable;
-import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
 
 import java.time.LocalTime;
@@ -48,9 +48,9 @@ public class InputTimeCommand extends InputCommand {
 
 	private String variableName;
 	private int granularityMinutes = 1;
-	private DLBVariableString startTime = null;
-	private DLBVariableString minTime = null;
-	private DLBVariableString maxTime = null;
+	private VariableString startTime = null;
+	private VariableString minTime = null;
+	private VariableString maxTime = null;
 
 	public InputTimeCommand(String variableName) {
 		super(TYPE_TIME);
@@ -62,11 +62,11 @@ public class InputTimeCommand extends InputCommand {
 		this.variableName = other.variableName;
 		this.granularityMinutes = other.granularityMinutes;
 		if (other.startTime != null)
-			this.startTime = new DLBVariableString(other.startTime);
+			this.startTime = new VariableString(other.startTime);
 		if (other.minTime != null)
-			this.minTime = new DLBVariableString(other.minTime);
+			this.minTime = new VariableString(other.minTime);
 		if (other.maxTime != null)
-			this.maxTime = new DLBVariableString(other.maxTime);
+			this.maxTime = new VariableString(other.maxTime);
 	}
 
 	public String getVariableName() {
@@ -85,27 +85,27 @@ public class InputTimeCommand extends InputCommand {
 		this.granularityMinutes = granularityMinutes;
 	}
 
-	public DLBVariableString getStartTime() {
+	public VariableString getStartTime() {
 		return startTime;
 	}
 
-	public void setStartTime(DLBVariableString startTime) {
+	public void setStartTime(VariableString startTime) {
 		this.startTime = startTime;
 	}
 
-	public DLBVariableString getMinTime() {
+	public VariableString getMinTime() {
 		return minTime;
 	}
 
-	public void setMinTime(DLBVariableString minTime) {
+	public void setMinTime(VariableString minTime) {
 		this.minTime = minTime;
 	}
 
-	public DLBVariableString getMaxTime() {
+	public VariableString getMaxTime() {
 		return maxTime;
 	}
 
-	public void setMaxTime(DLBVariableString maxTime) {
+	public void setMaxTime(VariableString maxTime) {
 		this.maxTime = maxTime;
 	}
 
@@ -147,7 +147,7 @@ public class InputTimeCommand extends InputCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		InputTimeCommand processedCmd = new InputTimeCommand(
 				variableName);
 		processedCmd.granularityMinutes = granularityMinutes;
@@ -161,7 +161,7 @@ public class InputTimeCommand extends InputCommand {
 		if (maxTime != null) {
 			processedCmd.maxTime = evaluateTime(maxTime.evaluate(variables));
 		}
-		processedBody.addSegment(new DLBNodeBody.CommandSegment(processedCmd));
+		processedBody.addSegment(new NodeBody.CommandSegment(processedCmd));
 	}
 
 	@Override
@@ -169,10 +169,10 @@ public class InputTimeCommand extends InputCommand {
 		return new InputTimeCommand(this);
 	}
 
-	private static DLBVariableString evaluateTime(String text)
+	private static VariableString evaluateTime(String text)
 			throws EvaluationException {
 		if (text.equalsIgnoreCase(TIME_NOW))
-			return new DLBVariableString(TIME_NOW);
+			return new VariableString(TIME_NOW);
 		DateTimeFormatter parser = DateTimeFormatter.ISO_LOCAL_TIME;
 		LocalTime time;
 		try {
@@ -180,7 +180,7 @@ public class InputTimeCommand extends InputCommand {
 		} catch (DateTimeParseException ex) {
 			throw new EvaluationException("Invalid local time value: " + text);
 		}
-		return new DLBVariableString(time.format(
+		return new VariableString(time.format(
 				DateTimeFormatter.ofPattern("HH:mm")));
 	}
 
@@ -218,10 +218,10 @@ public class InputTimeCommand extends InputCommand {
 		return command;
 	}
 
-	private static DLBVariableString readTimeAttribute(String attrName,
-                                                       Map<String, BodyToken> attrs, BodyToken cmdStartToken)
+	private static VariableString readTimeAttribute(String attrName,
+													Map<String, BodyToken> attrs, BodyToken cmdStartToken)
 			throws LineNumberParseException {
-		DLBVariableString result = readAttr(attrName, attrs, cmdStartToken,
+		VariableString result = readAttr(attrName, attrs, cmdStartToken,
 				false);
 		if (result == null || !result.isPlainText())
 			return result;

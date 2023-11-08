@@ -27,23 +27,23 @@
 
 package com.dialoguebranch.model.protocol;
 
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class is used for dialogue replies that are sent to the client in the
- * web service protocol. It mirrors the class {@link DLBReply}. The
+ * web service protocol. It mirrors the class {@link Reply}. The
  * differences are:
  *
  * <ul>
- *   <li>The statement (if available) has been converted from a {@link DLBNodeBody} to a {@link
+ *   <li>The statement (if available) has been converted from a {@link NodeBody} to a {@link
  *   DialogueStatement} where variables have been resolved and set commands have been executed. The
  *   statement only contains text segments and input segments.</li>
  *
- *   <li>The commands in a {@link DLBReply} can be action commands or set commands. Since only action
+ *   <li>The commands in a {@link Reply} can be action commands or set commands. Since only action
  *   commands are relevant to the client, this class does not contain set commands. They will be
  *   handled on the server when the user selects the reply. Action commands have been converted to
  *   {@link DialogueAction DialogueAction}s where variables have been resolved.</li>

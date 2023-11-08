@@ -28,103 +28,103 @@
 package com.dialoguebranch.model;
 
 /**
- * A {@link DLBNode} represents a single step in a {@link Dialogue} definition.
+ * A {@link Node} represents a single step in a {@link Dialogue} definition.
  *
  * @author Harm op den Akker (Roessingh Research and Development)
  */
-public class DLBNode {
+public class Node {
 	
-	private DLBNodeHeader header;
-	private DLBNodeBody body;
+	private NodeHeader header;
+	private NodeBody body;
 	
 	// ---------- Constructors:
 
 	/**
-	 * Creates an instance of an empty {@link DLBNode}.
+	 * Creates an instance of an empty {@link Node}.
 	 */
-	public DLBNode() { }
+	public Node() { }
 
 	/**
-	 * Creates an instance of a {@link DLBNode} with the given {@code header}.
+	 * Creates an instance of a {@link Node} with the given {@code header}.
 	 *
-	 * @param header the {@link DLBNodeHeader} for this {@link DLBNode}
+	 * @param header the {@link NodeHeader} for this {@link Node}
 	 */
-	public DLBNode(DLBNodeHeader header) {
+	public Node(NodeHeader header) {
 		this.header = header;
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBNode} with the given {@code header} and {@code body}.
+	 * Creates an instance of a {@link Node} with the given {@code header} and {@code body}.
 	 *
-	 * @param header the {@link DLBNodeHeader} for this {@link DLBNode}
-	 * @param body the {@link DLBNodeBody} for this {@link DLBNode}
+	 * @param header the {@link NodeHeader} for this {@link Node}
+	 * @param body the {@link NodeBody} for this {@link Node}
 	 */
-	public DLBNode(DLBNodeHeader header, DLBNodeBody body) {
+	public Node(NodeHeader header, NodeBody body) {
 		this.header = header;
 		this.body = body;
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBNode} instantiated with the contents from the given {@code other}
-	 * {@link DLBNode}.
+	 * Creates an instance of a {@link Node} instantiated with the contents from the given {@code other}
+	 * {@link Node}.
 	 *
-	 * @param other the {@link DLBNode} from which to copy its contents into this {@link DLBNode}
+	 * @param other the {@link Node} from which to copy its contents into this {@link Node}
 	 */
-	public DLBNode(DLBNode other) {
-		header = new DLBNodeHeader(other.header);
-		body = new DLBNodeBody(other.body);
+	public Node(Node other) {
+		header = new NodeHeader(other.header);
+		body = new NodeBody(other.body);
 	}
 	
 	// ---------- Getters:
 
 	/**
-	 * Returns the {@link DLBNodeHeader} of this {@link DLBNode}.
+	 * Returns the {@link NodeHeader} of this {@link Node}.
 	 *
-	 * @return the {@link DLBNodeHeader} of this {@link DLBNode}.
+	 * @return the {@link NodeHeader} of this {@link Node}.
 	 */
-	public DLBNodeHeader getHeader() {
+	public NodeHeader getHeader() {
 		return header;
 	}
 
 	/**
-	 * Returns the {@link DLBNodeBody} of this {@link DLBNode}.
+	 * Returns the {@link NodeBody} of this {@link Node}.
 	 *
-	 * @return the {@link DLBNodeBody} of this {@link DLBNode}.
+	 * @return the {@link NodeBody} of this {@link Node}.
 	 */
-	public DLBNodeBody getBody() {
+	public NodeBody getBody() {
 		return body;
 	}
 
 	// ---------- Setters;
 
 	/**
-	 * Sets the {@link DLBNodeHeader} for this {@link DLBNode}.
+	 * Sets the {@link NodeHeader} for this {@link Node}.
 	 *
-	 * @param header the {@link DLBNodeHeader} for this {@link DLBNode}.
+	 * @param header the {@link NodeHeader} for this {@link Node}.
 	 */
-	public void setHeader(DLBNodeHeader header) {
+	public void setHeader(NodeHeader header) {
 		this.header = header;
 	}
 
 	/**
-	 * Sets the {@link DLBNodeBody} for this {@link DLBNode}.
+	 * Sets the {@link NodeBody} for this {@link Node}.
 	 *
-	 * @param body the {@link DLBNodeBody} for this {@link DLBNode}.
+	 * @param body the {@link NodeBody} for this {@link Node}.
 	 */
-	public void setBody(DLBNodeBody body) {
+	public void setBody(NodeBody body) {
 		this.body = body;
 	}
 	
 	// ---------- Utility:
 	
 	/**
-	 * Returns the title of this {@link DLBNode} as defined in its
-	 * corresponding {@link DLBNodeHeader}. Returns the same as {@code
-	 * this.getHeader().getTitle()} or {@code null} if no {@link DLBNodeHeader}
+	 * Returns the title of this {@link Node} as defined in its
+	 * corresponding {@link NodeHeader}. Returns the same as {@code
+	 * this.getHeader().getTitle()} or {@code null} if no {@link NodeHeader}
 	 * has been set, or its title attribute is {@code null}.
 	 *
-	 * @return the title of this {@link DLBNode} as defined in its
-	 * corresponding {@link DLBNodeHeader}.
+	 * @return the title of this {@link Node} as defined in its
+	 * corresponding {@link NodeHeader}.
 	 */
 	public String getTitle() {
 		if(header != null)

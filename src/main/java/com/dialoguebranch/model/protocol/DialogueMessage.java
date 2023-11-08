@@ -27,15 +27,15 @@
 
 package com.dialoguebranch.model.protocol;
 
-import com.dialoguebranch.model.DLBNode;
+import com.dialoguebranch.model.Node;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * This class is used for dialogue messages that are sent to the client in the
- * web service protocol. It can be generated from an executed {@link DLBNode} using the {@link DialogueMessageFactory}.
- * The {@link DLBNode} having been executed means that variables have
+ * web service protocol. It can be generated from an executed {@link Node} using the {@link DialogueMessageFactory}.
+ * The {@link Node} having been executed means that variables have
  * been resolved and "if" and "set" commands have been executed.
  *
  * @author Dennis Hofs (RRD)

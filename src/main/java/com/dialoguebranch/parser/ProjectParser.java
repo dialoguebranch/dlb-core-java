@@ -49,7 +49,7 @@ import com.dialoguebranch.i18n.TranslationParser;
 import com.dialoguebranch.i18n.TranslationParserResult;
 import com.dialoguebranch.i18n.Translator;
 import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.DLBProject;
+import com.dialoguebranch.model.Project;
 
 /**
  * This class can read an entire DialogueBranch project consisting of ".dlb" dialogue files and
@@ -98,7 +98,7 @@ public class ProjectParser {
 		if (!projectParserResult.getParseErrors().isEmpty())
 			return projectParserResult;
 
-		DLBProject project = new DLBProject();
+		Project project = new Project();
 		project.setDialogues(translatedDialogues);
 
 		Map<FileDescriptor, Dialogue> sourceDialogues = new LinkedHashMap<>();

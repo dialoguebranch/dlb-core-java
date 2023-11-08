@@ -40,15 +40,15 @@ import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.command.ActionCommand;
 
 /**
- * TODO: It may be nice to make DLBReply Abstract with different implementing subclasses, e.g.
+ * TODO: It may be nice to make Reply Abstract with different implementing subclasses, e.g.
  *       "DLBAutoForwardReply" and "DLBNormalReply".
- * A reply option within a {@link DLBNodeBody}. A reply always has
+ * A reply option within a {@link NodeBody}. A reply always has
  * a pointer to the next node when the reply is chosen. This might be a pointer
  * to the end node. The reply usually has a statement that is shown in the UI,
  * but a node may have at most one reply without a statement, which is known as
  * an auto-forward reply.
  * 
- * <p>The statement may contain a {@link InputCommand} (see {@link DLBNodeBody}).</p>
+ * <p>The statement may contain a {@link InputCommand} (see {@link NodeBody}).</p>
  * 
  * <p>The reply may also have commands that should be performed when the reply
  * is chosen. This can be:</p>
@@ -61,9 +61,9 @@ import com.dialoguebranch.model.command.ActionCommand;
  * @author Dennis Hofs (RRD)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBReply {
+public class Reply {
 	private int replyId;
-	private DLBNodeBody statement = null;
+	private NodeBody statement = null;
 	private NodePointer nodePointer;
 	private List<Command> commands = new ArrayList<>();
 
@@ -74,8 +74,8 @@ public class DLBReply {
 	 * @param statement the statement or null (auto-forward reply)
 	 * @param nodePointer the next node when the reply is chosen
 	 */
-	public DLBReply(int replyId, DLBNodeBody statement,
-					NodePointer nodePointer) {
+	public Reply(int replyId, NodeBody statement,
+				 NodePointer nodePointer) {
 		this.replyId = replyId;
 		this.statement = statement;
 		this.nodePointer = nodePointer;
@@ -87,15 +87,15 @@ public class DLBReply {
 	 * @param replyId the reply ID
 	 * @param nodePointer the next node when the reply is chosen
 	 */
-	public DLBReply(int replyId, NodePointer nodePointer) {
+	public Reply(int replyId, NodePointer nodePointer) {
 		this.replyId = replyId;
 		this.nodePointer = nodePointer;
 	}
 
-	public DLBReply(DLBReply other) {
+	public Reply(Reply other) {
 		this.replyId = other.replyId;
 		if (other.statement != null)
-			this.statement = new DLBNodeBody(other.statement);
+			this.statement = new NodeBody(other.statement);
 		this.nodePointer = other.nodePointer.clone();
 		for (Command cmd : other.commands) {
 			this.commands.add(cmd.clone());
@@ -126,7 +126,7 @@ public class DLBReply {
 	 * 
 	 * @return the statement or null
 	 */
-	public DLBNodeBody getStatement() {
+	public NodeBody getStatement() {
 		return statement;
 	}
 
@@ -136,7 +136,7 @@ public class DLBReply {
 	 * 
 	 * @param statement the statement or null
 	 */
-	public void setStatement(DLBNodeBody statement) {
+	public void setStatement(NodeBody statement) {
 		this.statement = statement;
 	}
 
@@ -227,13 +227,13 @@ public class DLBReply {
 	 * @return the processed reply
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public DLBReply execute(Map<String,Object> variables)
+	public Reply execute(Map<String,Object> variables)
 			throws EvaluationException {
 		if (statement == null)
 			return this;
-		DLBNodeBody processedStatement = new DLBNodeBody();
+		NodeBody processedStatement = new NodeBody();
 		statement.execute(variables, false, processedStatement);
-		DLBReply result = new DLBReply(replyId, processedStatement,
+		Reply result = new Reply(replyId, processedStatement,
 				nodePointer);
 		for (Command command : commands) {
 			if (command instanceof ActionCommand) {

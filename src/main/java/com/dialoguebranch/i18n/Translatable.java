@@ -27,17 +27,17 @@
 
 package com.dialoguebranch.i18n;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.command.InputCommand;
 
 import java.util.List;
 
 /**
- * This class models a translatable segment from a {@link DLBNodeBody}. It basically
+ * This class models a translatable segment from a {@link NodeBody}. It basically
  * consists of plain text, variables and &lt;&lt;input&gt;&gt; commands.
  *
- * <p>The class contains {@link DLBNodeBody.TextSegment TextSegment}s (with
- * plain text and variables) and {@link DLBNodeBody.CommandSegment
+ * <p>The class contains {@link NodeBody.TextSegment TextSegment}s (with
+ * plain text and variables) and {@link NodeBody.CommandSegment
  * CommandSegment}s where the command is a {@link InputCommand
  * InputCommand}.</p>
  *
@@ -48,8 +48,8 @@ import java.util.List;
  * @author Dennis Hofs (RRD)
  */
 public class Translatable {
-	private final DLBNodeBody parent;
-	private final List<DLBNodeBody.Segment> segments;
+	private final NodeBody parent;
+	private final List<NodeBody.Segment> segments;
 
 	/**
 	 * Constructs a new {@link Translatable}.
@@ -57,8 +57,8 @@ public class Translatable {
 	 * @param parent the parent (used in {@link Translator})
 	 * @param segments the segments
 	 */
-	public Translatable(DLBNodeBody parent,
-                        List<DLBNodeBody.Segment> segments) {
+	public Translatable(NodeBody parent,
+                        List<NodeBody.Segment> segments) {
 		this.parent = parent;
 		this.segments = segments;
 	}
@@ -68,7 +68,7 @@ public class Translatable {
 	 *
 	 * @return the parent (used in {@link Translator})
 	 */
-	public DLBNodeBody getParent() {
+	public NodeBody getParent() {
 		return parent;
 	}
 
@@ -77,7 +77,7 @@ public class Translatable {
 	 *
 	 * @return the translatable segments
 	 */
-	public List<DLBNodeBody.Segment> getSegments() {
+	public List<NodeBody.Segment> getSegments() {
 		return segments;
 	}
 
@@ -99,7 +99,7 @@ public class Translatable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (DLBNodeBody.Segment segment : segments) {
+		for (NodeBody.Segment segment : segments) {
 			builder.append(segment);
 		}
 		return builder.toString();
@@ -107,7 +107,7 @@ public class Translatable {
 
 	public String toExportFriendlyString() {
 		StringBuilder builder = new StringBuilder();
-		for (DLBNodeBody.Segment segment : segments) {
+		for (NodeBody.Segment segment : segments) {
 			String sourceString = segment.toString();
 			builder.append(sourceString.trim());
 		}

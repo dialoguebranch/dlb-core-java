@@ -29,9 +29,9 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.exception.NodeParseException;
 import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.DLBNode;
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBNodeHeader;
+import com.dialoguebranch.model.Node;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.NodeHeader;
 import com.dialoguebranch.model.nodepointer.NodePointerInternal;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
@@ -158,7 +158,7 @@ public class DialogueBranchParser implements AutoCloseable {
 	}
 	
 	private static class ReadDLBNodeResult {
-		public DLBNode node = null;
+		public Node node = null;
 		public NodeParseException parseException = null;
 		public boolean readNodeEnd = false;
 	}
@@ -203,7 +203,7 @@ public class DialogueBranchParser implements AutoCloseable {
 						"Found incomplete node at end of file",
 						reader.getLineNum(), reader.getColNum());
 			}
-			DLBNodeHeader header = createHeader(headerMap, lineNum, nodeState);
+			NodeHeader header = createHeader(headerMap, lineNum, nodeState);
 			boolean inBody = true;
 			BodyTokenizer tokenizer = new BodyTokenizer();
 			lineNum = reader.getLineNum();
@@ -221,12 +221,12 @@ public class DialogueBranchParser implements AutoCloseable {
 				}
 			}
 			BodyParser bodyParser = new BodyParser(nodeState);
-			DLBNodeBody body = bodyParser.parse(bodyTokens, Arrays.asList(
+			NodeBody body = bodyParser.parse(bodyTokens, Arrays.asList(
 					"action", "if", "random", "set"));
 			if (header.getTitle().equalsIgnoreCase("end"))
 				validateEndNode(header, body, bodyTokens);
 			nodePointerTokens.addAll(nodeState.getNodePointerTokens());
-			result.node = new DLBNode(header, body);
+			result.node = new Node(header, body);
 			return result;
 		} catch (LineNumberParseException ex) {
 			result.parseException = createDLBNodeParseException(
@@ -235,7 +235,7 @@ public class DialogueBranchParser implements AutoCloseable {
 		}
 	}
 	
-	private void validateEndNode(DLBNodeHeader header, DLBNodeBody body,
+	private void validateEndNode(NodeHeader header, NodeBody body,
 								 List<BodyToken> tokens) throws LineNumberParseException {
 		if (body.getSegments().isEmpty() && body.getReplies().isEmpty())
 			return;
@@ -316,8 +316,8 @@ public class DialogueBranchParser implements AutoCloseable {
 		}
 	}
 	
-	private DLBNodeHeader createHeader(Map<String,String> headerMap,
-									   int lineNum, NodeState nodeState)
+	private NodeHeader createHeader(Map<String,String> headerMap,
+									int lineNum, NodeState nodeState)
 			throws LineNumberParseException {
 		String title = nodeState.getTitle();
 		if (title == null) {
@@ -339,7 +339,7 @@ public class DialogueBranchParser implements AutoCloseable {
 						nodeState.getSpeakerColumn());
 			}
 		}
-		DLBNodeHeader header = new DLBNodeHeader(title, headerMap);
+		NodeHeader header = new NodeHeader(title, headerMap);
 		header.setSpeaker(speaker);
 		return header;
 	}

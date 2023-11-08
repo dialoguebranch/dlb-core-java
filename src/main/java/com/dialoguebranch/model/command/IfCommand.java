@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.model.command;
 
-import com.dialoguebranch.model.DLBNodeBody;
+import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
@@ -36,7 +36,7 @@ import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Expression;
 import nl.rrd.utils.expressions.Value;
 import nl.rrd.utils.expressions.types.AssignExpression;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.parser.BodyParser;
 import com.dialoguebranch.parser.BodyToken;
 
@@ -44,13 +44,13 @@ import java.util.*;
 
 /**
  * This class models the &lt;&lt;if ...&gt;&gt; command in DialogueBranch. It can be part
- * of a {@link DLBNodeBody} (not inside a reply).
+ * of a {@link NodeBody} (not inside a reply).
  * 
  * @author Dennis Hofs (RRD)
  */
 public class IfCommand extends ExpressionCommand {
 	private List<Clause> ifClauses = new ArrayList<>();
-	private DLBNodeBody elseClause = null;
+	private NodeBody elseClause = null;
 
 	public IfCommand() {
 	}
@@ -60,7 +60,7 @@ public class IfCommand extends ExpressionCommand {
 			this.ifClauses.add(new Clause(ifClause));
 		}
 		if (other.elseClause != null)
-			this.elseClause = new DLBNodeBody(other.elseClause);
+			this.elseClause = new NodeBody(other.elseClause);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class IfCommand extends ExpressionCommand {
 	 * 
 	 * @return the else clause or null
 	 */
-	public DLBNodeBody getElseClause() {
+	public NodeBody getElseClause() {
 		return elseClause;
 	}
 
@@ -112,14 +112,14 @@ public class IfCommand extends ExpressionCommand {
 	 * 
 	 * @param elseClause the else clause or null
 	 */
-	public void setElseClause(DLBNodeBody elseClause) {
+	public void setElseClause(NodeBody elseClause) {
 		this.elseClause = elseClause;
 	}
 	
 	@Override
-	public DLBReply findReplyById(int replyId) {
+	public Reply findReplyById(int replyId) {
 		for (Clause clause : ifClauses) {
-			DLBReply reply = clause.statement.findReplyById(replyId);
+			Reply reply = clause.statement.findReplyById(replyId);
 			if (reply != null)
 				return reply;
 		}
@@ -159,7 +159,7 @@ public class IfCommand extends ExpressionCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		for (Clause clause : ifClauses) {
 			Value clauseEval = clause.expression.evaluate(variables);
 			if (clauseEval.asBoolean()) {
@@ -275,7 +275,7 @@ public class IfCommand extends ExpressionCommand {
 	 */
 	public static class Clause {
 		private Expression expression;
-		private DLBNodeBody statement;
+		private NodeBody statement;
 
 		/**
 		 * Constructs a new if clause.
@@ -285,14 +285,14 @@ public class IfCommand extends ExpressionCommand {
 		 * @param statement the statement that should be output if the
 		 * expression evaluates to true
 		 */
-		public Clause(Expression expression, DLBNodeBody statement) {
+		public Clause(Expression expression, NodeBody statement) {
 			this.expression = expression;
 			this.statement = statement;
 		}
 
 		public Clause(Clause other) {
 			this.expression = other.expression;
-			this.statement = new DLBNodeBody(other.statement);
+			this.statement = new NodeBody(other.statement);
 		}
 
 		/**
@@ -319,7 +319,7 @@ public class IfCommand extends ExpressionCommand {
 		 * 
 		 * @return the statement
 		 */
-		public DLBNodeBody getStatement() {
+		public NodeBody getStatement() {
 			return statement;
 		}
 
@@ -329,7 +329,7 @@ public class IfCommand extends ExpressionCommand {
 		 * 
 		 * @param statement the statement
 		 */
-		public void setStatement(DLBNodeBody statement) {
+		public void setStatement(NodeBody statement) {
 			this.statement = statement;
 		}
 	}

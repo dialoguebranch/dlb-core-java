@@ -40,15 +40,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link DLBProjectMetaData} class is the object representation of a DialogueBranch
+ * The {@link ProjectMetaData} class is the object representation of a DialogueBranch
  * metadata .xml file. This object can be serialized into an XML file using an {@link XMLWriter} or
  * be constructed from an XML file using a {@link SimpleSAXHandler}. Additionally, contains methods
- * for dynamically modifying the contents of a {@link DLBProjectMetaData} specification while
+ * for dynamically modifying the contents of a {@link ProjectMetaData} specification while
  * maintaining certain constraints.
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBProjectMetaData {
+public class ProjectMetaData {
 
 	private String name;
 	private String basePath;
@@ -61,12 +61,12 @@ public class DLBProjectMetaData {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of an empty {@link DLBProjectMetaData} object.
+	 * Creates an instance of an empty {@link ProjectMetaData} object.
 	 */
-	public DLBProjectMetaData() { }
+	public ProjectMetaData() { }
 
 	/**
-	 * Creates an instance of a {@link DLBProjectMetaData} object with the given parameters.
+	 * Creates an instance of a {@link ProjectMetaData} object with the given parameters.
 	 *
 	 * @param name a descriptive name of the DialogueBranch project.
 	 * @param basePath the folder in which this DialogueBranch project is stored.
@@ -74,8 +74,8 @@ public class DLBProjectMetaData {
 	 * @param version free-form version information (e.g. v0.1.0).
 	 * @param languageMap contains all the languages supported by this DialogueBranch project.
 	 */
-	public DLBProjectMetaData(String name, String basePath, String description, String version,
-							  LanguageMap languageMap) {
+	public ProjectMetaData(String name, String basePath, String description, String version,
+						   LanguageMap languageMap) {
 		this.name = name;
 		this.basePath = basePath;
 		this.description = description;
@@ -88,8 +88,8 @@ public class DLBProjectMetaData {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the name of this {@link DLBProject} as a String.
-	 * @return the name of this {@link DLBProject} as a String.
+	 * Returns the name of this {@link Project} as a String.
+	 * @return the name of this {@link Project} as a String.
 	 */
 	public String getName() {
 		return name;
@@ -104,8 +104,8 @@ public class DLBProjectMetaData {
 	}
 
 	/**
-	 * Returns a String representation of the base path of this {@link DLBProject}.
-	 * @return a String representation of the base path of this {@link DLBProject}.
+	 * Returns a String representation of the base path of this {@link Project}.
+	 * @return a String representation of the base path of this {@link Project}.
 	 */
 	public String getBasePath() {
 		return basePath;
@@ -120,8 +120,8 @@ public class DLBProjectMetaData {
 	}
 
 	/**
-	 * Returns the description of this {@link DLBProject}.
-	 * @return the description of this {@link DLBProject}.
+	 * Returns the description of this {@link Project}.
+	 * @return the description of this {@link Project}.
 	 */
 	public String getDescription() {
 		return description;
@@ -136,8 +136,8 @@ public class DLBProjectMetaData {
 	}
 
 	/**
-	 * Returns the version of this {@link DLBProject}.
-	 * @return the version of this {@link DLBProject}.
+	 * Returns the version of this {@link Project}.
+	 * @return the version of this {@link Project}.
 	 */
 	public String getVersion() {
 		return version;
@@ -153,9 +153,9 @@ public class DLBProjectMetaData {
 
 	/**
 	 * Returns the {@link LanguageMap} that contains a description of all
-	 * languages supported in this {@link DLBProject} and their mapping from source-
+	 * languages supported in this {@link Project} and their mapping from source-
 	 * to translation languages.
-	 * @return the {@link LanguageMap} for this {@link DLBProjectMetaData}.
+	 * @return the {@link LanguageMap} for this {@link ProjectMetaData}.
 	 */
 	public LanguageMap getDLBLanguageMap() {
 		return languageMap;
@@ -329,7 +329,7 @@ public class DLBProjectMetaData {
 	// ------------------------------------------------------
 
 	/**
-	 * Writes this {@link DLBProjectMetaData} to file using the given {@link XMLWriter}.
+	 * Writes this {@link ProjectMetaData} to file using the given {@link XMLWriter}.
 	 *
 	 * @param writer the XML writer
 	 * @throws IOException if a writing error occurs
@@ -351,11 +351,11 @@ public class DLBProjectMetaData {
 
 	/**
 	 * Returns a {@link SimpleSAXHandler} that is able to parse the contents of an .xml file
-	 * to a {@link DLBProjectMetaData} object.
+	 * to a {@link ProjectMetaData} object.
 	 *
 	 * @return the XMl handler
 	 */
-	public static SimpleSAXHandler<DLBProjectMetaData> getXMLHandler() {
+	public static SimpleSAXHandler<ProjectMetaData> getXMLHandler() {
 		return new XMLHandler();
 	}
 
@@ -363,9 +363,9 @@ public class DLBProjectMetaData {
 	 * TODO: Test error handling.
 	 * TODO: Check for duplicate languages.
 	 */
-	private static class XMLHandler extends AbstractSimpleSAXHandler<DLBProjectMetaData> {
+	private static class XMLHandler extends AbstractSimpleSAXHandler<ProjectMetaData> {
 
-		private DLBProjectMetaData result;
+		private ProjectMetaData result;
 		private int rootLevel = 0;
 		private boolean inDescription = false;
 		private SimpleSAXHandler<LanguageMap> languageMapHandler = null;
@@ -377,7 +377,7 @@ public class DLBProjectMetaData {
 				if(!name.equals("dlb-project")) {
 					throw new ParseException("Expected element 'dlb-project' while parsing DialogueBranch project metadata, found '"+name+"'.");
 				} else {
-					result = new DLBProjectMetaData();
+					result = new ProjectMetaData();
 					if(attributes.getValue("name") == null) {
 						throw new ParseException("Missing attribute 'name' in element 'dlb-project' while parsing DialogueBranch project metadata.");
 					} else {
@@ -425,7 +425,7 @@ public class DLBProjectMetaData {
 		}
 
 		@Override
-		public DLBProjectMetaData getObject() {
+		public ProjectMetaData getObject() {
 			return result;
 		}
 	}

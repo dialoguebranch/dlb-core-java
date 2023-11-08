@@ -32,10 +32,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
-public class DLBLoggedInteraction {
+public class LoggedInteraction {
 
 	private long timestamp;
-	private DLBMessageSource messageSource;
+	private MessageSource messageSource;
 	private String sourceName;
 	private String dialogueId;
 	private String nodeId;
@@ -48,13 +48,13 @@ public class DLBLoggedInteraction {
 
 	// ---------- Constructors:
 
-	public DLBLoggedInteraction() {
+	public LoggedInteraction() {
 	}
 
-	public DLBLoggedInteraction(long timestamp,
-								DLBMessageSource messageSource, String sourceName,
-								String dialogueId, String nodeId, int previousIndex,
-								String statement) {
+	public LoggedInteraction(long timestamp,
+							 MessageSource messageSource, String sourceName,
+							 String dialogueId, String nodeId, int previousIndex,
+							 String statement) {
 		this.timestamp = timestamp;
 		this.messageSource = messageSource;
 		this.sourceName = sourceName;
@@ -64,10 +64,10 @@ public class DLBLoggedInteraction {
 		this.statement = statement;
 	}
 
-	public DLBLoggedInteraction(long timestamp,
-								DLBMessageSource messageSource, String sourceName,
-								String dialogueId, String nodeId, int previousIndex,
-								String statement, int replyId) {
+	public LoggedInteraction(long timestamp,
+							 MessageSource messageSource, String sourceName,
+							 String dialogueId, String nodeId, int previousIndex,
+							 String statement, int replyId) {
 		this.timestamp = timestamp;
 		this.messageSource = messageSource;
 		this.sourceName = sourceName;
@@ -84,7 +84,7 @@ public class DLBLoggedInteraction {
 		return timestamp;
 	}
 	
-	public DLBMessageSource getMessageSource() {
+	public MessageSource getMessageSource() {
 		return messageSource;
 	}
 	
@@ -118,7 +118,7 @@ public class DLBLoggedInteraction {
 		this.timestamp = timestamp;
 	}
 	
-	public void setMessageSource(DLBMessageSource messageSource) {
+	public void setMessageSource(MessageSource messageSource) {
 		this.messageSource = messageSource;
 	}
 	

@@ -36,14 +36,14 @@ import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.Translatable;
 
 /**
- * A {@link DLBProject} or Dialogue Branch Project is the top-level element of the Dialogue Branch
+ * A {@link Project} or Dialogue Branch Project is the top-level element of the Dialogue Branch
  * model.
  *
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBProject {
-	private DLBProjectMetaData metaData;
+public class Project {
+	private ProjectMetaData metaData;
 	private Map<FileDescriptor, Dialogue> dialogues = new LinkedHashMap<>();
 	private Map<FileDescriptor, Dialogue> sourceDialogues = new LinkedHashMap<>();
 	private Map<FileDescriptor,
@@ -53,9 +53,9 @@ public class DLBProject {
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
-	public DLBProject() { }
+	public Project() { }
 
-	public DLBProject(DLBProjectMetaData metaData) {
+	public Project(ProjectMetaData metaData) {
 		this.metaData = metaData;
 	}
 
@@ -131,19 +131,19 @@ public class DLBProject {
 	}
 
 	/**
-	 * Returns the {@link DLBProjectMetaData} associated with this {@link DLBProject}, or
+	 * Returns the {@link ProjectMetaData} associated with this {@link Project}, or
 	 * {@code null} if no metadata is associated with this project.
-	 * @return the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
+	 * @return the {@link ProjectMetaData} associated with this {@link Project}.
 	 */
-	public DLBProjectMetaData getMetaData() {
+	public ProjectMetaData getMetaData() {
 		return metaData;
 	}
 
 	/**
-	 * Sets the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
-	 * @param metaData the {@link DLBProjectMetaData} associated with this {@link DLBProject}.
+	 * Sets the {@link ProjectMetaData} associated with this {@link Project}.
+	 * @param metaData the {@link ProjectMetaData} associated with this {@link Project}.
 	 */
-	public void setMetaData(DLBProjectMetaData metaData) {
+	public void setMetaData(ProjectMetaData metaData) {
 		this.metaData = metaData;
 	}
 
@@ -152,12 +152,12 @@ public class DLBProject {
 	// -------------------------------------------------------
 
 	/**
-	 * Returns a list of all supported languages in this {@link DLBProject}. In the case of a
+	 * Returns a list of all supported languages in this {@link Project}. In the case of a
 	 * "simple" Dialogue Branch project (i.e. a folder with .dlb and possibly .json files without a
 	 * specific metadata file), this list is derived from the list of {@link FileDescriptor}s in
-	 * this {@link DLBProject}. If a {@link DLBProjectMetaData} has been set (and a language map has
+	 * this {@link Project}. If a {@link ProjectMetaData} has been set (and a language map has
 	 * been defined therein), this information will be used instead.
-	 * @return a list of all supported languages in this {@link DLBProject}.
+	 * @return a list of all supported languages in this {@link Project}.
 	 */
 	public List<String> getLanguages() {
 		List<String> result = new ArrayList<>();

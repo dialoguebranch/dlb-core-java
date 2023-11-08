@@ -27,11 +27,11 @@
 
 package com.dialoguebranch.i18n;
 
+import com.dialoguebranch.model.VariableString;
 import com.dialoguebranch.model.command.Command;
-import com.dialoguebranch.model.DLBNode;
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
-import com.dialoguebranch.model.DLBVariableString;
+import com.dialoguebranch.model.Node;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.command.IfCommand;
 import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.command.RandomCommand;
@@ -41,31 +41,31 @@ import java.util.List;
 
 /**
  * This class can extract all translatable segments (plain text, variables and
- * &lt;&lt;input&gt;&gt; commands) from a {@link DLBNode} or {@link
- * DLBNodeBody}. This includes translatables within "if" and
+ * &lt;&lt;input&gt;&gt; commands) from a {@link Node} or {@link
+ * NodeBody}. This includes translatables within "if" and
  * "random" commands and replies.
  *
  * @author Dennis Hofs (RRD)
  */
 public class TranslatableExtractor {
-	public List<SourceTranslatable> extractFromNode(DLBNode node) {
+	public List<SourceTranslatable> extractFromNode(Node node) {
 		return extractFromBody(node.getHeader().getSpeaker(),
 				SourceTranslatable.USER, node.getBody());
 	}
 
 	public List<SourceTranslatable> extractFromBody(String speaker,
-                                                    String addressee, DLBNodeBody body) {
+                                                    String addressee, NodeBody body) {
 		List<SourceTranslatable> result = new ArrayList<>();
-		List<DLBNodeBody.Segment> current = new ArrayList<>();
+		List<NodeBody.Segment> current = new ArrayList<>();
 		for (int i = 0; i < body.getSegments().size(); i++) {
-			DLBNodeBody.Segment segment = body.getSegments().get(i);
-			if (segment instanceof DLBNodeBody.TextSegment) {
-				DLBNodeBody.TextSegment textSegment =
-						(DLBNodeBody.TextSegment)segment;
+			NodeBody.Segment segment = body.getSegments().get(i);
+			if (segment instanceof NodeBody.TextSegment) {
+				NodeBody.TextSegment textSegment =
+						(NodeBody.TextSegment)segment;
 				current.add(textSegment);
-			} else if (segment instanceof DLBNodeBody.CommandSegment) {
-				DLBNodeBody.CommandSegment cmdSegment =
-						(DLBNodeBody.CommandSegment)segment;
+			} else if (segment instanceof NodeBody.CommandSegment) {
+				NodeBody.CommandSegment cmdSegment =
+						(NodeBody.CommandSegment)segment;
 				Command cmd = cmdSegment.getCommand();
 				if (cmd instanceof IfCommand) {
 					IfCommand ifCmd = (IfCommand)cmd;
@@ -86,7 +86,7 @@ public class TranslatableExtractor {
 		}
 		finishCurrentTranslatableSegment(speaker, addressee, body, current,
 				result);
-		for (DLBReply reply : body.getReplies()) {
+		for (Reply reply : body.getReplies()) {
 			if (reply.getStatement() != null) {
 				result.addAll(extractFromBody(addressee, speaker,
 						reply.getStatement()));
@@ -120,11 +120,11 @@ public class TranslatableExtractor {
 	}
 
 	private void finishCurrentTranslatableSegment(String speaker,
-			String addressee, DLBNodeBody parent,
-			List<DLBNodeBody.Segment> current,
+			String addressee, NodeBody parent,
+			List<NodeBody.Segment> current,
 			List<SourceTranslatable> translatables) {
 		if (hasContent(current)) {
-			List<DLBNodeBody.Segment> segments = new ArrayList<>(current);
+			List<NodeBody.Segment> segments = new ArrayList<>(current);
 			SourceTranslatable translatable = new SourceTranslatable(
 					speaker, addressee, new Translatable(parent, segments));
 			translatables.add(translatable);
@@ -132,17 +132,17 @@ public class TranslatableExtractor {
 		current.clear();
 	}
 
-	private boolean hasContent(List<DLBNodeBody.Segment> segments) {
-		for (DLBNodeBody.Segment segment : segments) {
-			if (segment instanceof DLBNodeBody.TextSegment) {
-				DLBNodeBody.TextSegment textSegment =
-						(DLBNodeBody.TextSegment)segment;
-				DLBVariableString string = textSegment.getText();
+	private boolean hasContent(List<NodeBody.Segment> segments) {
+		for (NodeBody.Segment segment : segments) {
+			if (segment instanceof NodeBody.TextSegment) {
+				NodeBody.TextSegment textSegment =
+						(NodeBody.TextSegment)segment;
+				VariableString string = textSegment.getText();
 				if (hasContent(string))
 					return true;
-			} else if (segment instanceof DLBNodeBody.CommandSegment) {
-				DLBNodeBody.CommandSegment cmdSegment =
-						(DLBNodeBody.CommandSegment)segment;
+			} else if (segment instanceof NodeBody.CommandSegment) {
+				NodeBody.CommandSegment cmdSegment =
+						(NodeBody.CommandSegment)segment;
 				if (cmdSegment.getCommand() instanceof InputCommand)
 					return true;
 			}
@@ -150,7 +150,7 @@ public class TranslatableExtractor {
 		return false;
 	}
 
-	private boolean hasContent(DLBVariableString string) {
+	private boolean hasContent(VariableString string) {
 		return !string.getSegments().isEmpty() && !string.isWhitespace();
 	}
 }

@@ -30,10 +30,10 @@ package com.dialoguebranch.model.command;
 import java.util.Map;
 import java.util.Set;
 
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.NodeBody;
 
 /**
  * Base class for commands that are specified with &lt;&lt;...&gt;&gt; in DialogueBranch statements
@@ -50,7 +50,7 @@ public abstract class Command implements Cloneable {
 	 * @param replyId the reply ID
 	 * @return the reply or null
 	 */
-	public abstract DLBReply findReplyById(int replyId);
+	public abstract Reply findReplyById(int replyId);
 	
 	/**
 	 * Retrieves all variable names that are read in this command and adds them
@@ -79,7 +79,7 @@ public abstract class Command implements Cloneable {
 	/**
 	 * This method is called if this command occurs in a statement body. It executes the command
 	 * with respect to the specified variable map. Any content in the body that should be sent to
-	 * the client, is added to the {@code processedBody} {@link DLBNodeBody} object. This content
+	 * the client, is added to the {@code processedBody} {@link NodeBody} object. This content
 	 * can be text or client commands, with all variables resolved.
 	 * 
 	 * @param variables the variable map
@@ -87,7 +87,7 @@ public abstract class Command implements Cloneable {
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
 	public abstract void executeBodyCommand(Map<String,Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException;
+			NodeBody processedBody) throws EvaluationException;
 
 	/**
 	 * Returns a deep copy of this command.

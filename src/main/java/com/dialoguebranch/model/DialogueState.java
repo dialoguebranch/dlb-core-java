@@ -32,12 +32,12 @@ import com.dialoguebranch.execution.ActiveDialogue;
 public class DialogueState {
 	private FileDescriptor dialogueDescription;
 	private Dialogue dialogueDefinition;
-	private DLBLoggedDialogue loggedDialogue;
+	private LoggedDialogue loggedDialogue;
 	private int loggedInteractionIndex;
 	private ActiveDialogue activeDialogue;
 
 	public DialogueState(FileDescriptor dialogueDescription,
-						 Dialogue dialogueDefinition, DLBLoggedDialogue loggedDialogue,
+						 Dialogue dialogueDefinition, LoggedDialogue loggedDialogue,
 						 int loggedInteractionIndex, ActiveDialogue activeDialogue) {
 		this.dialogueDescription = dialogueDescription;
 		this.dialogueDefinition = dialogueDefinition;
@@ -54,7 +54,7 @@ public class DialogueState {
 		return dialogueDefinition;
 	}
 
-	public DLBLoggedDialogue getLoggedDialogue() {
+	public LoggedDialogue getLoggedDialogue() {
 		return loggedDialogue;
 	}
 

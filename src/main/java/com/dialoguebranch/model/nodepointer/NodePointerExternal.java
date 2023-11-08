@@ -27,9 +27,9 @@
 
 package com.dialoguebranch.model.nodepointer;
 
+import com.dialoguebranch.model.Reply;
 import nl.rrd.utils.exception.ParseException;
 import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.DLBReply;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import java.util.List;
  * A pointer to a node that is part of a different dialogue than the dialogue of which the node that is being referred from is a part. 
  * 
  * @author Tessa Beinema
- * @see DLBReply
+ * @see Reply
  */
 public class NodePointerExternal extends NodePointer {
 	

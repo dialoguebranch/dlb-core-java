@@ -33,21 +33,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
+import com.dialoguebranch.model.VariableString;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.BodyToken;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.DLBVariableString;
 
 /**
  * This command models the &lt;&lt;action ...&gt;&gt; command in DialogueBranch. It
  * specifies an action that should be performed along with a statement. It can
- * be part of a {@link DLBNodeBody} (along with an agent
- * statement) or a {@link DLBReply} (to be performed when the user
+ * be part of a {@link NodeBody} (along with an agent
+ * statement) or a {@link Reply} (to be performed when the user
  * chooses the reply).
  *
  * Three different action commands are supported:
@@ -70,8 +70,8 @@ public class ActionCommand extends AttributesCommand {
 			TYPE_IMAGE, TYPE_VIDEO, TYPE_LINK, TYPE_GENERIC);
 	
 	private String type;
-	private DLBVariableString value;
-	private Map<String, DLBVariableString> parameters = new LinkedHashMap<>();
+	private VariableString value;
+	private Map<String, VariableString> parameters = new LinkedHashMap<>();
 
 	/**
 	 * Creates an instance of a {@link ActionCommand} with given {@code type} and
@@ -80,16 +80,16 @@ public class ActionCommand extends AttributesCommand {
 	 *                one of "image", "video", or "generic".
 	 * @param value the value of this command
 	 */
-	public ActionCommand(String type, DLBVariableString value) {
+	public ActionCommand(String type, VariableString value) {
 		this.type = type;
 		this.value = value;
 	}
 
 	public ActionCommand(ActionCommand other) {
 		this.type = other.type;
-		this.value = new DLBVariableString(other.value);
+		this.value = new VariableString(other.value);
 		for (String key : other.parameters.keySet()) {
-			this.parameters.put(key, new DLBVariableString(
+			this.parameters.put(key, new VariableString(
 					other.parameters.get(key)));
 		}
 	}
@@ -111,35 +111,35 @@ public class ActionCommand extends AttributesCommand {
 		this.type = type;
 	}
 
-	public DLBVariableString getValue() {
+	public VariableString getValue() {
 		return value;
 	}
 
-	public void setValue(DLBVariableString value) {
+	public void setValue(VariableString value) {
 		this.value = value;
 	}
 
-	public Map<String, DLBVariableString> getParameters() {
+	public Map<String, VariableString> getParameters() {
 		return parameters;
 	}
 
-	public void setParameters(Map<String, DLBVariableString> parameters) {
+	public void setParameters(Map<String, VariableString> parameters) {
 		this.parameters = parameters;
 	}
 	
-	public void addParameter(String name, DLBVariableString value) {
+	public void addParameter(String name, VariableString value) {
 		parameters.put(name, value);
 	}
 	
 	@Override
-	public DLBReply findReplyById(int replyId) {
+	public Reply findReplyById(int replyId) {
 		return null;
 	}
 
 	@Override
 	public void getReadVariableNames(Set<String> varNames) {
 		value.getReadVariableNames(varNames);
-		for (DLBVariableString paramVals : parameters.values()) {
+		for (VariableString paramVals : parameters.values()) {
 			paramVals.getReadVariableNames(varNames);
 		}
 	}
@@ -154,9 +154,9 @@ public class ActionCommand extends AttributesCommand {
 
 	@Override
 	public void executeBodyCommand(Map<String, Object> variables,
-			DLBNodeBody processedBody) throws EvaluationException {
+			NodeBody processedBody) throws EvaluationException {
 		ActionCommand processedCommand = executeReplyCommand(variables);
-		processedBody.addSegment(new DLBNodeBody.CommandSegment(
+		processedBody.addSegment(new NodeBody.CommandSegment(
 				processedCommand));
 	}
 
@@ -165,7 +165,7 @@ public class ActionCommand extends AttributesCommand {
 		ActionCommand processedCommand = new ActionCommand(type,
 				value.execute(variables));
 		for (String param : parameters.keySet()) {
-			DLBVariableString value = parameters.get(param);
+			VariableString value = parameters.get(param);
 			processedCommand.addParameter(param, value.execute(variables));
 		}
 		return processedCommand;
@@ -198,13 +198,13 @@ public class ActionCommand extends AttributesCommand {
 					token.getLineNumber(), token.getColNumber());
 		}
 		attrs.remove("type");
-		DLBVariableString value = readAttr("value", attrs, cmdStartToken,
+		VariableString value = readAttr("value", attrs, cmdStartToken,
 				true);
 		attrs.remove("value");
 		ActionCommand command = new ActionCommand(type, value);
 		for (String attr : attrs.keySet()) {
 			token = attrs.get(attr);
-			command.addParameter(attr, (DLBVariableString)token.getValue());
+			command.addParameter(attr, (VariableString)token.getValue());
 		}
 		return command;
 	}

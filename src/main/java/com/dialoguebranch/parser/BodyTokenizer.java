@@ -30,9 +30,9 @@ package com.dialoguebranch.parser;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dialoguebranch.model.VariableString;
 import nl.rrd.utils.ReferenceParameter;
 import nl.rrd.utils.exception.LineNumberParseException;
-import com.dialoguebranch.model.DLBVariableString;
 
 /**
  * A {@link BodyTokenizer} may be used to split a line of dialogue branch script into a {@link List}
@@ -228,7 +228,7 @@ public class BodyTokenizer {
 			throws LineNumberParseException {
 		finishTextToken(tokens, line, lineNum, start);
 		ReferenceParameter<Integer> end = new ReferenceParameter<>();
-		DLBVariableString string = readQuotedString(line, lineNum, start, end);
+		VariableString string = readQuotedString(line, lineNum, start, end);
 		BodyToken token = new BodyToken(BodyToken.Type.QUOTED_STRING);
 		token.setLineNumber(lineNum);
 		token.setColNumber(start + 1);
@@ -239,10 +239,10 @@ public class BodyTokenizer {
 		return end.get();
 	}
 
-	private DLBVariableString readQuotedString(String line, int lineNum, int start,
-											   ReferenceParameter<Integer> end)
+	private VariableString readQuotedString(String line, int lineNum, int start,
+                                            ReferenceParameter<Integer> end)
 			throws LineNumberParseException {
-		DLBVariableString result = new DLBVariableString();
+		VariableString result = new VariableString();
 		StringBuilder textBuffer = new StringBuilder();
 		int textStart = start + 1;
 		boolean prevEscape = false;
@@ -268,10 +268,10 @@ public class BodyTokenizer {
 				if (!varName.isEmpty()) {
 					textBuffer.append(line, textStart, i);
 					if (!textBuffer.isEmpty()) {
-						result.addSegment(new DLBVariableString.TextSegment(
+						result.addSegment(new VariableString.TextSegment(
 								textBuffer.toString()));
 					}
-					result.addSegment(new DLBVariableString.VariableSegment(
+					result.addSegment(new VariableString.VariableSegment(
 							varName));
 					textBuffer = new StringBuilder();
 					textStart = varEnd.get();
@@ -283,7 +283,7 @@ public class BodyTokenizer {
 			case '"':
 				textBuffer.append(line, textStart, i);
 				if (!textBuffer.isEmpty()) {
-					result.addSegment(new DLBVariableString.TextSegment(
+					result.addSegment(new VariableString.TextSegment(
 							textBuffer.toString()));
 				}
 				end.set(i + 1);

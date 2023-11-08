@@ -29,9 +29,9 @@ package com.dialoguebranch.model.protocol;
 
 import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.execution.ExecuteNodeResult;
-import com.dialoguebranch.model.DLBNode;
-import com.dialoguebranch.model.DLBNodeBody;
-import com.dialoguebranch.model.DLBReply;
+import com.dialoguebranch.model.Node;
+import com.dialoguebranch.model.NodeBody;
+import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.command.ActionCommand;
 import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.nodepointer.NodePointerInternal;
@@ -49,8 +49,8 @@ public class DialogueMessageFactory {
 	public static DialogueMessage generateDialogueMessage(
 			ExecuteNodeResult executedNode) {
 		DialogueMessage dialogueMessage = new DialogueMessage();
-		DLBNode node = executedNode.DLBNode();
-		DLBNodeBody body = node.getBody();
+		Node node = executedNode.node();
+		NodeBody body = node.getBody();
 		dialogueMessage.setDialogue(executedNode.dialogue()
 				.getDialogueName());
 		dialogueMessage.setNode(node.getTitle());
@@ -62,24 +62,24 @@ public class DialogueMessageFactory {
 		}
 		dialogueMessage.setSpeaker(node.getHeader().getSpeaker());
 		dialogueMessage.setStatement(generateDialogueStatement(body));
-		for (DLBReply reply : body.getReplies()) {
+		for (Reply reply : body.getReplies()) {
 			dialogueMessage.addReply(generateDialogueReply(reply));
 		}
 		return dialogueMessage;
 	}
 	
 	private static DialogueStatement generateDialogueStatement(
-			DLBNodeBody body) {
+			NodeBody body) {
 		DialogueStatement statement = new DialogueStatement();
-		for (DLBNodeBody.Segment segment : body.getSegments()) {
-			if (segment instanceof DLBNodeBody.TextSegment) {
-				DLBNodeBody.TextSegment textSegment =
-						(DLBNodeBody.TextSegment)segment;
+		for (NodeBody.Segment segment : body.getSegments()) {
+			if (segment instanceof NodeBody.TextSegment) {
+				NodeBody.TextSegment textSegment =
+						(NodeBody.TextSegment)segment;
 				String text = textSegment.getText().evaluate(null);
 				statement.addTextSegment(text);
 			} else {
-				DLBNodeBody.CommandSegment cmdSegment =
-						(DLBNodeBody.CommandSegment)segment;
+				NodeBody.CommandSegment cmdSegment =
+						(NodeBody.CommandSegment)segment;
 				Command cmd = cmdSegment.getCommand();
 				if (cmd instanceof ActionCommand) {
 					statement.addActionSegment((ActionCommand)cmd);
@@ -91,7 +91,7 @@ public class DialogueMessageFactory {
 		return statement;
 	}
 	
-	private static ReplyMessage generateDialogueReply(DLBReply reply) {
+	private static ReplyMessage generateDialogueReply(Reply reply) {
 		ReplyMessage replyMsg = new ReplyMessage();
 		replyMsg.setReplyId(reply.getReplyId());
 		if (reply.getStatement() != null) {

@@ -27,7 +27,7 @@
 
 package com.dialoguebranch.model.protocol;
 
-import com.dialoguebranch.model.DLBVariableString;
+import com.dialoguebranch.model.VariableString;
 import com.dialoguebranch.model.command.ActionCommand;
 
 import java.util.LinkedHashMap;
@@ -51,7 +51,7 @@ public class DialogueAction {
 	public DialogueAction(ActionCommand actionCommand) {
 		type = actionCommand.getType();
 		value = actionCommand.getValue().evaluate(null);
-		Map<String, DLBVariableString> cmdParams =
+		Map<String, VariableString> cmdParams =
 				actionCommand.getParameters();
 		for (String key : cmdParams.keySet()) {
 			String paramVal = cmdParams.get(key).evaluate(null);
