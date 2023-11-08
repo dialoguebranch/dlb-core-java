@@ -32,7 +32,7 @@ import com.dialoguebranch.model.nodepointer.NodePointer;
 import com.dialoguebranch.parser.NodeState;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
-import com.dialoguebranch.execution.DLBVariableStore;
+import com.dialoguebranch.execution.VariableStore;
 import com.dialoguebranch.model.DLBReply;
 import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
@@ -136,7 +136,7 @@ public abstract class InputCommand extends AttributesCommand {
 	 * @param varStore the variable store
 	 * @return the statement log
 	 */
-	public abstract String getStatementLog(DLBVariableStore varStore);
+	public abstract String getStatementLog(VariableStore varStore);
 
 	@Override
 	public DLBReply findReplyById(int replyId) {

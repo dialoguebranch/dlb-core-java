@@ -55,7 +55,7 @@ public class ActiveDialogue {
 	private final FileDescriptor dialogueFileDescription;
 	private final Dialogue dialogueDefinition;
 	private DLBNode currentNode;
-	private DLBVariableStore dlbVariableStore;
+	private VariableStore variableStore;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
@@ -114,21 +114,21 @@ public class ActiveDialogue {
 	}
 
 	/**
-	 * Returns the {@link DLBVariableStore} associated with this {@link ActiveDialogue}.
-	 * @return the {@link DLBVariableStore} associated with this {@link ActiveDialogue}.
+	 * Returns the {@link VariableStore} associated with this {@link ActiveDialogue}.
+	 * @return the {@link VariableStore} associated with this {@link ActiveDialogue}.
 	 */
-	public DLBVariableStore getDLBVariableStore() {
-		return dlbVariableStore;
+	public VariableStore getDLBVariableStore() {
+		return variableStore;
 	}
 
 	/**
-	 * Sets the {@link DLBVariableStore} used to store/retrieve parameters for this
+	 * Sets the {@link VariableStore} used to store/retrieve parameters for this
 	 * {@link ActiveDialogue}.
-	 * @param dlbVariableStore the {@link DLBVariableStore} used to store/retrieve parameters for
+	 * @param variableStore the {@link VariableStore} used to store/retrieve parameters for
 	 *                         this {@link ActiveDialogue}.
 	 */
-	public void setDLBVariableStore(DLBVariableStore dlbVariableStore) {
-		this.dlbVariableStore = dlbVariableStore;
+	public void setDLBVariableStore(VariableStore variableStore) {
+		this.variableStore = variableStore;
 	}
 
 	// -------------------------------------------------------
@@ -200,8 +200,8 @@ public class ActiveDialogue {
 			throws EvaluationException {
 		DLBReply selectedDLBReply = currentNode.getBody().findReplyById(replyId);
 		Map<String,Object> variableMap =
-				dlbVariableStore.getModifiableMap(true, eventTime,
-					DLBVariableStoreChange.Source.DLB_SCRIPT);
+				variableStore.getModifiableMap(true, eventTime,
+					VariableStoreChange.Source.DLB_SCRIPT);
 		for (Command command : selectedDLBReply.getCommands()) {
 			if (command instanceof SetCommand setCommand) {
 				setCommand.getExpression().evaluate(variableMap);
@@ -245,8 +245,8 @@ public class ActiveDialogue {
 	 *                  a user input reply and therefore the chosen INPUT_REPLY source is used.
 	 */
 	public void storeReplyInput(Map<String,?> variables, ZonedDateTime eventTime) {
-		dlbVariableStore.addAll(variables,true,eventTime,
-				DLBVariableStoreChange.Source.INPUT_REPLY);
+		variableStore.addAll(variables,true,eventTime,
+				VariableStoreChange.Source.INPUT_REPLY);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class ActiveDialogue {
 				// a reply statement can only contain an "input" command
 				InputCommand command =
 						(InputCommand)cmdSegment.getCommand();
-				result.append(command.getStatementLog(dlbVariableStore));
+				result.append(command.getStatementLog(variableStore));
 			}
 		}
 		return result.toString();
@@ -306,8 +306,8 @@ public class ActiveDialogue {
 		processedNode.setHeader(DLBNode.getHeader());
 		DLBNodeBody processedBody = new DLBNodeBody();
 		Map<String,Object> variables =
-				dlbVariableStore.getModifiableMap(true, eventTime,
-						DLBVariableStoreChange.Source.DLB_SCRIPT);
+				variableStore.getModifiableMap(true, eventTime,
+						VariableStoreChange.Source.DLB_SCRIPT);
 		DLBNode.getBody().execute(variables, true, processedBody);
 		processedNode.setBody(processedBody);
 		return processedNode;
@@ -334,7 +334,7 @@ public class ActiveDialogue {
 		processedNode.setHeader(DLBNode.getHeader());
 		DLBNodeBody processedBody = new DLBNodeBody();
 		Map<String,Object> variables = new LinkedHashMap<>(
-				dlbVariableStore.getModifiableMap(false,eventTime));
+				variableStore.getModifiableMap(false,eventTime));
 		DLBNode.getBody().execute(variables, true, processedBody);
 		processedNode.setBody(processedBody);
 		return processedNode;

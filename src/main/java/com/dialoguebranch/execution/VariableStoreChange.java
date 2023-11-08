@@ -29,10 +29,10 @@ package com.dialoguebranch.execution;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-public abstract class DLBVariableStoreChange {
+public abstract class VariableStoreChange {
 
 	/**
-	 * Defines a set of possible source of changes to the DLBVariableStore.
+	 * Defines a set of possible source of changes to the VariableStore.
 	 */
 	public enum Source {
 		UNKNOWN,
@@ -46,19 +46,19 @@ public abstract class DLBVariableStoreChange {
 	private final Source source;
 
 	/**
-	 * Creates an instance of a {@link DLBVariableStoreChange} with a given {@code time} and
+	 * Creates an instance of a {@link VariableStoreChange} with a given {@code time} and
 	 * {@code source}.
 	 * @param time the time that this change took place (in the time zone of the user).
-	 * @param source the source of the {@link DLBVariableStoreChange}, as one of {@link Source}.
+	 * @param source the source of the {@link VariableStoreChange}, as one of {@link Source}.
 	 */
-	public DLBVariableStoreChange(ZonedDateTime time, Source source) {
+	public VariableStoreChange(ZonedDateTime time, Source source) {
 		this.time = time;
 		this.source = source;
 	}
 
 	/**
-	 * Returns the {@link Source} of this change to the DLBVariableStore.
-	 * @return the {@link Source} of this change to the DLBVariableStore.
+	 * Returns the {@link Source} of this change to the VariableStore.
+	 * @return the {@link Source} of this change to the VariableStore.
 	 */
 	public Source getSource() {
 		return source;
@@ -73,52 +73,52 @@ public abstract class DLBVariableStoreChange {
 	}
 
 	/**
-	 * An implementation of {@link DLBVariableStoreChange} representing a set of added
-	 * {@link DLBVariable}s.
+	 * An implementation of {@link VariableStoreChange} representing a set of added
+	 * {@link Variable}s.
 	 *
 	 * @author Dennis Hofs
 	 * @author Harm op den Akker
 	 */
-	public static class Put extends DLBVariableStoreChange {
+	public static class Put extends VariableStoreChange {
 		private final Map<String,Object> variables;
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a given map of
-		 * {@link DLBVariable}s.
-		 * @param dlbVariablesMap the mapping from variable name to {@link DLBVariable} that was
-		 *                         added in this {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given map of
+		 * {@link Variable}s.
+		 * @param dlbVariablesMap the mapping from variable name to {@link Variable} that was
+		 *                         added in this {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
-		public Put(Map<String, DLBVariable> dlbVariablesMap, ZonedDateTime time) {
+		public Put(Map<String, Variable> dlbVariablesMap, ZonedDateTime time) {
 			super(time,Source.UNKNOWN);
 			variables = new LinkedHashMap<>();
-			for(DLBVariable DLBVariable : dlbVariablesMap.values()) {
-				variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			for(Variable Variable : dlbVariablesMap.values()) {
+				variables.put(Variable.getName(), Variable.getValue());
 			}
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a given map of
-		 * {@link DLBVariable}s.
-		 * @param dlbVariablesMap the mapping from variable name to {@link DLBVariable} that was
-		 *                         added in this {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given map of
+		 * {@link Variable}s.
+		 * @param dlbVariablesMap the mapping from variable name to {@link Variable} that was
+		 *                         added in this {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.
 		 */
-		public Put(Map<String, DLBVariable> dlbVariablesMap, ZonedDateTime time, Source source) {
+		public Put(Map<String, Variable> dlbVariablesMap, ZonedDateTime time, Source source) {
 			super(time,source);
 			variables = new LinkedHashMap<>();
-			for(DLBVariable DLBVariable : dlbVariablesMap.values()) {
-				variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			for(Variable Variable : dlbVariablesMap.values()) {
+				variables.put(Variable.getName(), Variable.getValue());
 			}
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given
 		 * {@code variableName}, {@code variableValues}, and {@code lastUpdated} timestamp in the
 		 * timezone of the DialogueBranch user.
-		 * @param variableName the name of the {@link DLBVariable} representing this Put change.
-		 * @param variableValue the value of the {@link DLBVariable} representing this Put change.
+		 * @param variableName the name of the {@link Variable} representing this Put change.
+		 * @param variableValue the value of the {@link Variable} representing this Put change.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
 		public Put(String variableName, Object variableValue, ZonedDateTime time) {
@@ -128,11 +128,11 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given
 		 * {@code variableName}, {@code variableValues}, and {@code lastUpdated} timestamp in the
 		 * timezone of the DialogueBranch user.
-		 * @param variableName the name of the {@link DLBVariable} representing this Put change.
-		 * @param variableValue the value of the {@link DLBVariable} representing this Put change.
+		 * @param variableName the name of the {@link Variable} representing this Put change.
+		 * @param variableValue the value of the {@link Variable} representing this Put change.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.
 		 */
@@ -143,66 +143,66 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a single given
-		 * {@link DLBVariable}.
-		 * @param DLBVariable the one and only {@link DLBVariable} that was added in this
-		 *                     {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a single given
+		 * {@link Variable}.
+		 * @param variable the one and only {@link Variable} that was added in this
+		 *                     {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
-		public Put(DLBVariable DLBVariable, ZonedDateTime time) {
+		public Put(Variable variable, ZonedDateTime time) {
 			super(time, Source.UNKNOWN);
 			variables = new LinkedHashMap<>();
-			variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			variables.put(variable.getName(), variable.getValue());
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a single given
-		 * {@link DLBVariable}.
-		 * @param DLBVariable the one and only {@link DLBVariable} that was added in this
-		 *                     {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a single given
+		 * {@link Variable}.
+		 * @param variable the one and only {@link Variable} that was added in this
+		 *                     {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.
 		 */
-		public Put(DLBVariable DLBVariable, ZonedDateTime time, Source source) {
+		public Put(Variable variable, ZonedDateTime time, Source source) {
 			super(time, source);
 			variables = new LinkedHashMap<>();
-			variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			variables.put(variable.getName(), variable.getValue());
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a list of given
-		 * {@link DLBVariable}s.
-		 * @param DLBVariablesList the list of {@link DLBVariable}s that were added in this
-		 *                          {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a list of given
+		 * {@link Variable}s.
+		 * @param VariablesList the list of {@link Variable}s that were added in this
+		 *                          {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
-		public Put(List<DLBVariable> DLBVariablesList, ZonedDateTime time) {
+		public Put(List<Variable> VariablesList, ZonedDateTime time) {
 			super(time, Source.UNKNOWN);
 			variables = new LinkedHashMap<>();
-			for(DLBVariable DLBVariable : DLBVariablesList) {
-				variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			for(Variable variable : VariablesList) {
+				variables.put(variable.getName(), variable.getValue());
 			}
 		}
 
 		/**
-		 * Creates an instance of a {@link Put} {@link DLBVariableStoreChange} with a list of given
-		 * {@link DLBVariable}s.
-		 * @param DLBVariablesList the list of {@link DLBVariable}s that were added in this
-		 *                          {@link DLBVariableStoreChange}.
+		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a list of given
+		 * {@link Variable}s.
+		 * @param VariablesList the list of {@link Variable}s that were added in this
+		 *                          {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.
 		 */
-		public Put(List<DLBVariable> DLBVariablesList, ZonedDateTime time, Source source) {
+		public Put(List<Variable> VariablesList, ZonedDateTime time, Source source) {
 			super(time, source);
 			variables = new LinkedHashMap<>();
-			for(DLBVariable DLBVariable : DLBVariablesList) {
-				variables.put(DLBVariable.getName(), DLBVariable.getValue());
+			for(Variable variable : VariablesList) {
+				variables.put(variable.getName(), variable.getValue());
 			}
 		}
 
 		/**
 		 * Returns the mapping of variable name to value ({@link Object}) representing all the
-		 * variables that have been added in this {@link DLBVariableStoreChange}.
+		 * variables that have been added in this {@link VariableStoreChange}.
 		 * @return the added DialogueBranch Variables.
 		 */
 		public Map<String,Object> getVariables() {
@@ -212,17 +212,17 @@ public abstract class DLBVariableStoreChange {
 	}
 
 	/**
-	 * An implementation of {@link DLBVariableStoreChange} representing a set of removed DialogueBranch
+	 * An implementation of {@link VariableStoreChange} representing a set of removed DialogueBranch
 	 * Variables, identified by their variable names.
 	 *
 	 * @author Dennis Hofs
 	 * @author Harm op den Akker
 	 */
-	public static class Remove extends DLBVariableStoreChange {
+	public static class Remove extends VariableStoreChange {
 		private final Collection<String> removedVariableNames;
 
 		/**
-		 * Creates an instance of a {@link Remove} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Remove} {@link VariableStoreChange} with a given
 		 * collection of variableNames.
 		 * @param variableNames the names of the variables that have been removed in this change.
 		 * @param time the time that this change took place (in the time zone of the user).
@@ -233,7 +233,7 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Remove} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Remove} {@link VariableStoreChange} with a given
 		 * collection of variableNames.
 		 * @param variableNames the names of the variables that have been removed in this change.
 		 * @param time the time that this change took place (in the time zone of the user).
@@ -245,7 +245,7 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Remove} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Remove} {@link VariableStoreChange} with a given
 		 * single variable name, representing the variable that was removed with this change.
 		 * @param variableName the name of the variable that was removed with this change.
 		 * @param time the time that this change took place (in the time zone of the user).
@@ -256,7 +256,7 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Remove} {@link DLBVariableStoreChange} with a given
+		 * Creates an instance of a {@link Remove} {@link VariableStoreChange} with a given
 		 * single variable name, representing the variable that was removed with this change.
 		 * @param variableName the name of the variable that was removed with this change.
 		 * @param time the time that this change took place (in the time zone of the user).
@@ -269,7 +269,7 @@ public abstract class DLBVariableStoreChange {
 
 		/**
 		 * Returns the collection of variable names that are associated with this {@link Remove}
-		 * {@link DLBVariableStoreChange}.
+		 * {@link VariableStoreChange}.
 		 * @return the collection of variable names of variables that have been removed.
 		 */
 		public Collection<String> getVariableNames() {
@@ -279,16 +279,16 @@ public abstract class DLBVariableStoreChange {
 	}
 
 	/**
-	 * An implementation of {@link DLBVariableStoreChange} representing a full clear of the
-	 * {@link DLBVariableStore}.
+	 * An implementation of {@link VariableStoreChange} representing a full clear of the
+	 * {@link VariableStore}.
 	 *
 	 * @author Dennis Hofs
 	 * @author Harm op den Akker
 	 */
-	public static class Clear extends DLBVariableStoreChange {
+	public static class Clear extends VariableStoreChange {
 
 		/**
-		 * Creates an instance of a {@link Clear} {@link DLBVariableStoreChange} indicating a full
+		 * Creates an instance of a {@link Clear} {@link VariableStoreChange} indicating a full
 		 * clear (removed all variables) of the DialogueBranch Variable Store.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
@@ -297,7 +297,7 @@ public abstract class DLBVariableStoreChange {
 		}
 
 		/**
-		 * Creates an instance of a {@link Clear} {@link DLBVariableStoreChange} indicating a full
+		 * Creates an instance of a {@link Clear} {@link VariableStoreChange} indicating a full
 		 * clear (removed all variables) of the DialogueBranch Variable Store.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.

@@ -29,14 +29,14 @@ package com.dialoguebranch.execution;
 import java.time.ZoneId;
 
 /**
- * A {@link DLBUser} represents the person that is interacting with a DialogueBranch dialogue.
- * The {@link DLBUser} has an identifier and a timezone in which he currently resides that
+ * A {@link User} represents the person that is interacting with a DialogueBranch dialogue.
+ * The {@link User} has an identifier and a timezone in which he currently resides that
  * can be used to log events (dialogue history and the stored update times for DialogueBranch
  * variables).
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class DLBUser {
+public class User {
 
 	private String id;
 	private ZoneId timeZone;
@@ -46,20 +46,20 @@ public class DLBUser {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link DLBUser} in the system's default time zone.
-	 * @param id the username or identifier of the {@link DLBUser}.
+	 * Creates an instance of a {@link User} in the system's default time zone.
+	 * @param id the username or identifier of the {@link User}.
 	 */
-	public DLBUser(String id) {
+	public User(String id) {
 		this.id = id;
 		this.timeZone = ZoneId.systemDefault();
 	}
 
 	/**
-	 * Creates an instance of a {@link DLBUser} with a given {@code id} and {@code timeZone}.
-	 * @param id the username or identifier of the {@link DLBUser}
+	 * Creates an instance of a {@link User} with a given {@code id} and {@code timeZone}.
+	 * @param id the username or identifier of the {@link User}
 	 * @param timeZone the timezone (as {@link ZoneId}) in which the user currently resides.
 	 */
-	public DLBUser(String id, ZoneId timeZone) {
+	public User(String id, ZoneId timeZone) {
 		this.id = id;
 		this.timeZone = timeZone;
 	}
@@ -69,16 +69,16 @@ public class DLBUser {
 	// -----------------------------------------------------------
 
 	/**
-	 * Returns the identifier of this {@link DLBUser} as a {@link String}.
-	 * @return the identifier of this {@link DLBUser} as a {@link String}.
+	 * Returns the identifier of this {@link User} as a {@link String}.
+	 * @return the identifier of this {@link User} as a {@link String}.
 	 */
 	public String getId() {
 		return id;
 	}
 
 	/**
-	 * Sets the identifier of this {@link DLBUser} as a {@link String}.
-	 * @param id the identifier of this {@link DLBUser} as a {@link String}.
+	 * Sets the identifier of this {@link User} as a {@link String}.
+	 * @param id the identifier of this {@link User} as a {@link String}.
 	 */
 	public void setId(String id) {
 		this.id = id;

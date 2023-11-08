@@ -32,8 +32,8 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
 import nl.rrd.utils.json.JsonMapper;
-import com.dialoguebranch.execution.DLBVariable;
-import com.dialoguebranch.execution.DLBVariableStore;
+import com.dialoguebranch.execution.Variable;
+import com.dialoguebranch.execution.VariableStore;
 import com.dialoguebranch.model.DLBVariableString;
 import com.dialoguebranch.parser.BodyToken;
 
@@ -76,11 +76,11 @@ public class InputSetCommand extends InputCommand {
 	}
 
 	@Override
-	public String getStatementLog(DLBVariableStore varStore) {
+	public String getStatementLog(VariableStore varStore) {
 		List<String> optionTexts = new ArrayList<>();
 		for (Option option : options) {
-			DLBVariable DLBVariable = varStore.getDLBVariable(option.getVariableName());
-			Value value = new Value(DLBVariable.getValue());
+			Variable variable = varStore.getDLBVariable(option.getVariableName());
+			Value value = new Value(variable.getValue());
 			if (value.asBoolean())
 				optionTexts.add(option.getText().evaluate(null));
 		}

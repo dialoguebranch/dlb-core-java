@@ -27,11 +27,11 @@
 
 package com.dialoguebranch.model.command;
 
+import com.dialoguebranch.execution.VariableStore;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 import nl.rrd.utils.expressions.Value;
-import com.dialoguebranch.execution.DLBVariable;
-import com.dialoguebranch.execution.DLBVariableStore;
+import com.dialoguebranch.execution.Variable;
 import com.dialoguebranch.model.DLBNodeBody;
 import com.dialoguebranch.parser.BodyToken;
 
@@ -68,9 +68,9 @@ public class InputEmailCommand extends InputCommand {
 	}
 
 	@Override
-	public String getStatementLog(DLBVariableStore varStore) {
-		DLBVariable DLBVariable = varStore.getDLBVariable(variableName);
-		Value value = new Value(DLBVariable.getValue());
+	public String getStatementLog(VariableStore varStore) {
+		Variable variable = varStore.getDLBVariable(variableName);
+		Value value = new Value(variable.getValue());
 		return value.toString();
 	}
 

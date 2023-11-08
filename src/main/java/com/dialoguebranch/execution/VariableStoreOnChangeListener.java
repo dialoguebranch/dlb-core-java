@@ -30,14 +30,14 @@ package com.dialoguebranch.execution;
 import java.util.List;
 
 /**
- * Interface for listeners that can be registered at a {@link DLBVariableStore}. Whenever the
- * DLBVariableStore object is changed, that listener's
- * {@link DLBVariableStoreOnChangeListener#onChange(DLBVariableStore,List)} method will be called.
+ * Interface for listeners that can be registered at a {@link VariableStore}. Whenever the
+ * VariableStore object is changed, that listener's
+ * {@link VariableStoreOnChangeListener#onChange(VariableStore,List)} method will be called.
  *
  * @author Dennis Hofs
  * @author Harm op den Akker
  */
-public interface DLBVariableStoreOnChangeListener {
-	void onChange(DLBVariableStore dlbVariableStore, List<DLBVariableStoreChange> changes);
+public interface VariableStoreOnChangeListener {
+	void onChange(VariableStore variableStore, List<VariableStoreChange> changes);
 }
 

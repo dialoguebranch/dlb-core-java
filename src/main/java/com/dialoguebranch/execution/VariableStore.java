@@ -31,39 +31,39 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * A {@link DLBVariableStore} is an object that stores all DialogueBranch variable values for a
+ * A {@link VariableStore} is an object that stores all DialogueBranch variable values for a
  * given user.
  * 
  * @author Harm op den Akker
  */
-public class DLBVariableStore {
+public class VariableStore {
 
 	// Contains the list of all DLBVariables in this store
-	private final Map<String, DLBVariable> variables = new HashMap<>();
+	private final Map<String, Variable> variables = new HashMap<>();
 
-	// The DialogueBranch user associated with this DLBVariableStore
-	private DLBUser user;
+	// The DialogueBranch user associated with this VariableStore
+	private User user;
 
 	// Contains the list of all DLBVariableChangeListeners that need to be notified for updates
-	private final List<DLBVariableStoreOnChangeListener> onChangeListeners = new ArrayList<>();
+	private final List<VariableStoreOnChangeListener> onChangeListeners = new ArrayList<>();
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a new {@link DLBVariableStore} for a user in the given
+	 * Creates an instance of a new {@link VariableStore} for a user in the given
 	 * {@code timeZone}.
-	 * @param user the {@link DLBUser} associated with this {@link DLBVariableStore}.
+	 * @param user the {@link User} associated with this {@link VariableStore}.
 	 */
-	public DLBVariableStore(DLBUser user) {
+	public VariableStore(User user) {
 		this.user = user;
 	}
 
-	public DLBVariableStore(DLBUser user, DLBVariable[] DLBVariableArray) {
+	public VariableStore(User user, Variable[] VariableArray) {
 		this.user = user;
 		synchronized(variables) {
-			for (DLBVariable variable : DLBVariableArray) {
+			for (Variable variable : VariableArray) {
 				variables.put(variable.getName(),variable);
 			}
 		}
@@ -74,48 +74,48 @@ public class DLBVariableStore {
 	// ----------------------------------------------------------
 
 	/**
-	 * Adds the given {@link DLBVariableStoreOnChangeListener} to the list of listeners
-	 * for this {@link DLBVariableStore}.
+	 * Adds the given {@link VariableStoreOnChangeListener} to the list of listeners
+	 * for this {@link VariableStore}.
 	 *
-	 * @param listener a {@link DLBVariableStoreOnChangeListener} that should be notified whenever
-	 *                 this {@link DLBVariableStore} is changed
+	 * @param listener a {@link VariableStoreOnChangeListener} that should be notified whenever
+	 *                 this {@link VariableStore} is changed
 	 */
-	public void addOnChangeListener(DLBVariableStoreOnChangeListener listener) {
+	public void addOnChangeListener(VariableStoreOnChangeListener listener) {
 		synchronized (onChangeListeners) {
 			onChangeListeners.add(listener);
 		}
 	}
 
 	/**
-	 * Removes the given {@link DLBVariableStoreOnChangeListener} from the list of listeners
-	 * for this {@link DLBVariableStore}.
+	 * Removes the given {@link VariableStoreOnChangeListener} from the list of listeners
+	 * for this {@link VariableStore}.
 	 *
-	 * @param listener a {@link DLBVariableStoreOnChangeListener} that was previously registered
+	 * @param listener a {@link VariableStoreOnChangeListener} that was previously registered
 	 *                 to listen for changes.
-	 * @return {@code true} if the given {@link DLBVariableStoreOnChangeListener} was removed, or
+	 * @return {@code true} if the given {@link VariableStoreOnChangeListener} was removed, or
 	 *         {@code false} otherwise.
 	 * if it was not registered as a listener to begin with.
 	 */
-	public boolean removeOnChangeListener(DLBVariableStoreOnChangeListener listener) {
+	public boolean removeOnChangeListener(VariableStoreOnChangeListener listener) {
 		synchronized (onChangeListeners) {
 			return onChangeListeners.remove(listener);
 		}
 	}
 
 	/**
-	 * Notifies all {@link DLBVariableStoreOnChangeListener} that are listening for changes to this
-	 * {@link DLBVariableStore} of one or more changes as represented by the list of
-	 * {@link DLBVariableStoreChange} {@code changes}.
+	 * Notifies all {@link VariableStoreOnChangeListener} that are listening for changes to this
+	 * {@link VariableStore} of one or more changes as represented by the list of
+	 * {@link VariableStoreChange} {@code changes}.
 	 *
-	 * @param changes one or multiple {@link DLBVariableStoreChange}s representing a modification
-	 *                to this {@link DLBVariableStore}.
+	 * @param changes one or multiple {@link VariableStoreChange}s representing a modification
+	 *                to this {@link VariableStore}.
 	 */
-	private void notifyOnChange(DLBVariableStoreChange... changes) {
-		List<DLBVariableStoreOnChangeListener> listeners;
+	private void notifyOnChange(VariableStoreChange... changes) {
+		List<VariableStoreOnChangeListener> listeners;
 		synchronized (onChangeListeners) {
 			listeners = new ArrayList<>(onChangeListeners);
 		}
-		for (DLBVariableStoreOnChangeListener listener : listeners) {
+		for (VariableStoreOnChangeListener listener : listeners) {
 			listener.onChange(this, Arrays.asList(changes));
 		}
 	}
@@ -126,30 +126,30 @@ public class DLBVariableStore {
 
 	/**
 	 * Retrieves the variable identified by the given {@code name}, or returns
-	 * {@code null} if no such variable is known in this {@link DLBVariableStore}.
+	 * {@code null} if no such variable is known in this {@link VariableStore}.
 	 *
 	 * @param name the name of the variable to retrieve.
-	 * @return the {@link DLBVariable} with the given {@code name}, nor {@code null}.
+	 * @return the {@link Variable} with the given {@code name}, nor {@code null}.
 	 */
-	public DLBVariable getDLBVariable(String name) {
+	public Variable getDLBVariable(String name) {
 		synchronized (variables) {
 			return variables.get(name);
 		}
 	}
 
 	/**
-	 * Returns the contents of this {@link DLBVariableStore} as an array of {@link DLBVariable}s.
-	 * @return the contents of this {@link DLBVariableStore} as an array of {@link DLBVariable}s.
+	 * Returns the contents of this {@link VariableStore} as an array of {@link Variable}s.
+	 * @return the contents of this {@link VariableStore} as an array of {@link Variable}s.
 	 */
-	public DLBVariable[] getDLBVariables() {
+	public Variable[] getDLBVariables() {
 		synchronized (variables) {
-			return variables.values().toArray(new DLBVariable[0]);
+			return variables.values().toArray(new Variable[0]);
 		}
 	}
 
 	/**
 	 * Returns the value of the variable identified by the given {@code name}.
-	 * If no such variable is known in this {@link DLBVariableStore}, then this
+	 * If no such variable is known in this {@link VariableStore}, then this
 	 * method returns null.
 	 *
 	 * <p>Note: if this method returns null, it can mean that the variable does
@@ -162,7 +162,7 @@ public class DLBVariableStore {
 	 * or the variable value is null
 	 */
 	public Object getValue(String variableName) {
-		DLBVariable variable;
+		Variable variable;
 		synchronized (variables) {
 			variable = variables.get(variableName);
 		}
@@ -172,19 +172,19 @@ public class DLBVariableStore {
 	}
 
 	/**
-	 * Returns the {@link DLBUser} associated with this {@link DLBVariableStore}.
-	 * @return the {@link DLBUser} associated with this {@link DLBVariableStore}.
+	 * Returns the {@link User} associated with this {@link VariableStore}.
+	 * @return the {@link User} associated with this {@link VariableStore}.
 	 */
-	public DLBUser getUser() {
+	public User getUser() {
 		return user;
 	}
 
 	/**
-	 * Returns a set of all the names of {@link DLBVariable}s contained in this
-	 * {@link DLBVariableStore}.
+	 * Returns a set of all the names of {@link Variable}s contained in this
+	 * {@link VariableStore}.
 	 *
-	 * @return a set of all the names of {@link DLBVariable}s contained in this
-	 * {@link DLBVariableStore}.
+	 * @return a set of all the names of {@link Variable}s contained in this
+	 * {@link VariableStore}.
 	 */
 	public Set<String> getDLBVariableNames() {
 		return variables.keySet();
@@ -202,77 +202,77 @@ public class DLBVariableStore {
 
 	/**
 	 * Stores the given {@code value} under the given variable-{@code name} in this
-	 * {@link DLBVariableStore} and sets the updatedTime to {@code updatedTime}.
+	 * {@link VariableStore} and sets the updatedTime to {@code updatedTime}.
 	 *
 	 * @param name the name of the variable to store.
 	 * @param value the value of the variable to store.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time (in the time zone of the user) of the event that triggered the
 	 *                  update of this variable.
 	 */
 	public void setValue(String name, Object value, boolean notifyObservers,
 						 ZonedDateTime eventTime) {
-		setValue(name,value,notifyObservers,eventTime, DLBVariableStoreChange.Source.UNKNOWN);
+		setValue(name,value,notifyObservers,eventTime, VariableStoreChange.Source.UNKNOWN);
 	}
 
 	/**
 	 * Stores the given {@code value} under the given variable-{@code name} in this
-	 * {@link DLBVariableStore} and sets the updatedTime to {@code updatedTime}.
+	 * {@link VariableStore} and sets the updatedTime to {@code updatedTime}.
 	 *
 	 * @param name the name of the variable to store.
 	 * @param value the value of the variable to store.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time (in the time zone of the user) of the event that triggered the
 	 *                  update of this variable.
-	 * @param source the source of the update to this {@link DLBVariableStore}.
+	 * @param source the source of the update to this {@link VariableStore}.
 	 */
 	public void setValue(String name, Object value, boolean notifyObservers,
-						 ZonedDateTime eventTime, DLBVariableStoreChange.Source source) {
+						 ZonedDateTime eventTime, VariableStoreChange.Source source) {
 		synchronized (variables) {
-			DLBVariable DLBVariable = new DLBVariable(name, value, eventTime);
-			variables.put(name, DLBVariable);
+			Variable Variable = new Variable(name, value, eventTime);
+			variables.put(name, Variable);
 			if (notifyObservers) {
-				notifyOnChange(new DLBVariableStoreChange.Put(DLBVariable, eventTime, source));
+				notifyOnChange(new VariableStoreChange.Put(Variable, eventTime, source));
 			}
 		}
 	}
 
 	/**
-	 * Remove the {@link DLBVariable} with the given {@code name} from this
-	 * {@link DLBVariableStore}. This method returns the {@link DLBVariable} object that has been
+	 * Remove the {@link Variable} with the given {@code name} from this
+	 * {@link VariableStore}. This method returns the {@link Variable} object that has been
 	 * deleted, or {@code null} if the element to be deleted was not found.
 	 *
-	 * @param name the name of the {@link DLBVariable} to remove.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param name the name of the {@link Variable} to remove.
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time (in the time zone of the user) of the event that triggered the
 	 *                  removal of this variable
-	 * @return the {@link DLBVariable} that was removed, or {@code null}.
+	 * @return the {@link Variable} that was removed, or {@code null}.
 	 */
-	public DLBVariable removeByName(String name, boolean notifyObservers,
-									ZonedDateTime eventTime) {
-		return removeByName(name,notifyObservers,eventTime, DLBVariableStoreChange.Source.UNKNOWN);
+	public Variable removeByName(String name, boolean notifyObservers,
+                                 ZonedDateTime eventTime) {
+		return removeByName(name,notifyObservers,eventTime, VariableStoreChange.Source.UNKNOWN);
 	}
 
 	/**
-	 * Remove the {@link DLBVariable} with the given {@code name} from this
-	 * {@link DLBVariableStore}. This method returns the {@link DLBVariable} object that has been
+	 * Remove the {@link Variable} with the given {@code name} from this
+	 * {@link VariableStore}. This method returns the {@link Variable} object that has been
 	 * deleted, or {@code null} if the element to be deleted was not found.
 	 *
-	 * @param name the name of the {@link DLBVariable} to remove.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param name the name of the {@link Variable} to remove.
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time (in the time zone of the user) of the event that triggered the
 	 *                  removal of this variable
-	 * @param source the source of the update to this {@link DLBVariableStore}.
-	 * @return the {@link DLBVariable} that was removed, or {@code null}.
+	 * @param source the source of the update to this {@link VariableStore}.
+	 * @return the {@link Variable} that was removed, or {@code null}.
 	 */
-	public DLBVariable removeByName(String name, boolean notifyObservers,
-									ZonedDateTime eventTime,
-									DLBVariableStoreChange.Source source) {
-		DLBVariable result;
+	public Variable removeByName(String name, boolean notifyObservers,
+                                 ZonedDateTime eventTime,
+                                 VariableStoreChange.Source source) {
+		Variable result;
 		synchronized (variables) {
 			result = variables.remove(name);
 		}
@@ -280,123 +280,123 @@ public class DLBVariableStore {
 			return null;
 		} else {
 			if(notifyObservers) {
-				notifyOnChange(new DLBVariableStoreChange.Remove(name, eventTime, source));
+				notifyOnChange(new VariableStoreChange.Remove(name, eventTime, source));
 			}
 			return result;
 		}
 	}
 
 	/**
-	 * Adds all the entries in the {@code variablesToAdd}-map as {@link DLBVariable}s to this
-	 * {@link DLBVariableStore}. The {@code variablesToAdd}-map is treated as a mapping from
+	 * Adds all the entries in the {@code variablesToAdd}-map as {@link Variable}s to this
+	 * {@link VariableStore}. The {@code variablesToAdd}-map is treated as a mapping from
 	 * variable names ({@link String}s) to variable values ({@link Object}s).
-	 * @param variablesToAdd the {@link Map} of name-value pairs to add as {@link DLBVariable}s.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param variablesToAdd the {@link Map} of name-value pairs to add as {@link Variable}s.
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time of the event that triggered the addition of these variables
 	 *                  (in the time zone of the user)
 	 */
 	public void addAll(Map<? extends String, ?> variablesToAdd, boolean notifyObservers,
 					   ZonedDateTime eventTime) {
-		addAll(variablesToAdd,notifyObservers,eventTime, DLBVariableStoreChange.Source.UNKNOWN);
+		addAll(variablesToAdd,notifyObservers,eventTime, VariableStoreChange.Source.UNKNOWN);
 	}
 
 	/**
-	 * Adds all the entries in the {@code variablesToAdd}-map as {@link DLBVariable}s to this
-	 * {@link DLBVariableStore}. The {@code variablesToAdd}-map is treated as a mapping from
+	 * Adds all the entries in the {@code variablesToAdd}-map as {@link Variable}s to this
+	 * {@link VariableStore}. The {@code variablesToAdd}-map is treated as a mapping from
 	 * variable names ({@link String}s) to variable values ({@link Object}s).
-	 * @param variablesToAdd the {@link Map} of name-value pairs to add as {@link DLBVariable}s.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be
+	 * @param variablesToAdd the {@link Map} of name-value pairs to add as {@link Variable}s.
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be
 	 *                        notified about this update.
 	 * @param eventTime the time of the event that triggered the addition of these variables
 	 *                  (in the time zone of the user)
-	 * @param source the source of the update to this {@link DLBVariableStore}.
+	 * @param source the source of the update to this {@link VariableStore}.
 	 */
 	public void addAll(Map<? extends String, ?> variablesToAdd, boolean notifyObservers,
-					   ZonedDateTime eventTime, DLBVariableStoreChange.Source source) {
-		List<DLBVariable> DLBVariablesToAdd = new ArrayList<>();
+					   ZonedDateTime eventTime, VariableStoreChange.Source source) {
+		List<Variable> VariablesToAdd = new ArrayList<>();
 
 		for (Map.Entry<? extends String, ?> entry : variablesToAdd.entrySet()) {
 			String name = entry.getKey();
 			Object value = entry.getValue();
-			DLBVariable DLBVariable = new DLBVariable(name,value,eventTime);
-			DLBVariablesToAdd.add(DLBVariable);
+			Variable Variable = new Variable(name,value,eventTime);
+			VariablesToAdd.add(Variable);
 		}
 
 		synchronized (variables) {
-			for(DLBVariable DLBVariable : DLBVariablesToAdd) {
-				variables.put(DLBVariable.getName(), DLBVariable);
+			for(Variable Variable : VariablesToAdd) {
+				variables.put(Variable.getName(), Variable);
 			}
 		}
 
 		if (notifyObservers) {
-			notifyOnChange(new DLBVariableStoreChange.Put(DLBVariablesToAdd, eventTime, source));
+			notifyOnChange(new VariableStoreChange.Put(VariablesToAdd, eventTime, source));
 		}
 	}
 
 	/**
-	 * Sets the {@link DLBUser} for this {@link DLBVariableStore}.
-	 * @param user the {@link DLBUser} for this {@link DLBVariableStore}.
+	 * Sets the {@link User} for this {@link VariableStore}.
+	 * @param user the {@link User} for this {@link VariableStore}.
 	 */
-	public void setUser(DLBUser user) {
+	public void setUser(User user) {
 		this.user = user;
 	}
 
 	/**
 	 * Returns a modifiable mapping of {@link String}s to {@link Object}s that is linked to the
-	 * contents of this {@link DLBVariableStore}. The {@link Object} values in this map are the
-	 * values of the stored {@link DLBVariable}s, so not the {@link DLBVariable}s themselves!
+	 * contents of this {@link VariableStore}. The {@link Object} values in this map are the
+	 * values of the stored {@link Variable}s, so not the {@link Variable}s themselves!
 	 * This {@code Map<String,Object>} can be used as a regular map, but is actually a specific
 	 * implementation for this variable store. All basic map operations on the resulting map are
-	 * observable by the {@link DLBVariableStoreOnChangeListener}s that are registered to listen to
-	 * this {@link DLBVariableStore}.
+	 * observable by the {@link VariableStoreOnChangeListener}s that are registered to listen to
+	 * this {@link VariableStore}.
 	 *
 	 * <p>This "modifiable map" is used in the execution of DialogueBranch Dialogues containing DialogueBranch
 	 * Variables, as the implementation relies on the
 	 * {@link nl.rrd.utils.expressions.Expression} interface.</p>
 	 *
-	 * <p>In other words, if you are thinking "Man, I wish DLBVariableStore was just a simple
+	 * <p>In other words, if you are thinking "Man, I wish VariableStore was just a simple
 	 * mapping of variable names to values", use this method, and you can pretend that that is the
 	 * case.</p>
 	 *
 	 * If {@code notifyObservers} is {@code true}, then any action that modifies the content of this
 	 * {@link Map} will result in all listeners being notified.
 	 *
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be notified
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be notified
 	 *                        about updates to the Map.
 	 * @param eventTime the time of the event that is causing the changes to this
-	 *                  {@link DLBVariableStore} in the time zone of the user.
+	 *                  {@link VariableStore} in the time zone of the user.
 	 * @return the modifiable map
 	 */
 	public Map<String, Object> getModifiableMap(boolean notifyObservers, ZonedDateTime eventTime) {
 		return new DLBVariableMap(notifyObservers, eventTime,
-				DLBVariableStoreChange.Source.UNKNOWN);
+				VariableStoreChange.Source.UNKNOWN);
 	}
 
 	/**
 	 * See {@link #getModifiableMap(boolean, ZonedDateTime)}.
-	 * @param notifyObservers true if observers of this {@link DLBVariableStore} should be notified
+	 * @param notifyObservers true if observers of this {@link VariableStore} should be notified
 	 *                        about updates to the Map.
 	 * @param eventTime the time of the event that is causing the changes to this
-	 * 	                {@link DLBVariableStore} in the time zone of the user.
-	 * @param source the source of the changes to this {@link DLBVariableStore}.
+	 * 	                {@link VariableStore} in the time zone of the user.
+	 * @param source the source of the changes to this {@link VariableStore}.
 	 * @return the modifiable map
 	 */
 	public Map<String, Object> getModifiableMap(boolean notifyObservers, ZonedDateTime eventTime,
-												DLBVariableStoreChange.Source source) {
+												VariableStoreChange.Source source) {
 		return new DLBVariableMap(notifyObservers, eventTime, source);
 	}
 
 	/**
 	 * A {@link DLBVariableMap} is a Mapping from variable name to variable value and can be used
-	 * as an observable and modifiable "view" of the {@link DLBVariableStore} whose changes are
-	 * maintained within this {@link DLBVariableStore} object.
+	 * as an observable and modifiable "view" of the {@link VariableStore} whose changes are
+	 * maintained within this {@link VariableStore} object.
 	 */
 	private class DLBVariableMap implements Map<String, Object> {
 
 		private final boolean notifyObservers;
 		private final ZonedDateTime eventTime;
-		private final DLBVariableStoreChange.Source source;
+		private final VariableStoreChange.Source source;
 
 		// --------------------------------------------------------
 		// -------------------- Constructor(s) --------------------
@@ -404,14 +404,14 @@ public class DLBVariableStore {
 
 		/**
 		 * Creates an instance of a {@link DLBVariableMap} which is a mapping of Strings to Objects
-		 * representing the contents of this {@link DLBVariableStore}.
-		 * @param notifyObservers whether {@link DLBVariableStoreOnChangeListener}s should be
+		 * representing the contents of this {@link VariableStore}.
+		 * @param notifyObservers whether {@link VariableStoreOnChangeListener}s should be
 		 *                        notified of updates made to this {@link DLBVariableMap}.
 		 * @param eventTime the timestamp that is passed along to all changes that are made in this
 		 *                  {@link DLBVariableMap}.
 		 */
 		public DLBVariableMap(boolean notifyObservers, ZonedDateTime eventTime,
-							  DLBVariableStoreChange.Source source) {
+							  VariableStoreChange.Source source) {
 			this.notifyObservers = notifyObservers;
 			this.eventTime = eventTime;
 			this.source = source;
@@ -430,7 +430,7 @@ public class DLBVariableStore {
 
 		@Override
 		public Object remove(Object key) {
-			DLBVariable result = removeByName((String)key, notifyObservers, eventTime, source);
+			Variable result = removeByName((String)key, notifyObservers, eventTime, source);
 			if(result != null) return result.getValue();
 			else return null;
 		}
@@ -446,7 +446,7 @@ public class DLBVariableStore {
 				variables.clear();
 			}
 			if (notifyObservers)
-				notifyOnChange(new DLBVariableStoreChange.Clear(eventTime, source));
+				notifyOnChange(new VariableStoreChange.Clear(eventTime, source));
 		}
 
 		// -----------------------------------------------------------
@@ -486,7 +486,7 @@ public class DLBVariableStore {
 		@Override
 		public boolean containsValue(Object value) {
 			synchronized (variables) {
-				for (Map.Entry<String, DLBVariable> entry : variables.entrySet()) {
+				for (Map.Entry<String, Variable> entry : variables.entrySet()) {
 					if(entry.getValue().getValue().equals(value)) return true;
 				}
 				return false;
@@ -505,9 +505,9 @@ public class DLBVariableStore {
 			Collection<Object> objectCollection = new ArrayList<>();
 
 			synchronized (variables) {
-				Collection<DLBVariable> DLBVariableCollection = variables.values();
-				for(DLBVariable DLBVariable : DLBVariableCollection) {
-					objectCollection.add(DLBVariable.getValue());
+				Collection<Variable> VariableCollection = variables.values();
+				for(Variable Variable : VariableCollection) {
+					objectCollection.add(Variable.getValue());
 				}
 			}
 
@@ -519,9 +519,9 @@ public class DLBVariableStore {
 			Set<Entry<String,Object>> resultSet = new HashSet<>();
 
 			synchronized (variables) {
-				Set<Entry<String, DLBVariable>> entrySet = variables.entrySet();
+				Set<Entry<String, Variable>> entrySet = variables.entrySet();
 
-				for(Entry<String, DLBVariable> entry : entrySet) {
+				for(Entry<String, Variable> entry : entrySet) {
 					String key = entry.getKey();
 					Object value = entry.getValue().getValue();
 					Map.Entry<String,Object> newEntry = new AbstractMap.SimpleEntry<>(key, value);
