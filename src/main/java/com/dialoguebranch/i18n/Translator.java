@@ -39,14 +39,14 @@ import com.dialoguebranch.model.DLBVariableString;
 /**
  * This class can translate {@link DLBNode}s given a translation map.
  * The translation map can be obtained from a translation file using the {@link
- * DLBTranslationParser}.
+ * TranslationParser}.
  *
  * @author Dennis Hofs (RRD)
  */
-public class DLBTranslator {
-	private DLBTranslationContext context;
-	private Map<String,List<DLBContextTranslation>> exactTranslations;
-	private Map<String,List<DLBContextTranslation>> normalizedTranslations;
+public class Translator {
+	private TranslationContext context;
+	private Map<String,List<ContextTranslation>> exactTranslations;
+	private Map<String,List<ContextTranslation>> normalizedTranslations;
 	private Pattern preWhitespaceRegex;
 	private Pattern postWhitespaceRegex;
 
@@ -56,16 +56,16 @@ public class DLBTranslator {
 	 * @param context the translation context
 	 * @param translations the translation map
 	 */
-	public DLBTranslator(DLBTranslationContext context,
-						 Map<DLBTranslatable,List<DLBContextTranslation>> translations) {
+	public Translator(TranslationContext context,
+					  Map<Translatable,List<ContextTranslation>> translations) {
 		this.context = context;
 		this.exactTranslations = new LinkedHashMap<>();
-		for (DLBTranslatable key : translations.keySet()) {
+		for (Translatable key : translations.keySet()) {
 			this.exactTranslations.put(key.toString().trim(),
 					translations.get(key));
 		}
 		this.normalizedTranslations = new LinkedHashMap<>();
-		for (DLBTranslatable key : translations.keySet()) {
+		for (Translatable key : translations.keySet()) {
 			this.normalizedTranslations.put(getNormalizedText(key),
 					translations.get(key));
 		}
@@ -73,7 +73,7 @@ public class DLBTranslator {
 		postWhitespaceRegex = Pattern.compile("\\s+$");
 	}
 
-	private String getNormalizedText(DLBTranslatable translatable) {
+	private String getNormalizedText(Translatable translatable) {
 		String norm = translatable.toString().trim();
 		if (norm.isEmpty())
 			return norm;
@@ -99,7 +99,7 @@ public class DLBTranslator {
 		dialogue = new Dialogue(dialogue);
 		for (DLBNode node : dialogue.getNodes()) {
 			translateBody(node.getHeader().getSpeaker(),
-					DLBSourceTranslatable.USER, node.getBody());
+					SourceTranslatable.USER, node.getBody());
 		}
 		return dialogue;
 	}
@@ -115,21 +115,21 @@ public class DLBTranslator {
 	public DLBNode translate(DLBNode node) {
 		node = new DLBNode(node);
 		translateBody(node.getHeader().getSpeaker(),
-				DLBSourceTranslatable.USER, node.getBody());
+				SourceTranslatable.USER, node.getBody());
 		return node;
 	}
 
 	private void translateBody(String speaker, String addressee,
 			DLBNodeBody body) {
-		DLBTranslatableExtractor extractor = new DLBTranslatableExtractor();
-		List<DLBSourceTranslatable> translatables = extractor.extractFromBody(
+		TranslatableExtractor extractor = new TranslatableExtractor();
+		List<SourceTranslatable> translatables = extractor.extractFromBody(
 				speaker, addressee, body);
-		for (DLBSourceTranslatable translatable : translatables) {
+		for (SourceTranslatable translatable : translatables) {
 			translateText(translatable);
 		}
 	}
 
-	private void translateText(DLBSourceTranslatable text) {
+	private void translateText(SourceTranslatable text) {
 		String textPlain = text.translatable().toString();
 		String preWhitespace = "";
 		String postWhitespace = "";
@@ -139,7 +139,7 @@ public class DLBTranslator {
 		m = postWhitespaceRegex.matcher(textPlain);
 		if (m.find())
 			postWhitespace = m.group();
-		List<DLBContextTranslation> transList = exactTranslations.get(
+		List<ContextTranslation> transList = exactTranslations.get(
 				text.translatable().toString().trim());
 		if (transList == null) {
 			transList = normalizedTranslations.get(getNormalizedText(
@@ -147,7 +147,7 @@ public class DLBTranslator {
 		}
 		if (transList == null)
 			return;
-		DLBTranslatable translation = findContextTranslation(text, transList);
+		Translatable translation = findContextTranslation(text, transList);
 		DLBNodeBody body = text.translatable().getParent();
 		List<DLBNodeBody.Segment> bodySegments = new ArrayList<>(
 				body.getSegments());
@@ -175,15 +175,15 @@ public class DLBTranslator {
 		}
 	}
 
-	private DLBTranslatable findContextTranslation(
-			DLBSourceTranslatable source,
-			List<DLBContextTranslation> transList) {
-		DLBTranslationContext.Gender speakerGender = getGenderForSpeaker(
+	private Translatable findContextTranslation(
+			SourceTranslatable source,
+			List<ContextTranslation> transList) {
+		TranslationContext.Gender speakerGender = getGenderForSpeaker(
 				source.speaker());
-		DLBTranslationContext.Gender addresseeGender = getGenderForSpeaker(
+		TranslationContext.Gender addresseeGender = getGenderForSpeaker(
 				source.addressee());
-		List<DLBContextTranslation> prevFilter = transList;
-		List<DLBContextTranslation> filtered = filterSpeaker(transList,
+		List<ContextTranslation> prevFilter = transList;
+		List<ContextTranslation> filtered = filterSpeaker(transList,
 				source.speaker());
 		if (filtered.isEmpty())
 			filtered = prevFilter;
@@ -194,19 +194,19 @@ public class DLBTranslator {
 		return filtered.get(0).translation();
 	}
 
-	private DLBTranslationContext.Gender getGenderForSpeaker(String speaker) {
-		if (speaker.equals(DLBSourceTranslatable.USER))
+	private TranslationContext.Gender getGenderForSpeaker(String speaker) {
+		if (speaker.equals(SourceTranslatable.USER))
 			return context.getUserGender();
 		if (context.getAgentGenders().containsKey(speaker))
 			return context.getAgentGenders().get(speaker);
 		return context.getDefaultAgentGender();
 	}
 
-	private List<DLBContextTranslation> filterSpeaker(
-			List<DLBContextTranslation> terms, String speaker) {
-		List<DLBContextTranslation> result = new ArrayList<>();
+	private List<ContextTranslation> filterSpeaker(
+            List<ContextTranslation> terms, String speaker) {
+		List<ContextTranslation> result = new ArrayList<>();
 		String speakerContext = getSpeakerContext(speaker);
-		for (DLBContextTranslation term : terms) {
+		for (ContextTranslation term : terms) {
 			if (term.context().contains(speakerContext))
 				result.add(term);
 		}
@@ -214,35 +214,35 @@ public class DLBTranslator {
 	}
 
 	private String getSpeakerContext(String speaker) {
-		if (speaker.equals(DLBSourceTranslatable.USER))
+		if (speaker.equals(SourceTranslatable.USER))
 			return "_user";
 		else
 			return speaker;
 	}
 
-	private List<DLBContextTranslation> filterGender(
-			List<DLBContextTranslation> terms,
-			DLBTranslationContext.Gender speakerGender,
-			DLBTranslationContext.Gender addresseeGender) {
-		List<DLBContextTranslation> result = new ArrayList<>();
+	private List<ContextTranslation> filterGender(
+			List<ContextTranslation> terms,
+			TranslationContext.Gender speakerGender,
+			TranslationContext.Gender addresseeGender) {
+		List<ContextTranslation> result = new ArrayList<>();
 		if (speakerGender == null)
-			speakerGender = DLBTranslationContext.Gender.MALE;
+			speakerGender = TranslationContext.Gender.MALE;
 		if (addresseeGender == null)
-			addresseeGender = DLBTranslationContext.Gender.MALE;
-		for (DLBContextTranslation term : terms) {
-			if (speakerGender == DLBTranslationContext.Gender.MALE &&
+			addresseeGender = TranslationContext.Gender.MALE;
+		for (ContextTranslation term : terms) {
+			if (speakerGender == TranslationContext.Gender.MALE &&
 					term.context().contains("female_speaker")) {
 				continue;
 			}
-			if (addresseeGender == DLBTranslationContext.Gender.MALE &&
+			if (addresseeGender == TranslationContext.Gender.MALE &&
 					term.context().contains("female_addressee")) {
 				continue;
 			}
-			if (speakerGender == DLBTranslationContext.Gender.FEMALE &&
+			if (speakerGender == TranslationContext.Gender.FEMALE &&
 					term.context().contains("male_speaker")) {
 				continue;
 			}
-			if (addresseeGender == DLBTranslationContext.Gender.FEMALE &&
+			if (addresseeGender == TranslationContext.Gender.FEMALE &&
 					term.context().contains("male_addressee")) {
 				continue;
 			}

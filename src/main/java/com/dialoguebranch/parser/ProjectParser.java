@@ -42,12 +42,12 @@ import com.dialoguebranch.model.FileType;
 import com.dialoguebranch.model.FileDescriptor;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
-import com.dialoguebranch.i18n.DLBContextTranslation;
-import com.dialoguebranch.i18n.DLBTranslatable;
-import com.dialoguebranch.i18n.DLBTranslationContext;
-import com.dialoguebranch.i18n.DLBTranslationParser;
-import com.dialoguebranch.i18n.DLBTranslationParserResult;
-import com.dialoguebranch.i18n.DLBTranslator;
+import com.dialoguebranch.i18n.ContextTranslation;
+import com.dialoguebranch.i18n.Translatable;
+import com.dialoguebranch.i18n.TranslationContext;
+import com.dialoguebranch.i18n.TranslationParser;
+import com.dialoguebranch.i18n.TranslationParserResult;
+import com.dialoguebranch.i18n.Translator;
 import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.DLBProject;
 
@@ -62,7 +62,7 @@ public class ProjectParser {
 	private final FileLoader fileLoader;
 
 	private final Map<FileDescriptor, Dialogue> dialogues = new LinkedHashMap<>();
-	private final Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>>
+	private final Map<FileDescriptor,Map<Translatable,List<ContextTranslation>>>
 			translations = new LinkedHashMap<>();
 	private final Map<FileDescriptor, Dialogue> translatedDialogues = new LinkedHashMap<>();
 
@@ -107,7 +107,7 @@ public class ProjectParser {
 		}
 		project.setSourceDialogues(sourceDialogues);
 
-		Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>> dlgTranslations =
+		Map<FileDescriptor,Map<Translatable,List<ContextTranslation>>> dlgTranslations =
 				new LinkedHashMap<>();
 		for (FileDescriptor fileDescription : translations.keySet()) {
 			dlgTranslations.put(fileDescription, translations.get(fileDescription));
@@ -178,7 +178,7 @@ public class ProjectParser {
 					fileDescription));
 				continue;
 			}
-			DLBTranslationParserResult transParseResult = parseTranslationFile(fileDescription);
+			TranslationParserResult transParseResult = parseTranslationFile(fileDescription);
 			if (!transParseResult.getParseErrors().isEmpty()) {
 				getParseErrors(readResult, fileDescription).addAll(
 						transParseResult.getParseErrors());
@@ -235,8 +235,8 @@ public class ProjectParser {
 						"No source dialogue found for translation: " + fileDescription));
 				continue;
 			}
-			DLBTranslator translator = new DLBTranslator(
-					new DLBTranslationContext(), translations.get(fileDescription));
+			Translator translator = new Translator(
+					new TranslationContext(), translations.get(fileDescription));
 			Dialogue translated = translator.translate(source);
 			translatedDialogues.put(fileDescription, translated);
 		}
@@ -276,10 +276,10 @@ public class ProjectParser {
 		}
 	}
 
-	private DLBTranslationParserResult parseTranslationFile(FileDescriptor description)
+	private TranslationParserResult parseTranslationFile(FileDescriptor description)
 			throws IOException {
 		try (Reader reader = fileLoader.openFile(description)) {
-			return DLBTranslationParser.parse(reader);
+			return TranslationParser.parse(reader);
 		}
 	}
 

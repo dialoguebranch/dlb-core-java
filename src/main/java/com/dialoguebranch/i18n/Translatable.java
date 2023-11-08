@@ -42,31 +42,31 @@ import java.util.List;
  * InputCommand}.</p>
  *
  * <p>Instances of this class can be obtained from {@link
- * DLBTranslatableExtractor DLBTranslatableExtractor} or {@link
- * DLBTranslationParser WDLBTranslationParser}.</p>
+ * TranslatableExtractor TranslatableExtractor} or {@link
+ * TranslationParser WDLBTranslationParser}.</p>
  *
  * @author Dennis Hofs (RRD)
  */
-public class DLBTranslatable {
+public class Translatable {
 	private final DLBNodeBody parent;
 	private final List<DLBNodeBody.Segment> segments;
 
 	/**
-	 * Constructs a new {@link DLBTranslatable}.
+	 * Constructs a new {@link Translatable}.
 	 *
-	 * @param parent the parent (used in {@link DLBTranslator})
+	 * @param parent the parent (used in {@link Translator})
 	 * @param segments the segments
 	 */
-	public DLBTranslatable(DLBNodeBody parent,
-						   List<DLBNodeBody.Segment> segments) {
+	public Translatable(DLBNodeBody parent,
+                        List<DLBNodeBody.Segment> segments) {
 		this.parent = parent;
 		this.segments = segments;
 	}
 
 	/**
-	 * Returns the parent (used in {@link DLBTranslator}).
+	 * Returns the parent (used in {@link Translator}).
 	 *
-	 * @return the parent (used in {@link DLBTranslator})
+	 * @return the parent (used in {@link Translator})
 	 */
 	public DLBNodeBody getParent() {
 		return parent;
@@ -92,7 +92,7 @@ public class DLBTranslatable {
 			return false;
 		if (obj.getClass() != getClass())
 			return false;
-		DLBTranslatable other = (DLBTranslatable)obj;
+		Translatable other = (Translatable)obj;
 		return toString().equals(other.toString());
 	}
 

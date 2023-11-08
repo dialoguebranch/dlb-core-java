@@ -51,7 +51,7 @@ import java.util.*;
 public class POEditorTools {
 
 	/**
-	 * Takes a Key-Value JSON export from POEditor and generates a set of {@link DLBTranslationFile} objects for
+	 * Takes a Key-Value JSON export from POEditor and generates a set of {@link TranslationFile} objects for
 	 * each different dialogue found in the JSON file. The input JSON-file has the following structure:
 	 * {
 	 *     "dialogue-name Speaker": {
@@ -67,34 +67,34 @@ public class POEditorTools {
 	 *
 	 * @param jsonFile a {@link File} object pointing to a Key-Value-JSON export from POEditor with the format as defined
 	 *                 above.
-	 * @return a mapping from {@link String}s (dialogue names) to {@link DLBTranslationFile} objects.
+	 * @return a mapping from {@link String}s (dialogue names) to {@link TranslationFile} objects.
 	 * @throws IOException in case any error occurs in parsing the JSON from the input file.
 	 */
-	public Map<String, DLBTranslationFile> generateDLBTranslationFilesFromPOEditorExport(File jsonFile) throws IOException {
+	public Map<String, TranslationFile> generateDLBTranslationFilesFromPOEditorExport(File jsonFile) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		TypeReference<Map<String, Map<String, String>>> mapType = new TypeReference<>(){};
 		Map<String, Map<String,String>> terms = mapper.readValue(jsonFile, mapType);
 
-		Map<String, DLBTranslationFile> dlbTranslationFiles = new HashMap<>();
+		Map<String, TranslationFile> dlbTranslationFiles = new HashMap<>();
 
 		// Iterate over all contexts available in the JSON body
 		for (String contextString : terms.keySet()) {
 			String dialogueName = contextString.split(" ")[0];
 			String speakerName = contextString.split(" ")[1];
 
-			DLBTranslationFile DLBTranslationFile;
+			TranslationFile translationFile;
 			if (dlbTranslationFiles.containsKey(dialogueName)) {
-				DLBTranslationFile = dlbTranslationFiles.get(dialogueName);
+				translationFile = dlbTranslationFiles.get(dialogueName);
 			} else {
-				DLBTranslationFile = new DLBTranslationFile(dialogueName);
-				dlbTranslationFiles.put(dialogueName, DLBTranslationFile);
+				translationFile = new TranslationFile(dialogueName);
+				dlbTranslationFiles.put(dialogueName, translationFile);
 			}
 
 			Map<String, String> termsMap = terms.get(contextString);
 			for (String term : termsMap.keySet()) {
 				String translation = termsMap.get(term);
-				DLBTranslationFile.addTerm(speakerName, term, translation);
+				translationFile.addTerm(speakerName, term, translation);
 			}
 
 		}
@@ -102,27 +102,27 @@ public class POEditorTools {
 	}
 
 	/**
-	 * Generates a {@link List} of {@link DLBTranslationTerm}s from a .dlb script located at the given {@link File} location.
+	 * Generates a {@link List} of {@link TranslationTerm}s from a .dlb script located at the given {@link File} location.
 	 * @param dlbScriptFile a {@link File} link to a .dlb script.
-	 * @return all translatable terms as a {@link List} of {@link DLBTranslationTerm}s
+	 * @return all translatable terms as a {@link List} of {@link TranslationTerm}s
 	 * @throws IOException in case of an IO error when reading in the .dlb script
 	 */
-	public List<DLBTranslationTerm> extractTranslationTermsFromDLBScript(File dlbScriptFile) throws IOException {
+	public List<TranslationTerm> extractTranslationTermsFromDLBScript(File dlbScriptFile) throws IOException {
 		// Read in the dialogue from the .dlb script file
 		Dialogue dialogue = readDialogueFile(dlbScriptFile);
 
 		System.out.println("===== Processing: " + dialogue.getDialogueName() + " with " + dialogue.getNodeCount() + " nodes. =====");
 
-		ArrayList<DLBTranslationTerm> terms = new ArrayList<>();
+		ArrayList<TranslationTerm> terms = new ArrayList<>();
 
 
 		for (DLBNode node : dialogue.getNodes()) {
-			DLBTranslatableExtractor extractor = new DLBTranslatableExtractor();
-			List<DLBSourceTranslatable> translatables = extractor.extractFromBody(
-					node.getHeader().getSpeaker(), DLBSourceTranslatable.USER, node.getBody());
+			TranslatableExtractor extractor = new TranslatableExtractor();
+			List<SourceTranslatable> translatables = extractor.extractFromBody(
+					node.getHeader().getSpeaker(), SourceTranslatable.USER, node.getBody());
 
-			for(DLBSourceTranslatable translatable : translatables) {
-				DLBTranslationTerm term = new DLBTranslationTerm(translatable.translatable().toExportFriendlyString(),dialogue.getDialogueName()+" "+translatable.speaker());
+			for(SourceTranslatable translatable : translatables) {
+				TranslationTerm term = new TranslationTerm(translatable.translatable().toExportFriendlyString(),dialogue.getDialogueName()+" "+translatable.speaker());
 				terms.add(term);
 			}
 
@@ -175,13 +175,13 @@ public class POEditorTools {
 	}
 
 	/**
-	 * Takes a given {@link List} of {@link DLBTranslationTerm}s and writes them to the given {@code exportFile} in
+	 * Takes a given {@link List} of {@link TranslationTerm}s and writes them to the given {@code exportFile} in
 	 * JSON format.
-	 * @param terms the {@link List} of {@link DLBTranslationTerm}s to write to file.
+	 * @param terms the {@link List} of {@link TranslationTerm}s to write to file.
 	 * @param exportFile the file to write to.
 	 * @throws IOException in case of any write error.
 	 */
-	public void writeDLBTranslationTermsToJSON(List<DLBTranslationTerm> terms, File exportFile) throws IOException {
+	public void writeDLBTranslationTermsToJSON(List<TranslationTerm> terms, File exportFile) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(exportFile, terms);
@@ -223,11 +223,11 @@ public class POEditorTools {
 				}
 
 				// A list for collection all terms from all files
-				List<DLBTranslationTerm> allTerms = new ArrayList<>();
+				List<TranslationTerm> allTerms = new ArrayList<>();
 
 				for(File dialogueFile : allDialogues) {
 					try {
-						List<DLBTranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
+						List<TranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
 						allTerms.addAll(terms);
 					} catch (IOException e) {
 						throw new RuntimeException(e);
@@ -269,7 +269,7 @@ public class POEditorTools {
 
 				for(File dialogueFile : allDialogues) {
 					try {
-						List<DLBTranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
+						List<TranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
 						tools.writeDLBTranslationTermsToJSON(terms,new File(outputDirectory+File.separator+dialogueFile.getName()+".json"));
 					} catch (IOException e) {
 						throw new RuntimeException(e);
@@ -285,14 +285,14 @@ public class POEditorTools {
 
 				File poEditorKeyValueFile = new File(poEditorKeyValueFileName);
 				try {
-					Map<String, DLBTranslationFile> dlbTranslationFiles = tools.generateDLBTranslationFilesFromPOEditorExport(poEditorKeyValueFile);
+					Map<String, TranslationFile> dlbTranslationFiles = tools.generateDLBTranslationFilesFromPOEditorExport(poEditorKeyValueFile);
 					System.out.println("Successfully read translations for "+dlbTranslationFiles.keySet().size()+" files.");
 					System.out.println("Please choose a directory where you would like to store the DialogueBranch Translation files.");
 					outputDirectory = tools.getOutputDirectoryInteractive();
 
 					// The output directory should exist at this point...
 					for (String s : dlbTranslationFiles.keySet()) {
-						DLBTranslationFile wtf = dlbTranslationFiles.get(s);
+						TranslationFile wtf = dlbTranslationFiles.get(s);
 						wtf.writeToFile(outputDirectory);
 					}
 				} catch(IOException e) {

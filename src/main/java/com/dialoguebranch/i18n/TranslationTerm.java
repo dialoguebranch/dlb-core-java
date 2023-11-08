@@ -27,13 +27,36 @@
 
 package com.dialoguebranch.i18n;
 
-import java.util.Set;
+public class TranslationTerm {
 
-/**
- * This class models the translation of a phrase in a DialogueBranch dialogue, along with
- * a context set. Supported contexts are: male_speaker, female_speaker,
- * male_addressee, female_addressee.
- *
- * @author Dennis Hofs (RRD)
- */
-public record DLBContextTranslation(Set<String> context, DLBTranslatable translation) { }
+	public String term;
+	public String context;
+
+	public TranslationTerm() {}
+
+	public TranslationTerm(String term, String context) {
+		this.term = term;
+		this.context = context;
+	}
+
+	public String getTerm () {
+		return this.term;
+	}
+
+	public void setTerm (String term) {
+		this.term = term;
+	}
+
+	public String getContext () {
+		return this.context;
+	}
+
+	public void setContext () {
+		this.context = context;
+	}
+
+	@Override
+	public String toString() {
+		return "Term: '" + this.term + "' context: '" + this.context + "'.";
+	}
+}

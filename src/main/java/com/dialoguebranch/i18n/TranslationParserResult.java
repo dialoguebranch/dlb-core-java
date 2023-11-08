@@ -27,7 +27,39 @@
 
 package com.dialoguebranch.i18n;
 
-public record DLBSourceTranslatable(String speaker, String addressee,
-									DLBTranslatable translatable) {
-	public static final String USER = "_user";
+import nl.rrd.utils.exception.ParseException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class TranslationParserResult {
+	private Map<Translatable,List<ContextTranslation>> translations = null;
+	private List<ParseException> parseErrors = new ArrayList<>();
+	private List<String> warnings = new ArrayList<>();
+
+	public Map<Translatable,List<ContextTranslation>> getTranslations() {
+		return translations;
+	}
+
+	public void setTranslations(
+			Map<Translatable,List<ContextTranslation>> translations) {
+		this.translations = translations;
+	}
+
+	public List<ParseException> getParseErrors() {
+		return parseErrors;
+	}
+
+	public void setParseErrors(List<ParseException> parseErrors) {
+		this.parseErrors = parseErrors;
+	}
+
+	public List<String> getWarnings() {
+		return warnings;
+	}
+
+	public void setWarnings(List<String> warnings) {
+		this.warnings = warnings;
+	}
 }

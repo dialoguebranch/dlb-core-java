@@ -27,8 +27,8 @@
 
 package com.dialoguebranch.parser;
 
-import com.dialoguebranch.i18n.DLBContextTranslation;
-import com.dialoguebranch.i18n.DLBTranslatable;
+import com.dialoguebranch.i18n.ContextTranslation;
+import com.dialoguebranch.i18n.Translatable;
 import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.FileDescriptor;
 import nl.rrd.utils.exception.ParseException;
@@ -219,7 +219,7 @@ public class ProjectParserResult {
 					.append("\n");
 		}
 
-		Map<FileDescriptor,Map<DLBTranslatable,List<DLBContextTranslation>>> translations =
+		Map<FileDescriptor,Map<Translatable,List<ContextTranslation>>> translations =
 				project.getTranslations();
 		result.append("Number of Translation Scripts: ")
 				.append(translations.size())

@@ -37,8 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link DLBTranslationFile} is an object representation of a JSON file that contains
- * translations for a single .dlb script. The body of a {@link DLBTranslationFile} consists of a
+ * A {@link TranslationFile} is an object representation of a JSON file that contains
+ * translations for a single .dlb script. The body of a {@link TranslationFile} consists of a
  * mapping from speakerNames to a map of {term,translation}-pairs, e.g.:
  *
  * <pre>
@@ -56,14 +56,14 @@ import java.util.Map;
  * @author Harm op den Akker (Fruit Tree Labs)
  * @author Dennis Hofs (Roessingh Research and Development)
  */
-public class DLBTranslationFile {
+public class TranslationFile {
 
 	private final String fileName;
 	private final Map<String, Map<String,String>> contentMap;
 
 	// ----- Constructors
 
-	public DLBTranslationFile(String fileName) {
+	public TranslationFile(String fileName) {
 		this.fileName = fileName;
 		this.contentMap = new HashMap<>();
 	}
@@ -92,7 +92,7 @@ public class DLBTranslationFile {
 	}
 
 	/**
-	 * Writes this {@link DLBTranslationFile} to a file, specified by {@link #getFileName()}
+	 * Writes this {@link TranslationFile} to a file, specified by {@link #getFileName()}
 	 * in the given {@code directory}.
 	 * @param directory the directory in which to store the .json file output
 	 * @throws IOException in case the given directory is not a directory, or another file writing

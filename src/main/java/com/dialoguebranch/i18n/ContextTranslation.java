@@ -27,39 +27,13 @@
 
 package com.dialoguebranch.i18n;
 
-import nl.rrd.utils.exception.ParseException;
+import java.util.Set;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-public class DLBTranslationParserResult {
-	private Map<DLBTranslatable,List<DLBContextTranslation>> translations = null;
-	private List<ParseException> parseErrors = new ArrayList<>();
-	private List<String> warnings = new ArrayList<>();
-
-	public Map<DLBTranslatable,List<DLBContextTranslation>> getTranslations() {
-		return translations;
-	}
-
-	public void setTranslations(
-			Map<DLBTranslatable,List<DLBContextTranslation>> translations) {
-		this.translations = translations;
-	}
-
-	public List<ParseException> getParseErrors() {
-		return parseErrors;
-	}
-
-	public void setParseErrors(List<ParseException> parseErrors) {
-		this.parseErrors = parseErrors;
-	}
-
-	public List<String> getWarnings() {
-		return warnings;
-	}
-
-	public void setWarnings(List<String> warnings) {
-		this.warnings = warnings;
-	}
-}
+/**
+ * This class models the translation of a phrase in a DialogueBranch dialogue, along with
+ * a context set. Supported contexts are: male_speaker, female_speaker,
+ * male_addressee, female_addressee.
+ *
+ * @author Dennis Hofs (RRD)
+ */
+public record ContextTranslation(Set<String> context, Translatable translation) { }

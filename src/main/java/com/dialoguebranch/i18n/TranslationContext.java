@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * A {@link DLBTranslationContext} describes relevant parameters defining the context in which
+ * A {@link TranslationContext} describes relevant parameters defining the context in which
  * dialogue statements should be translated from source- to target languages.
  *
  * <p>This currently holds the genders, as either {@link Gender#MALE} or {@link Gender#FEMALE},
@@ -44,7 +44,7 @@ import java.util.Map;
  * @author Dennis Hofs
  * @author Harm op den Akker
  */
-public class DLBTranslationContext {
+public class TranslationContext {
 
 	public enum Gender {
 		MALE,
@@ -61,18 +61,18 @@ public class DLBTranslationContext {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an empty instance of a {@link DLBTranslationContext}.
+	 * Creates an empty instance of a {@link TranslationContext}.
 	 */
-	public DLBTranslationContext() { }
+	public TranslationContext() { }
 
 	/**
-	 * Creates an instance of a {@link DLBTranslationContext} with a given {@code userGender} and
+	 * Creates an instance of a {@link TranslationContext} with a given {@code userGender} and
 	 * a mapping of {@code agentGenders}.
 	 * @param userGender the {@link Gender} of the user (person interacting with the dialogues).
 	 * @param agentGenders a mapping of agent-names to {@link Gender}s, specifying the genders of
 	 *                     the agents involved in a dialogue or dialogue set.
 	 */
-	public DLBTranslationContext(Gender userGender, Map<String, Gender> agentGenders) {
+	public TranslationContext(Gender userGender, Map<String, Gender> agentGenders) {
 		this.userGender = userGender;
 		this.agentGenders = agentGenders;
 	}
@@ -92,7 +92,7 @@ public class DLBTranslationContext {
 
 	/**
 	 * Sets the {@link Gender} that is assumed for agents if no specific gender is given in
-	 * {@link DLBTranslationContext#getAgentGenders()}.
+	 * {@link TranslationContext#getAgentGenders()}.
 	 * @param defaultAgentGender the default {@link Gender} for agents.
 	 */
 	public void setDefaultAgentGender(Gender defaultAgentGender) {

@@ -27,36 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
-public class DLBTranslationTerm {
-
-	public String term;
-	public String context;
-
-	public DLBTranslationTerm() {}
-
-	public DLBTranslationTerm(String term, String context) {
-		this.term = term;
-		this.context = context;
-	}
-
-	public String getTerm () {
-		return this.term;
-	}
-
-	public void setTerm (String term) {
-		this.term = term;
-	}
-
-	public String getContext () {
-		return this.context;
-	}
-
-	public void setContext () {
-		this.context = context;
-	}
-
-	@Override
-	public String toString() {
-		return "Term: '" + this.term + "' context: '" + this.context + "'.";
-	}
+public record SourceTranslatable(String speaker, String addressee,
+                                 Translatable translatable) {
+	public static final String USER = "_user";
 }

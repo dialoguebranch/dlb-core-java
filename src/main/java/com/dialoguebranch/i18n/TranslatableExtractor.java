@@ -47,15 +47,15 @@ import java.util.List;
  *
  * @author Dennis Hofs (RRD)
  */
-public class DLBTranslatableExtractor {
-	public List<DLBSourceTranslatable> extractFromNode(DLBNode node) {
+public class TranslatableExtractor {
+	public List<SourceTranslatable> extractFromNode(DLBNode node) {
 		return extractFromBody(node.getHeader().getSpeaker(),
-				DLBSourceTranslatable.USER, node.getBody());
+				SourceTranslatable.USER, node.getBody());
 	}
 
-	public List<DLBSourceTranslatable> extractFromBody(String speaker,
-													   String addressee, DLBNodeBody body) {
-		List<DLBSourceTranslatable> result = new ArrayList<>();
+	public List<SourceTranslatable> extractFromBody(String speaker,
+                                                    String addressee, DLBNodeBody body) {
+		List<SourceTranslatable> result = new ArrayList<>();
 		List<DLBNodeBody.Segment> current = new ArrayList<>();
 		for (int i = 0; i < body.getSegments().size(); i++) {
 			DLBNodeBody.Segment segment = body.getSegments().get(i);
@@ -95,9 +95,9 @@ public class DLBTranslatableExtractor {
 		return result;
 	}
 
-	private List<DLBSourceTranslatable> getTranslatableSegmentsFromIfCommand(
+	private List<SourceTranslatable> getTranslatableSegmentsFromIfCommand(
 			String speaker, String addressee, IfCommand ifCmd) {
-		List<DLBSourceTranslatable> result = new ArrayList<>();
+		List<SourceTranslatable> result = new ArrayList<>();
 		for (IfCommand.Clause clause : ifCmd.getIfClauses()) {
 			result.addAll(extractFromBody(speaker, addressee,
 					clause.getStatement()));
@@ -109,9 +109,9 @@ public class DLBTranslatableExtractor {
 		return result;
 	}
 
-	private List<DLBSourceTranslatable> getTranslatableSegmentsFromRandomCommand(
+	private List<SourceTranslatable> getTranslatableSegmentsFromRandomCommand(
 			String speaker, String addressee, RandomCommand rndCmd) {
-		List<DLBSourceTranslatable> result = new ArrayList<>();
+		List<SourceTranslatable> result = new ArrayList<>();
 		for (RandomCommand.Clause clause : rndCmd.getClauses()) {
 			result.addAll(extractFromBody(speaker, addressee,
 					clause.getStatement()));
@@ -122,11 +122,11 @@ public class DLBTranslatableExtractor {
 	private void finishCurrentTranslatableSegment(String speaker,
 			String addressee, DLBNodeBody parent,
 			List<DLBNodeBody.Segment> current,
-			List<DLBSourceTranslatable> translatables) {
+			List<SourceTranslatable> translatables) {
 		if (hasContent(current)) {
 			List<DLBNodeBody.Segment> segments = new ArrayList<>(current);
-			DLBSourceTranslatable translatable = new DLBSourceTranslatable(
-					speaker, addressee, new DLBTranslatable(parent, segments));
+			SourceTranslatable translatable = new SourceTranslatable(
+					speaker, addressee, new Translatable(parent, segments));
 			translatables.add(translatable);
 		}
 		current.clear();

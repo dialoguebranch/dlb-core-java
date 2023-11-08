@@ -50,7 +50,7 @@ import java.util.*;
  * <ul>
  *   <li>Key and value are strings. The key is a translatable in one language, and the value is a
  *   translatable in another language. A translatable should be the string representation of a
- *   {@link DLBTranslatable}. That is a text that may include variables and &lt;&lt;input&gt;&gt;
+ *   {@link Translatable}. That is a text that may include variables and &lt;&lt;input&gt;&gt;
  *   commands.</li>
  *   <li>The key is a string the value is a JSON object. In this case the key is a context string,
  *   and the value contains translatable key-value pairs.</li>
@@ -62,30 +62,30 @@ import java.util.*;
  *
  * @author Dennis Hofs (RRD)
  */
-public class DLBTranslationParser {
-	public static DLBTranslationParserResult parse(URL url)
+public class TranslationParser {
+	public static TranslationParserResult parse(URL url)
 			throws IOException {
 		try (InputStream input = url.openStream()) {
 			return parse(input);
 		}
 	}
 
-	public static DLBTranslationParserResult parse(File file)
+	public static TranslationParserResult parse(File file)
 			throws IOException {
 		try (InputStream input = new FileInputStream(file)) {
 			return parse(input);
 		}
 	}
 
-	public static DLBTranslationParserResult parse(InputStream input)
+	public static TranslationParserResult parse(InputStream input)
 			throws IOException{
 		return parse(new InputStreamReader(input, StandardCharsets.UTF_8));
 	}
 
-	public static DLBTranslationParserResult parse(Reader reader)
+	public static TranslationParserResult parse(Reader reader)
 			throws IOException {
-		DLBTranslationParserResult result = new DLBTranslationParserResult();
-		Map<DLBTranslatable,List<DLBContextTranslation>> translations =
+		TranslationParserResult result = new TranslationParserResult();
+		Map<Translatable,List<ContextTranslation>> translations =
 				new LinkedHashMap<>();
 		String json = FileUtils.readFileString(reader);
 		if (json.trim().isEmpty()) {
@@ -107,8 +107,8 @@ public class DLBTranslationParser {
 	}
 
 	private static void parse(Set<String> context, Map<String,?> map,
-			Map<DLBTranslatable,List<DLBContextTranslation>> translations,
-			DLBTranslationParserResult parseResult) {
+			Map<Translatable,List<ContextTranslation>> translations,
+			TranslationParserResult parseResult) {
 		for (String key : map.keySet()) {
 			Object value = map.get(key);
 			if (value instanceof String) {
@@ -122,10 +122,10 @@ public class DLBTranslationParser {
 
 	private static void parseTranslatable(Set<String> context, String key,
 			String value,
-			Map<DLBTranslatable,List<DLBContextTranslation>> translations,
-			DLBTranslationParserResult parseResult) {
+			Map<Translatable,List<ContextTranslation>> translations,
+			TranslationParserResult parseResult) {
 		boolean success = true;
-		DLBTranslatable source = null;
+		Translatable source = null;
 		try {
 			source = parseTranslationString(key);
 		} catch (ParseException ex) {
@@ -147,7 +147,7 @@ public class DLBTranslationParser {
 					"Empty translation value for key \"%s\"", key));
 			return;
 		}
-		DLBTranslatable transValue = null;
+		Translatable transValue = null;
 		try {
 			transValue = parseTranslationString(value);
 		} catch (ParseException ex) {
@@ -157,23 +157,23 @@ public class DLBTranslationParser {
 			success = false;
 		}
 		if (success) {
-			List<DLBContextTranslation> transList = translations.get(source);
+			List<ContextTranslation> transList = translations.get(source);
 			if (transList == null) {
 				transList = new ArrayList<>();
 				translations.put(source, transList);
 			}
-			transList.add(new DLBContextTranslation(context, transValue));
+			transList.add(new ContextTranslation(context, transValue));
 		}
 	}
 
-	private static void checkDuplicateTranslation(DLBTranslatable source,
+	private static void checkDuplicateTranslation(Translatable source,
 												  Set<String> context,
-												  Map<DLBTranslatable,List<DLBContextTranslation>> translations)
+												  Map<Translatable,List<ContextTranslation>> translations)
 			throws ParseException {
 		if (!translations.containsKey(source))
 			return;
-		List<DLBContextTranslation> sourceTrans = translations.get(source);
-		for (DLBContextTranslation trans : sourceTrans) {
+		List<ContextTranslation> sourceTrans = translations.get(source);
+		for (ContextTranslation trans : sourceTrans) {
 			if (trans.context().equals(context)) {
 				throw new ParseException(String.format(
 						"Found duplicate translation \"%s\" with context %s",
@@ -183,8 +183,8 @@ public class DLBTranslationParser {
 	}
 
 	private static void parseContextMap(String key, Object value,
-			Map<DLBTranslatable,List<DLBContextTranslation>> translations,
-			DLBTranslationParserResult parseResult) {
+			Map<Translatable,List<ContextTranslation>> translations,
+			TranslationParserResult parseResult) {
 		String contextListStr = key.trim();
 		Set<String> context = new LinkedHashSet<>();
 		if (!contextListStr.isEmpty()) {
@@ -204,7 +204,7 @@ public class DLBTranslationParser {
 		parse(context, map, translations, parseResult);
 	}
 
-	private static DLBTranslatable parseTranslationString(String translation)
+	private static Translatable parseTranslationString(String translation)
 			throws ParseException {
 		BodyTokenizer tokenizer = new BodyTokenizer();
 		List<BodyToken> tokens;
@@ -224,11 +224,11 @@ public class DLBTranslationParser {
 					"Invalid translation string: " + translation +
 					": " + ex.getError());
 		}
-		DLBTranslatableExtractor extractor = new DLBTranslatableExtractor();
-		List<DLBSourceTranslatable> sourceTranslatables =
+		TranslatableExtractor extractor = new TranslatableExtractor();
+		List<SourceTranslatable> sourceTranslatables =
 				extractor.extractFromBody(null, null, body);
-		List<DLBTranslatable> translatables = new ArrayList<>();
-		for (DLBSourceTranslatable sourceTranslatable : sourceTranslatables) {
+		List<Translatable> translatables = new ArrayList<>();
+		for (SourceTranslatable sourceTranslatable : sourceTranslatables) {
 			translatables.add(sourceTranslatable.translatable());
 		}
 		if (translatables.size() == 0) {
