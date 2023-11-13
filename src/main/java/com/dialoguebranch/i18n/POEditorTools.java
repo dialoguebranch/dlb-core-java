@@ -70,13 +70,13 @@ public class POEditorTools {
 	 * @return a mapping from {@link String}s (dialogue names) to {@link TranslationFile} objects.
 	 * @throws IOException in case any error occurs in parsing the JSON from the input file.
 	 */
-	public Map<String, TranslationFile> generateDLBTranslationFilesFromPOEditorExport(File jsonFile) throws IOException {
+	public Map<String, TranslationFile> generateTranslationFilesFromPOEditorExport(File jsonFile) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		TypeReference<Map<String, Map<String, String>>> mapType = new TypeReference<>(){};
 		Map<String, Map<String,String>> terms = mapper.readValue(jsonFile, mapType);
 
-		Map<String, TranslationFile> dlbTranslationFiles = new HashMap<>();
+		Map<String, TranslationFile> translationFiles = new HashMap<>();
 
 		// Iterate over all contexts available in the JSON body
 		for (String contextString : terms.keySet()) {
@@ -84,11 +84,11 @@ public class POEditorTools {
 			String speakerName = contextString.split(" ")[1];
 
 			TranslationFile translationFile;
-			if (dlbTranslationFiles.containsKey(dialogueName)) {
-				translationFile = dlbTranslationFiles.get(dialogueName);
+			if (translationFiles.containsKey(dialogueName)) {
+				translationFile = translationFiles.get(dialogueName);
 			} else {
 				translationFile = new TranslationFile(dialogueName);
-				dlbTranslationFiles.put(dialogueName, translationFile);
+				translationFiles.put(dialogueName, translationFile);
 			}
 
 			Map<String, String> termsMap = terms.get(contextString);
@@ -98,7 +98,7 @@ public class POEditorTools {
 			}
 
 		}
-		return dlbTranslationFiles;
+		return translationFiles;
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class POEditorTools {
 	 * @param exportFile the file to write to.
 	 * @throws IOException in case of any write error.
 	 */
-	public void writeDLBTranslationTermsToJSON(List<TranslationTerm> terms, File exportFile) throws IOException {
+	public void writeTranslationTermsToJSON(List<TranslationTerm> terms, File exportFile) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(exportFile, terms);
@@ -241,7 +241,7 @@ public class POEditorTools {
 				String poEditorTermsExportFileName = userInputScanner.nextLine();
 
 				try {
-					tools.writeDLBTranslationTermsToJSON(allTerms,new File(poEditorTermsExportFileName));
+					tools.writeTranslationTermsToJSON(allTerms,new File(poEditorTermsExportFileName));
 				} catch (
 						IOException e) {
 					throw new RuntimeException(e);
@@ -270,7 +270,7 @@ public class POEditorTools {
 				for(File dialogueFile : allDialogues) {
 					try {
 						List<TranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
-						tools.writeDLBTranslationTermsToJSON(terms,new File(outputDirectory+File.separator+dialogueFile.getName()+".json"));
+						tools.writeTranslationTermsToJSON(terms,new File(outputDirectory+File.separator+dialogueFile.getName()+".json"));
 					} catch (IOException e) {
 						throw new RuntimeException(e);
 					}
@@ -285,7 +285,7 @@ public class POEditorTools {
 
 				File poEditorKeyValueFile = new File(poEditorKeyValueFileName);
 				try {
-					Map<String, TranslationFile> dlbTranslationFiles = tools.generateDLBTranslationFilesFromPOEditorExport(poEditorKeyValueFile);
+					Map<String, TranslationFile> dlbTranslationFiles = tools.generateTranslationFilesFromPOEditorExport(poEditorKeyValueFile);
 					System.out.println("Successfully read translations for "+dlbTranslationFiles.keySet().size()+" files.");
 					System.out.println("Please choose a directory where you would like to store the DialogueBranch Translation files.");
 					outputDirectory = tools.getOutputDirectoryInteractive();

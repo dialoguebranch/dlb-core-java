@@ -117,7 +117,7 @@ public class ActiveDialogue {
 	 * Returns the {@link VariableStore} associated with this {@link ActiveDialogue}.
 	 * @return the {@link VariableStore} associated with this {@link ActiveDialogue}.
 	 */
-	public VariableStore getDLBVariableStore() {
+	public VariableStore getVariableStore() {
 		return variableStore;
 	}
 
@@ -127,7 +127,7 @@ public class ActiveDialogue {
 	 * @param variableStore the {@link VariableStore} used to store/retrieve parameters for
 	 *                         this {@link ActiveDialogue}.
 	 */
-	public void setDLBVariableStore(VariableStore variableStore) {
+	public void setVariableStore(VariableStore variableStore) {
 		this.variableStore = variableStore;
 	}
 
@@ -181,7 +181,7 @@ public class ActiveDialogue {
 								startNodeId, dialogueDefinition.getDialogueName()));
 			}
 		}
-		this.currentNode = executeDLBNode(nextNode,eventTime);
+		this.currentNode = executeNode(nextNode,eventTime);
 		return currentNode;
 	}
 	
@@ -230,7 +230,7 @@ public class ActiveDialogue {
 		if (!nodePointer.getNodeId().equalsIgnoreCase(Constants.DLB_NODE_END_ID))
 			nextNode = dialogueDefinition.getNodeById(nodePointer.getNodeId());
 		this.currentNode = nextNode;
-		if (nextNode != null) this.currentNode = executeDLBNode(nextNode, eventTime);
+		if (nextNode != null) this.currentNode = executeNode(nextNode, eventTime);
 		return this.currentNode;
 	}
 
@@ -300,8 +300,7 @@ public class ActiveDialogue {
 	 * @return the executed {@link Node}.
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public Node executeDLBNode(Node node, ZonedDateTime eventTime)
-			throws EvaluationException {
+	public Node executeNode(Node node, ZonedDateTime eventTime) throws EvaluationException {
 		Node processedNode = new Node();
 		processedNode.setHeader(node.getHeader());
 		NodeBody processedBody = new NodeBody();
@@ -328,7 +327,7 @@ public class ActiveDialogue {
 	 * @return the executed {@link Node}
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public Node executeDLBNodeStateless(Node node, ZonedDateTime eventTime)
+	public Node executeNodeStateless(Node node, ZonedDateTime eventTime)
 			throws EvaluationException {
 		Node processedNode = new Node();
 		processedNode.setHeader(node.getHeader());

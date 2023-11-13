@@ -119,7 +119,7 @@ public class DialogueBranchParser implements AutoCloseable {
 		this.dialogue = dialogue;
 		nodePointerTokens = new ArrayList<>();
 		boolean foundNodeError = false;
-		ReadDLBNodeResult readResult;
+		ReadNodeResult readResult;
 		while ((readResult = readNode()) != null) {
 			if (readResult.node != null) {
 				dialogue.addNode(readResult.node);
@@ -146,7 +146,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			LineNumberParseException parseEx = new LineNumberParseException(
 					"Found reply with pointer to non-existing node: " +
 					pointer.getNodeId(), token.getLineNumber(), token.getColNumber());
-			result.getParseErrors().add(createDLBNodeParseException(
+			result.getParseErrors().add(createNodeParseException(
 					pointerToken.nodeTitle(), parseEx));
 		}
 		if (!result.getParseErrors().isEmpty())
@@ -157,7 +157,7 @@ public class DialogueBranchParser implements AutoCloseable {
 		return result;
 	}
 	
-	private static class ReadDLBNodeResult {
+	private static class ReadNodeResult {
 		public Node node = null;
 		public NodeParseException parseException = null;
 		public boolean readNodeEnd = false;
@@ -173,8 +173,8 @@ public class DialogueBranchParser implements AutoCloseable {
 	 * @return the result or null
 	 * @throws IOException if a reading error occurs
 	 */
-	private ReadDLBNodeResult readNode() throws IOException {
-		ReadDLBNodeResult result = new ReadDLBNodeResult();
+	private ReadNodeResult readNode() throws IOException {
+		ReadNodeResult result = new ReadNodeResult();
 		NodeState nodeState = new NodeState(dialogueName);
 		try {
 			boolean inHeader = true;
@@ -229,7 +229,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			result.node = new Node(header, body);
 			return result;
 		} catch (LineNumberParseException ex) {
-			result.parseException = createDLBNodeParseException(
+			result.parseException = createNodeParseException(
 					nodeState.getTitle(), ex);
 			return result;
 		}
@@ -246,14 +246,14 @@ public class DialogueBranchParser implements AutoCloseable {
 	}
 	
 	/**
-	 * Creates a {@link NodeParseException} with message "Error in node ..." If the
-	 * node title is unknown, it can be set to null.
+	 * Creates a {@link NodeParseException} with message "Error in node ..." If the node title is
+	 * unknown, it can be set to null.
 	 * 
 	 * @param nodeTitle the node title or null
 	 * @param ex the parse error
 	 * @return the NodeParseException
 	 */
-	private NodeParseException createDLBNodeParseException(
+	private NodeParseException createNodeParseException(
 			String nodeTitle, LineNumberParseException ex) {
 		String msg = "Error in node";
 		if (nodeTitle != null)

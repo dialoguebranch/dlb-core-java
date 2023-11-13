@@ -41,9 +41,8 @@ import java.util.List;
  * CommandSegment}s where the command is a {@link InputCommand
  * InputCommand}.</p>
  *
- * <p>Instances of this class can be obtained from {@link
- * TranslatableExtractor TranslatableExtractor} or {@link
- * TranslationParser WDLBTranslationParser}.</p>
+ * <p>Instances of this class can be obtained from {@link TranslatableExtractor} or {@link
+ * TranslationParser}.</p>
  *
  * @author Dennis Hofs (RRD)
  */

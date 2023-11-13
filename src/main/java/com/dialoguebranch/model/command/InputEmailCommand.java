@@ -69,7 +69,7 @@ public class InputEmailCommand extends InputCommand {
 
 	@Override
 	public String getStatementLog(VariableStore varStore) {
-		Variable variable = varStore.getDLBVariable(variableName);
+		Variable variable = varStore.getVariable(variableName);
 		Value value = new Value(variable.getValue());
 		return value.toString();
 	}

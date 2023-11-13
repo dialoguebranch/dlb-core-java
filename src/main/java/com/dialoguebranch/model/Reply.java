@@ -41,24 +41,23 @@ import com.dialoguebranch.model.command.ActionCommand;
 
 /**
  * TODO: It may be nice to make Reply Abstract with different implementing subclasses, e.g.
- *       "DLBAutoForwardReply" and "DLBNormalReply".
- * A reply option within a {@link NodeBody}. A reply always has
- * a pointer to the next node when the reply is chosen. This might be a pointer
- * to the end node. The reply usually has a statement that is shown in the UI,
- * but a node may have at most one reply without a statement, which is known as
+ *       "AutoForwardReply" and "NormalReply".
+ * A reply option within a {@link NodeBody}. A reply always has a pointer to the next node when the
+ * reply is chosen. This might be a pointer to the end node. The reply usually has a statement that
+ * is shown in the UI, but a node may have at most one reply without a statement, which is known as
  * an auto-forward reply.
  * 
  * <p>The statement may contain a {@link InputCommand} (see {@link NodeBody}).</p>
  * 
- * <p>The reply may also have commands that should be performed when the reply
- * is chosen. This can be:</p>
+ * <p>The reply may also have commands that should be performed when the reply is chosen. This can
+ * be:</p>
  * 
  * <ul>
  *   <li>{@link ActionCommand}</li>
  *   <li>{@link SetCommand}</li>
  * </ul>
  * 
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class Reply {
@@ -236,8 +235,7 @@ public class Reply {
 		Reply result = new Reply(replyId, processedStatement,
 				nodePointer);
 		for (Command command : commands) {
-			if (command instanceof ActionCommand) {
-				ActionCommand actionCmd = (ActionCommand)command;
+			if (command instanceof ActionCommand actionCmd) {
 				result.addCommand(actionCmd.executeReplyCommand(variables));
 			} else {
 				result.addCommand(command);

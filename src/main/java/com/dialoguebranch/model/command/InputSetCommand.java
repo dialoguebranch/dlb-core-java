@@ -79,7 +79,7 @@ public class InputSetCommand extends InputCommand {
 	public String getStatementLog(VariableStore varStore) {
 		List<String> optionTexts = new ArrayList<>();
 		for (Option option : options) {
-			Variable variable = varStore.getDLBVariable(option.getVariableName());
+			Variable variable = varStore.getVariable(option.getVariableName());
 			Value value = new Value(variable.getValue());
 			if (value.asBoolean())
 				optionTexts.add(option.getText().evaluate(null));

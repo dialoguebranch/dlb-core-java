@@ -163,7 +163,7 @@ public class Project {
 		List<String> result = new ArrayList<>();
 
 		// If no metaData has been defined, scrape languages from the set of available dialogues
-		if(metaData == null || metaData.getDLBLanguageMap() == null) {
+		if(metaData == null || metaData.getLanguageMap() == null) {
 			for(FileDescriptor fileDescription : dialogues.keySet()) {
 				if(!result.contains(fileDescription.getLanguage()))
 					result.add(fileDescription.getLanguage());

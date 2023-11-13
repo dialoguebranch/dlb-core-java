@@ -31,20 +31,20 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * A {@link VariableStore} is an object that stores all DialogueBranch variable values for a
- * given user.
+ * A {@link VariableStore} is an object that stores all DialogueBranch variable values for a given
+ * user.
  * 
- * @author Harm op den Akker
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class VariableStore {
 
-	// Contains the list of all DLBVariables in this store
+	// Contains the list of all Variables in this store
 	private final Map<String, Variable> variables = new HashMap<>();
 
 	// The DialogueBranch user associated with this VariableStore
 	private User user;
 
-	// Contains the list of all DLBVariableChangeListeners that need to be notified for updates
+	// Contains the list of all VariableStoreOnChangeListeners that need to be notified for updates
 	private final List<VariableStoreOnChangeListener> onChangeListeners = new ArrayList<>();
 
 	// --------------------------------------------------------
@@ -125,13 +125,13 @@ public class VariableStore {
 	// -----------------------------------------------------------
 
 	/**
-	 * Retrieves the variable identified by the given {@code name}, or returns
-	 * {@code null} if no such variable is known in this {@link VariableStore}.
+	 * Retrieves the variable identified by the given {@code name}, or returns {@code null} if no
+	 * such variable is known in this {@link VariableStore}.
 	 *
 	 * @param name the name of the variable to retrieve.
 	 * @return the {@link Variable} with the given {@code name}, nor {@code null}.
 	 */
-	public Variable getDLBVariable(String name) {
+	public Variable getVariable(String name) {
 		synchronized (variables) {
 			return variables.get(name);
 		}
@@ -141,25 +141,23 @@ public class VariableStore {
 	 * Returns the contents of this {@link VariableStore} as an array of {@link Variable}s.
 	 * @return the contents of this {@link VariableStore} as an array of {@link Variable}s.
 	 */
-	public Variable[] getDLBVariables() {
+	public Variable[] getVariables() {
 		synchronized (variables) {
 			return variables.values().toArray(new Variable[0]);
 		}
 	}
 
 	/**
-	 * Returns the value of the variable identified by the given {@code name}.
-	 * If no such variable is known in this {@link VariableStore}, then this
-	 * method returns null.
+	 * Returns the value of the variable identified by the given {@code name}. If no such variable
+	 * is known in this {@link VariableStore}, then this method returns null.
 	 *
-	 * <p>Note: if this method returns null, it can mean that the variable does
-	 * not exist, or that the variable has value {@code null}. If you need to
-	 * distinguish these two cases, you should call {@link
-	 * #getDLBVariable(String) getDLBVariable()} </p>
+	 * <p>Note: if this method returns null, it can mean that the variable does not exist, or that
+	 * the variable has value {@code null}. If you need to distinguish these two cases, you should
+	 * call {@link #getVariable(String)}.</p>
 	 *
 	 * @param variableName the name of the variable to retrieve.
-	 * @return the value of the variable, null if the variable does not exist
-	 * or the variable value is null
+	 * @return the value of the variable, null if the variable does not exist or the variable value
+	 *         is {@code null}.
 	 */
 	public Object getValue(String variableName) {
 		Variable variable;
@@ -180,17 +178,18 @@ public class VariableStore {
 	}
 
 	/**
-	 * Returns a set of all the names of {@link Variable}s contained in this
-	 * {@link VariableStore}.
-	 *
-	 * @return a set of all the names of {@link Variable}s contained in this
-	 * {@link VariableStore}.
+	 * Returns a set of all the names of {@link Variable}s contained in this {@link VariableStore}.
+	 * @return a set of all the names of {@link Variable}s contained in this {@link VariableStore}.
 	 */
-	public Set<String> getDLBVariableNames() {
+	public Set<String> getVariableNames() {
 		return variables.keySet();
 	}
 
-	public List<String> getSortedDLBVariableNames() {
+	/**
+	 * Get a sorted list of all variable names in this {@link VariableStore}.
+	 * @return a sorted list of all variable names in this {@link VariableStore}.
+	 */
+	public List<String> getSortedVariableNames() {
 		List<String> nameList = new ArrayList<>(variables.keySet());
 		Collections.sort(nameList);
 		return nameList;
@@ -351,7 +350,7 @@ public class VariableStore {
 	 * observable by the {@link VariableStoreOnChangeListener}s that are registered to listen to
 	 * this {@link VariableStore}.
 	 *
-	 * <p>This "modifiable map" is used in the execution of DialogueBranch Dialogues containing DialogueBranch
+	 * <p>This "modifiable map" is used in the execution of Dialogue Branch Dialogues containing
 	 * Variables, as the implementation relies on the
 	 * {@link nl.rrd.utils.expressions.Expression} interface.</p>
 	 *
@@ -369,7 +368,7 @@ public class VariableStore {
 	 * @return the modifiable map
 	 */
 	public Map<String, Object> getModifiableMap(boolean notifyObservers, ZonedDateTime eventTime) {
-		return new DLBVariableMap(notifyObservers, eventTime,
+		return new VariableMap(notifyObservers, eventTime,
 				VariableStoreChange.Source.UNKNOWN);
 	}
 
@@ -384,15 +383,15 @@ public class VariableStore {
 	 */
 	public Map<String, Object> getModifiableMap(boolean notifyObservers, ZonedDateTime eventTime,
 												VariableStoreChange.Source source) {
-		return new DLBVariableMap(notifyObservers, eventTime, source);
+		return new VariableMap(notifyObservers, eventTime, source);
 	}
 
 	/**
-	 * A {@link DLBVariableMap} is a Mapping from variable name to variable value and can be used
-	 * as an observable and modifiable "view" of the {@link VariableStore} whose changes are
-	 * maintained within this {@link VariableStore} object.
+	 * A {@link VariableMap} is a mapping from Variable name to Variable value and can be used as an
+	 * observable and modifiable "view" of the {@link VariableStore} whose changes are maintained
+	 * within this encapsulating {@link VariableStore} object.
 	 */
-	private class DLBVariableMap implements Map<String, Object> {
+	private class VariableMap implements Map<String, Object> {
 
 		private final boolean notifyObservers;
 		private final ZonedDateTime eventTime;
@@ -403,15 +402,15 @@ public class VariableStore {
 		// --------------------------------------------------------
 
 		/**
-		 * Creates an instance of a {@link DLBVariableMap} which is a mapping of Strings to Objects
+		 * Creates an instance of a {@link VariableMap} which is a mapping of Strings to Objects
 		 * representing the contents of this {@link VariableStore}.
 		 * @param notifyObservers whether {@link VariableStoreOnChangeListener}s should be
-		 *                        notified of updates made to this {@link DLBVariableMap}.
+		 *                        notified of updates made to this {@link VariableMap}.
 		 * @param eventTime the timestamp that is passed along to all changes that are made in this
-		 *                  {@link DLBVariableMap}.
+		 *                  {@link VariableMap}.
 		 */
-		public DLBVariableMap(boolean notifyObservers, ZonedDateTime eventTime,
-							  VariableStoreChange.Source source) {
+		public VariableMap(boolean notifyObservers, ZonedDateTime eventTime,
+						   VariableStoreChange.Source source) {
 			this.notifyObservers = notifyObservers;
 			this.eventTime = eventTime;
 			this.source = source;

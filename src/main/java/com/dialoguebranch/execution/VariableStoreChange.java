@@ -85,14 +85,14 @@ public abstract class VariableStoreChange {
 		/**
 		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given map of
 		 * {@link Variable}s.
-		 * @param dlbVariablesMap the mapping from variable name to {@link Variable} that was
+		 * @param variablesMap the mapping from variable name to {@link Variable} that was
 		 *                         added in this {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 */
-		public Put(Map<String, Variable> dlbVariablesMap, ZonedDateTime time) {
+		public Put(Map<String, Variable> variablesMap, ZonedDateTime time) {
 			super(time,Source.UNKNOWN);
 			variables = new LinkedHashMap<>();
-			for(Variable Variable : dlbVariablesMap.values()) {
+			for(Variable Variable : variablesMap.values()) {
 				variables.put(Variable.getName(), Variable.getValue());
 			}
 		}
@@ -100,15 +100,15 @@ public abstract class VariableStoreChange {
 		/**
 		 * Creates an instance of a {@link Put} {@link VariableStoreChange} with a given map of
 		 * {@link Variable}s.
-		 * @param dlbVariablesMap the mapping from variable name to {@link Variable} that was
+		 * @param variablesMap the mapping from variable name to {@link Variable} that was
 		 *                         added in this {@link VariableStoreChange}.
 		 * @param time the time that this change took place (in the time zone of the user).
 		 * @param source the source of the change to the variable store.
 		 */
-		public Put(Map<String, Variable> dlbVariablesMap, ZonedDateTime time, Source source) {
+		public Put(Map<String, Variable> variablesMap, ZonedDateTime time, Source source) {
 			super(time,source);
 			variables = new LinkedHashMap<>();
-			for(Variable Variable : dlbVariablesMap.values()) {
+			for(Variable Variable : variablesMap.values()) {
 				variables.put(Variable.getName(), Variable.getValue());
 			}
 		}

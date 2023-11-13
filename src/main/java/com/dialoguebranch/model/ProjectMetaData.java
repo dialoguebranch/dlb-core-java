@@ -40,11 +40,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link ProjectMetaData} class is the object representation of a DialogueBranch
- * metadata .xml file. This object can be serialized into an XML file using an {@link XMLWriter} or
- * be constructed from an XML file using a {@link SimpleSAXHandler}. Additionally, contains methods
- * for dynamically modifying the contents of a {@link ProjectMetaData} specification while
- * maintaining certain constraints.
+ * The {@link ProjectMetaData} class is the object representation of a DialogueBranch metadata .xml
+ * file. This object can be serialized into an XML file using an {@link XMLWriter} or be constructed
+ * from an XML file using a {@link SimpleSAXHandler}. Additionally, contains methods for dynamically
+ * modifying the contents of a {@link ProjectMetaData} specification while maintaining certain
+ * constraints.
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
@@ -157,7 +157,7 @@ public class ProjectMetaData {
 	 * to translation languages.
 	 * @return the {@link LanguageMap} for this {@link ProjectMetaData}.
 	 */
-	public LanguageMap getDLBLanguageMap() {
+	public LanguageMap getLanguageMap() {
 		return languageMap;
 	}
 
@@ -166,7 +166,7 @@ public class ProjectMetaData {
 	 * supported source- and translation languages.
 	 * @param languageMap the {@link LanguageMap} for this DialogueBranch project.
 	 */
-	public void setDLBLanguageMap(LanguageMap languageMap) {
+	public void setLanguageMap(LanguageMap languageMap) {
 		this.languageMap = languageMap;
 	}
 
@@ -249,8 +249,8 @@ public class ProjectMetaData {
 	public boolean languageExists(String languageCode) {
 		for(LanguageSet languageSet : languageMap.getLanguageSets()) {
 			if(languageSet.getSourceLanguage().getCode().equals(languageCode)) return true;
-			for(Language dlbTranslationLanguage : languageSet.getTranslationLanguages()) {
-				if(dlbTranslationLanguage.getCode().equals(languageCode)) return true;
+			for(Language translationLanguage : languageSet.getTranslationLanguages()) {
+				if(translationLanguage.getCode().equals(languageCode)) return true;
 			}
 		}
 		return false;
@@ -413,7 +413,7 @@ public class ProjectMetaData {
 			} else if (name.equals("description")) inDescription = false;
 
 			if(name.equals("language-map") && languageMapHandler != null) {
-				result.setDLBLanguageMap(languageMapHandler.getObject());
+				result.setLanguageMap(languageMapHandler.getObject());
 			}
 		}
 

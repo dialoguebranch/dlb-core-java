@@ -67,15 +67,15 @@ public class CommandLineRunner {
 	 */
 	public static void main(String... args) {
 		System.out.println("""
-				Welcome to the DialogueBranch Command Line Runner.
+			Welcome to the DialogueBranch Command Line Runner.
 
-				This command line tool can be used for a number of different scenarios.
-				Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.""");
+			This command line tool can be used for a number of different scenarios.
+			Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.
 
-		System.out.println("The following scenarios are currently supported:\n");
-		System.out.println("  1. Open a DialogueBranch Folder and generate a summary.");
-		System.out.println("  2. Open a DialogueBranch Project (from metadata.xml) and generate " +
-				           "a summary.");
+			The following scenarios are currently supported:
+			  1. Open a DialogueBranch Folder and generate a summary.
+			  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.
+		""");
 
 		Scanner userInputScanner = new Scanner(System.in);
 		System.out.print("\nChoose scenario: ");
@@ -217,10 +217,22 @@ public class CommandLineRunner {
 			throw new InvalidInputException("Provided input is null.");
 
 		// Check if the given input path exists
+		File file = getFileFromString(fileString);
+
+		// Check if the given input is an .xml file
+		try {
+			String extension = fileString.substring(fileString.lastIndexOf(".") + 1);
+			if(extension.equals("xml")) return file;
+			else throw new InvalidInputException("The given input is not an .xml file.");
+		} catch(IndexOutOfBoundsException e) {
+			throw new InvalidInputException("The given input is not an .xml file.");
+		}
+	}
+
+	private static File getFileFromString(String fileString) throws InvalidInputException {
 		File file = new File(fileString);
 		if (!file.exists()) {
-			throw new InvalidInputException("Provided file '" + fileString +
-					"' does not exist.");
+			throw new InvalidInputException("Provided file '" + fileString + "' does not exist.");
 		}
 
 		// Check if the given input is a file
@@ -231,18 +243,10 @@ public class CommandLineRunner {
 					fileString + "' is a file.");
 		}
 		if (file.isDirectory()) {
-			throw new InvalidInputException("Given path '"+ file + "' is a " +
-					"directory (not a file).");
+			throw new InvalidInputException("Given path '" + file +
+					"' is a directory (not a file).");
 		}
-
-		// Check if the given input is an .xml file
-		try {
-			String extension = fileString.substring(fileString.lastIndexOf(".") + 1);
-			if(extension.equals("xml")) return file;
-			else throw new InvalidInputException("The given input is not an .xml file.");
-		} catch(IndexOutOfBoundsException e) {
-			throw new InvalidInputException("The given input is not an .xml file.");
-		}
+		return file;
 	}
 
 }
