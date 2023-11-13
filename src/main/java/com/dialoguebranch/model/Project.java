@@ -32,8 +32,10 @@ import java.util.*;
 import com.dialoguebranch.i18n.ContextTranslation;
 import com.dialoguebranch.i18n.TranslationContext;
 import com.dialoguebranch.i18n.Translator;
+import nl.rrd.utils.AppComponents;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.Translatable;
+import org.slf4j.Logger;
 
 /**
  * A {@link Project} or Dialogue Branch Project is the top-level element of the Dialogue Branch
@@ -200,7 +202,7 @@ public class Project {
 				this.translations.get(dialogueDescription);
 		if (translations == null)
 			return null;
-		dialogue = findSourceDialogue(dialogueDescription.getFilePath());
+		dialogue = findSourceDialogue(dialogueDescription.getDialogueName());
 		if (dialogue == null)
 			return null;
 		Translator translator = new Translator(context, translations);
@@ -210,7 +212,7 @@ public class Project {
 	private Dialogue findSourceDialogue(String dialogueName) {
 		List<FileDescriptor> matches = new ArrayList<>();
 		for (FileDescriptor description : sourceDialogues.keySet()) {
-			if (description.getFilePath().equals(dialogueName))
+			if (description.getDialogueName().equals(dialogueName))
 				matches.add(description);
 		}
 		if (matches.isEmpty())
