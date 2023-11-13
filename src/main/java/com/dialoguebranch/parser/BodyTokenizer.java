@@ -267,7 +267,7 @@ public class BodyTokenizer {
 				String varName = readVariableName(line, i + 1, varEnd);
 				if (!varName.isEmpty()) {
 					textBuffer.append(line, textStart, i);
-					if (!textBuffer.isEmpty()) {
+					if (textBuffer.length() != 0) {
 						result.addSegment(new VariableString.TextSegment(
 								textBuffer.toString()));
 					}
@@ -282,7 +282,7 @@ public class BodyTokenizer {
 				break;
 			case '"':
 				textBuffer.append(line, textStart, i);
-				if (!textBuffer.isEmpty()) {
+				if (textBuffer.length() != 0) {
 					result.addSegment(new VariableString.TextSegment(
 							textBuffer.toString()));
 				}

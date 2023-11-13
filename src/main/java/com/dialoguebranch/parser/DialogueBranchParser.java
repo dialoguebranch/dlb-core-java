@@ -395,7 +395,7 @@ public class DialogueBranchParser implements AutoCloseable {
 			}
 			int c = reader.read();
 			if (c == -1) {
-				if (builder.isEmpty())
+				if (builder.length() == 0)
 					return null;
 				else
 					return builder.toString();
