@@ -1,6 +1,6 @@
 /*
  *
- *                   Copyright (c) 2023 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -27,15 +27,13 @@
 
 package com.dialoguebranch.model;
 
-import java.util.*;
-
 import com.dialoguebranch.i18n.ContextTranslation;
+import com.dialoguebranch.i18n.Translatable;
 import com.dialoguebranch.i18n.TranslationContext;
 import com.dialoguebranch.i18n.Translator;
-import nl.rrd.utils.AppComponents;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
-import com.dialoguebranch.i18n.Translatable;
-import org.slf4j.Logger;
+
+import java.util.*;
 
 /**
  * A {@link Project} or Dialogue Branch Project is the top-level element of the Dialogue Branch
