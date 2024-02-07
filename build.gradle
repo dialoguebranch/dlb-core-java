@@ -10,6 +10,10 @@ group = 'com.dialoguebranch'
 archivesBaseName = 'dlb-core-java'
 version = '1.2.0'
 
+repositories {
+	mavenCentral()
+}
+
 application {
 	mainClassName = "com.dialoguebranch.cli.CommandLineRunner"
 }
@@ -18,15 +22,18 @@ run {
 	standardInput = System.in
 }
 
-repositories {
-	mavenCentral()
-}
-
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
 	withJavadocJar()
 	withSourcesJar()
+}
+
+javadoc {
+	source = sourceSets.main.allJava
+	destinationDir = reporting.file("javadoc")
+	include 'com/dialoguebranch/**'
+	options.source = "17"
 }
 
 dependencies {
@@ -46,17 +53,9 @@ distributions {
 	main {
 		distributionBaseName = archivesBaseName
 		contents {
-			from configurations.compileClasspath
 			from jar
 		}
 	}
 }
 
 [distZip, distTar, installDist]*.dependsOn jar
-
-javadoc {
-	source = sourceSets.main.allJava
-	destinationDir = reporting.file("javadoc")
-	include 'com/dialoguebranch/**'
-	options.source = "17"
-}
