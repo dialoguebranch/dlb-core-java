@@ -7,7 +7,8 @@ plugins {
 }
 
 group = 'com.dialoguebranch'
-version = '1.1.0'
+archivesBaseName = 'dlb-core-java'
+version = '1.2.0'
 
 application {
 	mainClassName = "com.dialoguebranch.cli.CommandLineRunner"
@@ -21,10 +22,6 @@ repositories {
 	mavenCentral()
 }
 
-base {
-	archivesName = "dlb-core-java"
-}
-
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
@@ -33,7 +30,7 @@ java {
 }
 
 dependencies {
-	api "nl.rrd:rrd-utils:3.0.0"
+	api "nl.rrd:rrd-utils:3.0.3"
 	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.13.4'
 	testImplementation 'junit:junit:4.13.2'
 }
@@ -47,7 +44,7 @@ jar {
 
 distributions {
 	main {
-		distributionBaseName = base.archivesName
+		distributionBaseName = archivesBaseName
 		contents {
 			from configurations.compileClasspath
 			from jar
@@ -58,7 +55,8 @@ distributions {
 [distZip, distTar, installDist]*.dependsOn jar
 
 javadoc {
-	destinationDir = file("${buildDir}/javadoc/")
+	source = sourceSets.main.allJava
+	destinationDir = reporting.file("javadoc")
 	include 'com/dialoguebranch/**'
 	options.source = "17"
 }
