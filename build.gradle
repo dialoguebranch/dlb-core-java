@@ -4,7 +4,6 @@ plugins {
 	id 'java-library'
 	id 'application'
 	id 'distribution'
-	id 'net.thebugmc.gradle.sonatype-central-portal-publisher' version '1.0.0'
 }
 
 group = 'com.dialoguebranch'
@@ -63,40 +62,3 @@ distributions {
 }
 
 [distZip, distTar, installDist]*.dependsOn jar
-
-// use Gradle task 'publishToCentralPortal'
-centralPortal {
-	pom {
-		name = 'Dialogue Branch Core Java Library'
-		description = 'Dialogue Branch gives you creative freedom to write engaging interactive conversations...'
-		url = 'https://www.dialoguebranch.com'
-		packaging = 'jar' // jar is the default, but still set it to make it clear
-
-		licenses {
-			license {
-				name = 'MIT License'
-				url = 'https://opensource.org/licenses/MIT'
-			}
-		}
-		developers {
-			developer {
-				id = 'hopdenakker'
-				name = 'Harm op den Akker'
-				email = 'hopdenakker@fruittreelabs.com'
-				organizationUrl = 'https://fruittreelabs.com/'
-			}
-			developer {
-				id ='dhofs'
-				name = 'Dennis Hofs'
-				email = 'd.hofs@rrd.nl'
-				organizationUrl = 'https://rrd.nl'
-			}
-		}
-		scm {
-			url = 'https://github.com/dialoguebranch/dlb-core-java/tree/main'
-			connection = 'scm:git:git://github.com/dialoguebranch/dlb-core-java.git'
-			developerConnection = 'scm:git:ssh://github.com:dialoguebranch/dlb-core-java.git'
-		}
-	}
-
-}
