@@ -4,12 +4,12 @@ plugins {
     id 'java-library'
     id 'application'
     id 'distribution'
-    id 'net.thebugmc.gradle.sonatype-central-portal-publisher' version '1.1.0'
+    id 'net.thebugmc.gradle.sonatype-central-portal-publisher' version '1.1.1'
 }
 
 group = 'com.dialoguebranch'
 archivesBaseName = 'dlb-core-java'
-version = '1.2.2'
+version = '1.2.3'
 
 repositories {
     mavenCentral()
