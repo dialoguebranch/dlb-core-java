@@ -27,7 +27,8 @@
 
 package com.dialoguebranch.i18n;
 
-public record SourceTranslatable(String speaker, String addressee,
-                                 Translatable translatable) {
+public record SourceTranslatable(String speaker, String addressee, Translatable translatable) {
+
+	/** The string to use when the speaker of a statement is the user of the system. */
 	public static final String USER = "_user";
 }

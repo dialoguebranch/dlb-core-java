@@ -142,7 +142,7 @@ public abstract class AttributesCommand extends Command {
 		if (varStr == null)
 			return null;
 		BodyToken token = attrs.get(name);
-		if (!varStr.isPlainText()) {
+		if (varStr.containsVariables()) {
 			throw new LineNumberParseException(String.format(
 					"Value for attribute \"%s\" is not plain text", name) +
 					": " + token.getText(), token.getLineNumber(),

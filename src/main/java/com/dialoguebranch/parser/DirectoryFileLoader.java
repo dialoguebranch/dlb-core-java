@@ -68,6 +68,8 @@ import java.util.List;
  *
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
+ *
+ * @param rootDirectory the root directory for this {@link DirectoryFileLoader}.
  */
 public record DirectoryFileLoader(File rootDirectory) implements FileLoader {
 
@@ -116,21 +118,19 @@ public record DirectoryFileLoader(File rootDirectory) implements FileLoader {
 	// ---------------------------------------------------------
 
 	/**
-	 * Recursively generates a list of {@link FileDescriptor} objects from all .dlb
-	 * and/or .json files in the given {@code directory} (and all its subdirectories), under the
-	 * given relative {@code pathName} (relative to the {@code rootDirectory} of this
-	 * {@link DirectoryFileLoader}). Each {@link FileDescriptor} will have its
-	 * language attribute set to the given {@code language} parameter, which is the direct
-	 * sub-folder of the {@code rootDirectory} under which it was found.
+	 * Recursively generates a list of {@link FileDescriptor} objects from all .dlb and/or .json
+	 * files in the given {@code directory} (and all its subdirectories), under the given relative
+	 * {@code pathName} (relative to the {@code rootDirectory} of this {@link DirectoryFileLoader}).
+	 * Each {@link FileDescriptor} will have its language attribute set to the given {@code
+	 * language} parameter, which is the direct sub-folder of the {@code rootDirectory} under which
+	 * it was found.
 	 *
-	 * @param language  the language code, or name of the main folder.
-	 * @param pathName  the relative pathName in which the given {@code directory} can be found.
+	 * @param language the language code, or name of the main folder.
+	 * @param pathName the relative pathName in which the given {@code directory} can be found.
 	 * @param directory the directory in which to look for .dlb and .json files.
-	 * @return a list of all encountered .dlb and .json files as
-	 * {@code FileDescriptor}s.
+	 * @return a list of all encountered .dlb and .json files as {@code FileDescriptor}s.
 	 */
-	private List<FileDescriptor> listDir(String language, String pathName,
-										 File directory) {
+	private List<FileDescriptor> listDir(String language, String pathName, File directory) {
 		List<FileDescriptor> result = new ArrayList<>();
 		File[] children = directory.listFiles();
 		if (children != null) {
@@ -155,4 +155,5 @@ public record DirectoryFileLoader(File rootDirectory) implements FileLoader {
 		}
 		return result;
 	}
+
 }

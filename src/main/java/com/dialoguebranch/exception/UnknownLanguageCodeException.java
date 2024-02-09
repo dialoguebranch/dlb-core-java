@@ -40,6 +40,7 @@ public class UnknownLanguageCodeException extends DialogueBranchException {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	/** The language code (e.g. 'en') associated with this exception. */
 	private final String languageCode;
 
 	// --------------------------------------------------------

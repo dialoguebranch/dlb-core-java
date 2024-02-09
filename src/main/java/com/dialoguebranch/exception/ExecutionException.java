@@ -53,7 +53,8 @@ public class ExecutionException extends DialogueBranchException {
 		INTERACTION_NOT_FOUND,
 		NO_ACTIVE_DIALOGUE
 	}
-	
+
+	/** The type of this {@link ExecutionException} as {@link Type}. */
 	private final Type type;
 
 	// --------------------------------------------------------

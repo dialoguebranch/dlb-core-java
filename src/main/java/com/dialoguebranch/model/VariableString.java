@@ -36,29 +36,53 @@ import java.util.Set;
 import nl.rrd.utils.expressions.Value;
 
 /**
- * This class represents a text with possible variables. It is modelled as a
- * list of segments, where each segment is plain text or a variable.
+ * This class represents a text with possible variables. It is modelled as a list of segments, where
+ * each segment is plain text or a variable.
  * 
- * <p>The segments are always normalized so that subsequent plain text segments
- * are automatically merged into one.</p>
+ * <p>The segments are always normalized so that subsequent plain text segments are automatically
+ * merged into one.</p>
  * 
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class VariableString {
-	private List<Segment> segments = new ArrayList<>();
-	
-	public VariableString() {
-	}
 
+	/** The list of {@link Segment}s that makes up this {@link VariableString}. */
+	private final List<Segment> segments = new ArrayList<>();
+
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
+	/**
+	 * Creates an instance of an empty {@link VariableString}.
+	 */
+	public VariableString() {}
+
+	/**
+	 * Creates an instance of a {@link VariableString} from the given {@code text}.
+	 *
+	 * @param text a String of text with possible variables.
+	 */
 	public VariableString(String text) {
 		segments.add(new TextSegment(text));
 	}
 
+	/**
+	 * Creates an instance of a {@link VariableString} from the contents of the {@code other} given
+	 * {@link VariableString}.
+	 *
+	 * @param other the other {@link VariableString} from which to copy its contents.
+	 */
 	public VariableString(VariableString other) {
 		for (Segment segment : other.segments) {
 			this.segments.add(segment.clone());
 		}
 	}
+
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
 
 	/**
 	 * Returns the segments as an unmodifiable list.
@@ -68,24 +92,33 @@ public class VariableString {
 	public List<Segment> getSegments() {
 		return Collections.unmodifiableList(segments);
 	}
-	
+
+	/**
+	 * Adds the given {@link Segment} to the list of segments for this {@link VariableString}. If
+	 * both the given {@code segment} and the last Segment in the current list are of type {@link
+	 * TextSegment}, they will be merged into a single segment.
+	 *
+	 * @param segment the {@link Segment} to add.
+	 */
 	public void addSegment(Segment segment) {
 		Segment lastSegment = null;
 		if (!segments.isEmpty())
 			lastSegment = segments.get(segments.size() - 1);
-		if (lastSegment instanceof TextSegment &&
-				segment instanceof TextSegment) {
-			TextSegment lastTextSegment = (TextSegment)lastSegment;
-			TextSegment textSegment = (TextSegment)segment;
-			TextSegment mergedSegment = new TextSegment(
-					lastTextSegment.text + textSegment.text);
+		if (lastSegment instanceof TextSegment lastTextSegment &&
+                segment instanceof TextSegment textSegment) {
+            TextSegment mergedSegment = new TextSegment(lastTextSegment.text + textSegment.text);
 			segments.remove(segments.size() - 1);
 			segments.add(mergedSegment);
 		} else {
 			segments.add(segment);
 		}
 	}
-	
+
+	/**
+	 * Adds the given Set of {@link Segment}s to this {@link VariableString}.
+	 *
+	 * @param segments the segments to add.
+	 */
 	public void addSegments(Iterable<Segment> segments) {
 		for (Segment segment : segments) {
 			addSegment(segment);
@@ -93,12 +126,11 @@ public class VariableString {
 	}
 
 	/**
-	 * Executes this variable string with respect to the specified variables.
-	 * The result will be a string with 0 or 1 text segments. Undefined
-	 * variables will be evaluated as string "null".
+	 * Executes this variable string with respect to the specified variables. The result will be a
+	 * string with 0 or 1 text segments. Undefined variables will be evaluated as string "null".
 	 * 
-	 * @param variables the variable map (can be null)
-	 * @return the processed variable string
+	 * @param variables the variable map (can be {@code null}).
+	 * @return the processed variable string.
 	 */
 	public VariableString execute(Map<String,Object> variables) {
 		VariableString result = new VariableString();
@@ -118,82 +150,102 @@ public class VariableString {
 	}
 
 	/**
-	 * Evaluates this variable string with respect to the specified variables.
-	 * Undefined variables will be evaluated as string "null".
+	 * Evaluates this variable string with respect to the specified variables. Undefined variables
+	 * will be evaluated as string "null".
 	 * 
-	 * @param variables the variable map (can be null)
-	 * @return the evaluated string
+	 * @param variables the variable map (can be {@code null}).
+	 * @return the evaluated string.
 	 */
 	public String evaluate(Map<String,Object> variables) {
-		VariableString varStr = execute(variables);
-		if (varStr.segments.isEmpty())
+		VariableString variableString = execute(variables);
+		if (variableString.segments.isEmpty())
 			return "";
-		TextSegment segment = (TextSegment)varStr.segments.get(0);
+		TextSegment segment = (TextSegment)variableString.segments.get(0);
 		return segment.text;
 	}
 	
 	/**
-	 * Retrieves all variable names that are read in this variable string and
-	 * adds them to the specified set.
+	 * Retrieves all variable names that are read in this variable string and adds them to the
+	 * specified set.
 	 * 
-	 * @param varNames the set to which the variable names are added
+	 * @param variableNames the set to which the variable names are added.
 	 */
-	public void getReadVariableNames(Set<String> varNames) {
+	public void getReadVariableNames(Set<String> variableNames) {
 		for (Segment segment : segments) {
-			if (!(segment instanceof VariableSegment))
+			if (!(segment instanceof VariableSegment variableSegment))
 				continue;
-			VariableSegment varSegment = (VariableSegment)segment;
-			varNames.add(varSegment.variableName);
+            variableNames.add(variableSegment.variableName);
 		}
-	}
-	
-	public boolean isWhitespace() {
-		for (Segment segment : segments) {
-			if (!(segment instanceof TextSegment))
-				return false;
-			TextSegment textSegment = (TextSegment)segment;
-			if (!textSegment.text.trim().isEmpty())
-				return false;
-		}
-		return true;
 	}
 
-	public boolean isPlainText() {
+	/**
+	 * Checks whether there are any 'real' contents in this {@link VariableString}. If all of its
+	 * segments are {@link TextSegment}s that contain only whitespace, this method returns {@code
+	 * false}, otherwise it returns {@code true}.
+	 *
+	 * @return {@code true} if this {@link VariableString} has any non-whitespace contents.
+	 */
+	public boolean hasContents() {
+		for (Segment segment : segments) {
+			if (!(segment instanceof TextSegment textSegment))
+				return true;
+            if (!textSegment.text.trim().isEmpty())
+				return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Checks whether this {@link VariableString} contains any variables. Returns {@code true} if it
+	 * does and {@code false} if there are only {@link TextSegment}s.
+	 *
+	 * @return {@code true} if this {@link VariableString} contains any variables.
+	 */
+	public boolean containsVariables() {
 		for (Segment segment : segments) {
 			if (!(segment instanceof TextSegment))
-				return false;
+				return true;
 		}
-		return true;
+		return false;
 	}
-	
+
+	/**
+	 * Remove all (leading and trailing) white space from this {@link VariableString}.
+	 */
 	public void trimWhitespace() {
 		removeLeadingWhitespace();
 		removeTrailingWhitespace();
 	}
 
+	/**
+	 * Removes all white space from this {@link VariableString}'s segments until it encounters text
+	 * or a variable.
+	 */
 	public void removeLeadingWhitespace() {
 		while (!segments.isEmpty()) {
 			Segment segment = segments.get(0);
-			if (!(segment instanceof TextSegment))	
+			if (!(segment instanceof TextSegment textSegment))
 				return;
-			TextSegment textSegment = (TextSegment)segment;
-			String content = textSegment.getText().replaceAll("^\\s+", "");
+            String content = textSegment.getText().replaceAll("^\\s+", "");
 			textSegment.setText(content);
-			if (content.length() > 0)
+			if (!content.isEmpty())
 				return;
 			segments.remove(0);
 		}
 	}
-	
+
+	/**
+	 * Removes all white space at the end of this {@link VariableString}s contents, until it
+	 * encounters text or a variable.
+	 */
 	public void removeTrailingWhitespace() {
 		while (!segments.isEmpty()) {
 			Segment segment = segments.get(segments.size() - 1);
-			if (!(segment instanceof TextSegment))	
+			if (!(segment instanceof TextSegment textSegment))
 				return;
-			TextSegment textSegment = (TextSegment)segment;
-			String content = textSegment.getText().replaceAll("\\s+$", "");
+            String content = textSegment.getText().replaceAll("\\s+$", "");
 			textSegment.setText(content);
-			if (content.length() > 0)
+			if (!content.isEmpty())
 				return;
 			segments.remove(segments.size() - 1);
 		}
@@ -209,8 +261,8 @@ public class VariableString {
 	}
 	
 	/**
-	 * Returns the code string for this instance. It will escape \ and $ with a
-	 * backslash. You may specify additional characters to escape.
+	 * Returns the code string for this instance. It will escape \ and $ with a backslash. You may
+	 * specify additional characters to escape.
 	 * 
 	 * @param escapes the characters to escape
 	 * @return the code string
@@ -227,26 +279,58 @@ public class VariableString {
 		return result.toString();
 	}
 
+	/**
+	 * A {@link Segment} represents a piece of a {@link VariableString} that can either be a {@link
+	 * TextSegment} or a {@link VariableSegment}.
+	 */
 	public static abstract class Segment implements Cloneable {
+
+		/**
+		 * Creates an instance of the implementing subclass.
+		 */
+		public Segment() { }
+
 		@Override
 		public abstract Segment clone();
 	}
-	
+
+	/**
+	 * A {@link TextSegment} represents a piece of a {@link VariableString} that only contains
+	 * regular text.
+	 */
 	public static class TextSegment extends Segment {
 		private String text;
-		
+
+		/**
+		 * Creates an instance of a {@link TextSegment} with the given {@code text}.
+		 * @param text the text contents for this {@link TextSegment}.
+		 */
 		public TextSegment(String text) {
 			this.text = text;
 		}
 
+		/**
+		 * Creates an instance of a {@link TextSegment} with the contents of the {@code other}
+		 * {@link TextSegment}.
+		 *
+		 * @param other the {@link TextSegment} from which to copy its contents.
+		 */
 		public TextSegment(TextSegment other) {
 			this.text = other.text;
 		}
 
+		/**
+		 * Returns the text contents of this {@link TextSegment}.
+		 * @return the text contents of this {@link TextSegment}.
+		 */
 		public String getText() {
 			return text;
 		}
 
+		/**
+		 * Sets the text contents of this {@link TextSegment}.
+		 * @param text the text contents of this {@link TextSegment}.
+		 */
 		public void setText(String text) {
 			this.text = text;
 		}
@@ -290,22 +374,47 @@ public class VariableString {
 			return new TextSegment(this);
 		}
 	}
-	
+
+	/**
+	 * A {@link VariableSegment} represents a piece of a {@link VariableString} that contains a
+	 * named variable.
+	 */
 	public static class VariableSegment extends Segment {
+
+		/** The name of the variable in this {@link VariableSegment}. */
 		private String variableName;
 
+		/**
+		 * Creates an instance of a {@link VariableSegment} with a given {@code variableName}.
+		 *
+		 * @param variableName the name of the variable.
+		 */
 		public VariableSegment(String variableName) {
 			this.variableName = variableName;
 		}
 
+		/**
+		 * Creates an instance of a {@link VariableSegment} given the contents of an {@code other}
+		 * {@link VariableSegment}.
+		 *
+		 * @param other the {@link VariableSegment} from which to copy its contents.
+		 */
 		public VariableSegment(VariableSegment other) {
 			this.variableName = other.variableName;
 		}
 
+		/**
+		 * Returns the variable name of this {@link VariableSegment}.
+		 * @return the variable name of this {@link VariableSegment}.
+		 */
 		public String getVariableName() {
 			return variableName;
 		}
 
+		/**
+		 * Sets the variable name of this {@link VariableSegment}.
+		 * @param variableName the variable name of this {@link VariableSegment}.
+		 */
 		public void setVariableName(String variableName) {
 			this.variableName = variableName;
 		}

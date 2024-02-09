@@ -33,33 +33,26 @@ import com.dialoguebranch.model.command.InputCommand;
 import java.util.List;
 
 /**
- * This class models a translatable segment from a {@link NodeBody}. It basically
- * consists of plain text, variables and &lt;&lt;input&gt;&gt; commands.
+ * This class models a translatable segment from a {@link NodeBody}. It basically consists of plain
+ * text, variables and &lt;&lt;input&gt;&gt; commands.
  *
- * <p>The class contains {@link NodeBody.TextSegment TextSegment}s (with
- * plain text and variables) and {@link NodeBody.CommandSegment
- * CommandSegment}s where the command is a {@link InputCommand
- * InputCommand}.</p>
+ * <p>The class contains {@link NodeBody.TextSegment TextSegment}s (with plain text and variables)
+ * and {@link NodeBody.CommandSegment}s where the command is a {@link InputCommand}.</p>
  *
  * <p>Instances of this class can be obtained from {@link TranslatableExtractor} or {@link
  * TranslationParser}.</p>
  *
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
  */
-public class Translatable {
-	private final NodeBody parent;
-	private final List<NodeBody.Segment> segments;
+public record Translatable(NodeBody parent, List<NodeBody.Segment> segments) {
 
 	/**
 	 * Constructs a new {@link Translatable}.
 	 *
-	 * @param parent the parent (used in {@link Translator})
+	 * @param parent   the parent (used in {@link Translator})
 	 * @param segments the segments
 	 */
-	public Translatable(NodeBody parent,
-                        List<NodeBody.Segment> segments) {
-		this.parent = parent;
-		this.segments = segments;
+	public Translatable {
 	}
 
 	/**
@@ -67,7 +60,8 @@ public class Translatable {
 	 *
 	 * @return the parent (used in {@link Translator})
 	 */
-	public NodeBody getParent() {
+	@Override
+	public NodeBody parent() {
 		return parent;
 	}
 
@@ -76,7 +70,8 @@ public class Translatable {
 	 *
 	 * @return the translatable segments
 	 */
-	public List<NodeBody.Segment> getSegments() {
+	@Override
+	public List<NodeBody.Segment> segments() {
 		return segments;
 	}
 
@@ -91,7 +86,7 @@ public class Translatable {
 			return false;
 		if (obj.getClass() != getClass())
 			return false;
-		Translatable other = (Translatable)obj;
+		Translatable other = (Translatable) obj;
 		return toString().equals(other.toString());
 	}
 

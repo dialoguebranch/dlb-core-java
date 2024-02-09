@@ -43,6 +43,7 @@ public class NodeParseException extends ParseException {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
+	/** The name of the node from which this error occurred. */
 	private final String nodeTitle;
 
 	// --------------------------------------------------------

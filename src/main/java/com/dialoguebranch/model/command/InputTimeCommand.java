@@ -223,7 +223,7 @@ public class InputTimeCommand extends InputCommand {
 			throws LineNumberParseException {
 		VariableString result = readAttr(attrName, attrs, cmdStartToken,
 				false);
-		if (result == null || !result.isPlainText())
+		if (result == null || result.containsVariables())
 			return result;
 		BodyToken token = attrs.get(attrName);
 		String value = result.evaluate(null);

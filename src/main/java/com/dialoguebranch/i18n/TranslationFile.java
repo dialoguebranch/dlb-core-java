@@ -92,11 +92,12 @@ public class TranslationFile {
 	}
 
 	/**
-	 * Writes this {@link TranslationFile} to a file, specified by {@link #getFileName()}
-	 * in the given {@code directory}.
+	 * Writes this {@link TranslationFile} to a file, specified by {@link #getFileName()} in the
+	 * given {@code directory}.
+	 *
 	 * @param directory the directory in which to store the .json file output
 	 * @throws IOException in case the given directory is not a directory, or another file writing
-	 * error occurs.
+	 *                     error occurs.
 	 */
 	public void writeToFile(File directory) throws IOException {
 		if(!directory.isDirectory()) throw new IOException("The given directory parameter is not a directory.");

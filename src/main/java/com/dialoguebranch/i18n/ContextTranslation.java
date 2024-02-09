@@ -30,10 +30,14 @@ package com.dialoguebranch.i18n;
 import java.util.Set;
 
 /**
- * This class models the translation of a phrase in a DialogueBranch dialogue, along with
- * a context set. Supported contexts are: male_speaker, female_speaker,
- * male_addressee, female_addressee.
+ * This class models the translation of a phrase in a Dialogue Branch dialogue, along with a context
+ * set. Supported contexts are: male_speaker, female_speaker, male_addressee, female_addressee.
  *
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
+ *
+ * @param context a set of properties that defines the context in which the {@code translation}
+ *                takes place.
+ * @param translation the {@link Translatable} element in this context.
  */
 public record ContextTranslation(Set<String> context, Translatable translation) { }

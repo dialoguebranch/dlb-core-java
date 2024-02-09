@@ -34,10 +34,17 @@ import java.util.List;
  * VariableStore object is changed, that listener's
  * {@link VariableStoreOnChangeListener#onChange(VariableStore,List)} method will be called.
  *
- * @author Dennis Hofs
- * @author Harm op den Akker
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Roessingh Research and Development)
  */
 public interface VariableStoreOnChangeListener {
+
+	/**
+	 * Called when a change occurs in the given {@link VariableStore}. The changes are listed in the
+	 * given list of {@code changes}.
+	 * @param variableStore the {@link VariableStore} that has seen a change.
+	 * @param changes the list of {@link VariableStoreChange}s.
+	 */
 	void onChange(VariableStore variableStore, List<VariableStoreChange> changes);
 }
 

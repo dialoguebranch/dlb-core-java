@@ -29,16 +29,30 @@ package com.dialoguebranch.execution;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+/**
+ * An abstract representation of a change in the {@link VariableStore}.
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 public abstract class VariableStoreChange {
 
 	/**
 	 * Defines a set of possible source of changes to the VariableStore.
 	 */
 	public enum Source {
+		/** In case the source of the variable change is unknown. */
 		UNKNOWN,
+
+		/** In case the variable was changed through a SET-statement from within the script. */
 		DLB_SCRIPT,
+
+		/** In case a variable was changed through provided user input in a reply. */
 		INPUT_REPLY,
+
+		/** In case a change originated from the Dialogue Branch Web Service. */
 		WEB_SERVICE,
+
+		/** In case the change was caused through an External Variable Service. */
 		EXTERNAL_VARIABLE_SERVICE
 	}
 
@@ -46,8 +60,9 @@ public abstract class VariableStoreChange {
 	private final Source source;
 
 	/**
-	 * Creates an instance of a {@link VariableStoreChange} with a given {@code time} and
-	 * {@code source}.
+	 * Creates an instance of a {@link VariableStoreChange} with a given {@code time} and {@code
+	 * source}.
+	 *
 	 * @param time the time that this change took place (in the time zone of the user).
 	 * @param source the source of the {@link VariableStoreChange}, as one of {@link Source}.
 	 */
@@ -58,6 +73,7 @@ public abstract class VariableStoreChange {
 
 	/**
 	 * Returns the {@link Source} of this change to the VariableStore.
+	 *
 	 * @return the {@link Source} of this change to the VariableStore.
 	 */
 	public Source getSource() {
@@ -66,6 +82,7 @@ public abstract class VariableStoreChange {
 
 	/**
 	 * Returns the time that this change took place (in the time zone of the user).
+	 *
 	 * @return the time that this change took place (in the time zone of the user).
 	 */
 	public ZonedDateTime getTime() {
@@ -73,11 +90,11 @@ public abstract class VariableStoreChange {
 	}
 
 	/**
-	 * An implementation of {@link VariableStoreChange} representing a set of added
-	 * {@link Variable}s.
+	 * An implementation of {@link VariableStoreChange} representing a set of added {@link
+	 * Variable}s.
 	 *
-	 * @author Dennis Hofs
-	 * @author Harm op den Akker
+	 * @author Dennis Hofs (Roessingh Research and Development)
+	 * @author Harm op den Akker (Fruit Tree Labs)
 	 */
 	public static class Put extends VariableStoreChange {
 		private final Map<String,Object> variables;

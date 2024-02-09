@@ -31,7 +31,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 /**
- * A {@link VariableStore} is an object that stores all DialogueBranch variable values for a given
+ * A {@link VariableStore} is an object that stores all Dialogue Branch variable values for a given
  * user.
  * 
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -52,18 +52,25 @@ public class VariableStore {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a new {@link VariableStore} for a user in the given
-	 * {@code timeZone}.
+	 * Creates an instance of a new {@link VariableStore} for a given {@code user}.
+	 *
 	 * @param user the {@link User} associated with this {@link VariableStore}.
 	 */
 	public VariableStore(User user) {
 		this.user = user;
 	}
 
-	public VariableStore(User user, Variable[] VariableArray) {
+	/**
+	 * Creates an instance of a new {@link VariableStore} for the given {@code user}, initialized
+	 * with the given array of {@link Variable}s.
+	 *
+	 * @param user the {@link User} associated with this {@link VariableStore}.
+	 * @param variableArray the array of variables used to initiate this {@link VariableStore}.
+	 */
+	public VariableStore(User user, Variable[] variableArray) {
 		this.user = user;
 		synchronized(variables) {
-			for (Variable variable : VariableArray) {
+			for (Variable variable : variableArray) {
 				variables.put(variable.getName(),variable);
 			}
 		}
@@ -74,11 +81,11 @@ public class VariableStore {
 	// ----------------------------------------------------------
 
 	/**
-	 * Adds the given {@link VariableStoreOnChangeListener} to the list of listeners
-	 * for this {@link VariableStore}.
+	 * Adds the given {@link VariableStoreOnChangeListener} to the list of listeners for this {@link
+	 * VariableStore}.
 	 *
-	 * @param listener a {@link VariableStoreOnChangeListener} that should be notified whenever
-	 *                 this {@link VariableStore} is changed
+	 * @param listener a {@link VariableStoreOnChangeListener} that should be notified whenever this
+	 *                 {@link VariableStore} is changed
 	 */
 	public void addOnChangeListener(VariableStoreOnChangeListener listener) {
 		synchronized (onChangeListeners) {

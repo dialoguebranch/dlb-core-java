@@ -41,18 +41,20 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * POEditorTools is a runnable class that provides a Command-Line-Interface allowing you
- * to conveniently execute different scripts covering different scenarios related to importing
- * from- or exporting to POEditor.
+ * POEditorTools is a runnable class that provides a Command-Line-Interface allowing you to
+ * conveniently execute different scripts covering different scenarios related to importing from- or
+ * exporting to POEditor.
  *
- * @author Harm op den Akker
- * @author Tessa Beinema
+ * @author Harm op den Akker (Fruit Tree Labs)
+ * @author Tessa Beinema (University of Twente)
  */
 public class POEditorTools {
 
 	/**
-	 * Takes a Key-Value JSON export from POEditor and generates a set of {@link TranslationFile} objects for
-	 * each different dialogue found in the JSON file. The input JSON-file has the following structure:
+	 * Takes a Key-Value JSON export from POEditor and generates a set of {@link TranslationFile}
+	 * objects for each different dialogue found in the JSON file. The input JSON-file has the
+	 * following structure:
+	 * <pre>
 	 * {
 	 *     "dialogue-name Speaker": {
 	 *         "term": "translation",
@@ -63,14 +65,15 @@ public class POEditorTools {
 	 *         "term": "translation",
 	 *         ...
 	 *     }
-	 * }
+	 * }</pre>
 	 *
-	 * @param jsonFile a {@link File} object pointing to a Key-Value-JSON export from POEditor with the format as defined
-	 *                 above.
+	 * @param jsonFile a {@link File} object pointing to a Key-Value-JSON export from POEditor with
+	 *                 the format as defined above.
 	 * @return a mapping from {@link String}s (dialogue names) to {@link TranslationFile} objects.
 	 * @throws IOException in case any error occurs in parsing the JSON from the input file.
 	 */
-	public Map<String, TranslationFile> generateTranslationFilesFromPOEditorExport(File jsonFile) throws IOException {
+	public Map<String, TranslationFile> generateTranslationFilesFromPOEditorExport(File jsonFile)
+			throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		TypeReference<Map<String, Map<String, String>>> mapType = new TypeReference<>(){};
@@ -102,16 +105,20 @@ public class POEditorTools {
 	}
 
 	/**
-	 * Generates a {@link List} of {@link TranslationTerm}s from a .dlb script located at the given {@link File} location.
+	 * Generates a {@link List} of {@link TranslationTerm}s from a .dlb script located at the given
+	 * {@link File} location.
+	 *
 	 * @param dlbScriptFile a {@link File} link to a .dlb script.
 	 * @return all translatable terms as a {@link List} of {@link TranslationTerm}s
 	 * @throws IOException in case of an IO error when reading in the .dlb script
 	 */
-	public List<TranslationTerm> extractTranslationTermsFromDLBScript(File dlbScriptFile) throws IOException {
+	public List<TranslationTerm> extractTranslationTermsFromDLBScript(File dlbScriptFile)
+			throws IOException {
 		// Read in the dialogue from the .dlb script file
 		Dialogue dialogue = readDialogueFile(dlbScriptFile);
 
-		System.out.println("===== Processing: " + dialogue.getDialogueName() + " with " + dialogue.getNodeCount() + " nodes. =====");
+		System.out.println("===== Processing: " + dialogue.getDialogueName() + " with "
+				+ dialogue.getNodeCount() + " nodes. =====");
 
 		ArrayList<TranslationTerm> terms = new ArrayList<>();
 
@@ -122,7 +129,9 @@ public class POEditorTools {
 					node.getHeader().getSpeaker(), SourceTranslatable.USER, node.getBody());
 
 			for(SourceTranslatable translatable : translatables) {
-				TranslationTerm term = new TranslationTerm(translatable.translatable().toExportFriendlyString(),dialogue.getDialogueName()+" "+translatable.speaker());
+				TranslationTerm term = new TranslationTerm(translatable.translatable()
+						.toExportFriendlyString(),dialogue.getDialogueName() + " "
+						+ translatable.speaker());
 				terms.add(term);
 			}
 
@@ -131,16 +140,21 @@ public class POEditorTools {
 	}
 
 	/**
-	 * If the given {@code dlbScriptFile} is a correct {@link File} pointer to a .dlb script, this function will
-	 * return a {@link Set} of {@link File}s that contains all the .dlb scripts that are linked from the given {@code dlbScriptFile} and
-	 * recursively from those referenced .dlb scripts.
-	 * @param allDialogueFiles call this method with an empty set of files, {@code allDialogueFiles} is used to store progressively the encountered
-	 *                         .dlb script {@link File}s as the method recursively traverses the dialogue tree.
+	 * If the given {@code dlbScriptFile} is a correct {@link File} pointer to a .dlb script, this
+	 * function will return a {@link Set} of {@link File}s that contains all the .dlb scripts that
+	 * are linked from the given {@code dlbScriptFile} and recursively from those referenced .dlb
+	 * scripts.
+	 *
+	 * @param allDialogueFiles call this method with an empty set of files, {@code allDialogueFiles}
+	 *                         is used to store progressively the encountered .dlb script {@link
+	 *                         File}s as the method recursively traverses the dialogue tree.
 	 * @param dlbScriptFile the origin .dlb script {@link File} pointer.
-	 * @return a {@link Set} of {@link File}s that represent all .dlb scripts that are linked through {@code dlbScriptFile} (including itself).
+	 * @return a {@link Set} of {@link File}s that represent all .dlb scripts that are linked
+	 *         through {@code dlbScriptFile} (including itself).
 	 * @throws IOException in case of a read error for any of the .dlb scripts.
 	 */
-	public Set<File> getCompleteReferencedDialoguesSet(Set<File> allDialogueFiles, File dlbScriptFile) throws IOException {
+	public Set<File> getCompleteReferencedDialoguesSet(Set<File> allDialogueFiles,
+													   File dlbScriptFile) throws IOException {
 		Dialogue dialogue = readDialogueFile(dlbScriptFile);
 
 		// Include the given root dlbScriptFile if not already in the result set
@@ -149,10 +163,14 @@ public class POEditorTools {
 		// Get all dialogues that are referenced from the given dlbScriptFile
 		Set<String> referencedDialogues = dialogue.getDialoguesReferenced();
 		for(String referencedDialogue : referencedDialogues) {
-			File referencedDialogueFile = new File(dlbScriptFile.getParent() + File.separator + referencedDialogue + ".dlb");
+			File referencedDialogueFile = new File(dlbScriptFile.getParent()
+					+ File.separator + referencedDialogue + ".dlb");
 			if(!allDialogueFiles.contains(referencedDialogueFile)) {
 				allDialogueFiles.add(referencedDialogueFile);
-				Set<File> additionalDialogueFiles = getCompleteReferencedDialoguesSet(allDialogueFiles, new File(dlbScriptFile.getParent()+File.separator+referencedDialogue+".dlb"));
+				Set<File> additionalDialogueFiles = getCompleteReferencedDialoguesSet(
+						allDialogueFiles,
+						new File(dlbScriptFile.getParent() + File.separator
+								+ referencedDialogue + ".dlb"));
 				allDialogueFiles.addAll(additionalDialogueFiles);
 			}
 		}
@@ -162,6 +180,7 @@ public class POEditorTools {
 	/**
 	 * Returns a {@link Dialogue} object as read in from a DialogueBranch script identified by the
 	 * given {@code fileName}.
+	 *
 	 * @param dlbScriptFile the .dlb script {@link File} to read
 	 * @return a {@link Dialogue} object representation of the given .dlb script
 	 */
@@ -175,13 +194,15 @@ public class POEditorTools {
 	}
 
 	/**
-	 * Takes a given {@link List} of {@link TranslationTerm}s and writes them to the given {@code exportFile} in
-	 * JSON format.
+	 * Takes a given {@link List} of {@link TranslationTerm}s and writes them to the given {@code
+	 * exportFile} in JSON format.
+	 *
 	 * @param terms the {@link List} of {@link TranslationTerm}s to write to file.
 	 * @param exportFile the file to write to.
 	 * @throws IOException in case of any write error.
 	 */
-	public void writeTranslationTermsToJSON(List<TranslationTerm> terms, File exportFile) throws IOException {
+	public void writeTranslationTermsToJSON(List<TranslationTerm> terms, File exportFile)
+			throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
 		writer.writeValue(exportFile, terms);
@@ -190,30 +211,42 @@ public class POEditorTools {
 	public static void main(String[] args) {
 		POEditorTools tools = new POEditorTools();
 
-		System.out.println("Welcome to the DialogueBranch POEditor Command Line Tool.\n\n"+
-				"This command line tool is used for a number of different scenarios for converting DialogueBranch and POEditor file formats.\n"+
-				"Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.");
+		System.out.println("""
+                Welcome to the DialogueBranch POEditor Command Line Tool.
+
+                This command line tool is used for a number of different scenarios for converting Dialogue Branch and POEditor file formats.
+                Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.""");
 
 		System.out.println("The following scenarios are currently supported:\n");
-		System.out.println("  1. Generate a single POEditor Terms file from a .dlb script, including all linked scripts.");
-		System.out.println("  2. Generate multiple POEditor Terms files from a .dlb script, including all linked scripts.");
-		System.out.println("  3. Convert a single POEditor Key-Value JSON export to one or many DialogueBranch Translation JSON files.");
+		System.out.println("  1. Generate a single POEditor Terms file from a .dlb script, " +
+				"including all linked scripts.");
+		System.out.println("  2. Generate multiple POEditor Terms files from a .dlb script, " +
+				"including all linked scripts.");
+		System.out.println("  3. Convert a single POEditor Key-Value JSON export to one or " +
+				"many DialogueBranch Translation JSON files.");
 
 		Scanner userInputScanner = new Scanner(System.in);  // Create a Scanner object
 		System.out.print("\nChoose scenario: ");
 
 		String scenario = userInputScanner.nextLine();  // Read user input
+
+		File outputDirectory;
+		String dlbScriptFile;
+		Set<File> allDialogues;
+
 		switch(scenario) {
 			case "1":
-				System.out.println("Please provide the full file path to the starting .dlb script.");
+				System.out.println("Please provide the full file path to the starting " +
+						".dlb script.");
 
 				System.out.print("DialogueBranch Script File: ");
-				String dlbScriptFile = userInputScanner.nextLine();
+				dlbScriptFile = userInputScanner.nextLine();
 
-				Set<File> allDialogues;
 				try {
-					allDialogues = tools.getCompleteReferencedDialoguesSet(new HashSet<>(),new File(dlbScriptFile));
-					System.out.println("Found a total of "+allDialogues.size()+" linked dialogue scripts: ");
+					allDialogues = tools.getCompleteReferencedDialoguesSet(new HashSet<>(),
+							new File(dlbScriptFile));
+					System.out.println("Found a total of " + allDialogues.size() +
+							" linked dialogue scripts: ");
 					for(File dialogueFile : allDialogues) {
 						System.out.println(dialogueFile);
 					}
@@ -227,7 +260,8 @@ public class POEditorTools {
 
 				for(File dialogueFile : allDialogues) {
 					try {
-						List<TranslationTerm> terms = tools.extractTranslationTermsFromDLBScript(dialogueFile);
+						List<TranslationTerm> terms =
+								tools.extractTranslationTermsFromDLBScript(dialogueFile);
 						allTerms.addAll(terms);
 					} catch (IOException e) {
 						throw new RuntimeException(e);
@@ -241,21 +275,25 @@ public class POEditorTools {
 				String poEditorTermsExportFileName = userInputScanner.nextLine();
 
 				try {
-					tools.writeTranslationTermsToJSON(allTerms,new File(poEditorTermsExportFileName));
+					tools.writeTranslationTermsToJSON(allTerms,
+							new File(poEditorTermsExportFileName));
 				} catch (
 						IOException e) {
 					throw new RuntimeException(e);
 				}
 				break;
 			case "2":
-				System.out.println("Please provide the full file path to the starting .dlb script.");
+				System.out.println("Please provide the full file path to the starting " +
+						".dlb script.");
 
 				System.out.print("DialogueBranch Script File: ");
 				dlbScriptFile = userInputScanner.nextLine();
 
 				try {
-					allDialogues = tools.getCompleteReferencedDialoguesSet(new HashSet<>(),new File(dlbScriptFile));
-					System.out.println("Found a total of "+allDialogues.size()+" linked dialogue scripts: ");
+					allDialogues = tools.getCompleteReferencedDialoguesSet(new HashSet<>(),
+							new File(dlbScriptFile));
+					System.out.println("Found a total of " + allDialogues.size() +
+							" linked dialogue scripts: ");
 					for(File dialogueFile : allDialogues) {
 						System.out.println(dialogueFile);
 					}
@@ -264,8 +302,9 @@ public class POEditorTools {
 					throw new RuntimeException(e);
 				}
 
-				System.out.println("Please choose a directory where you would like to store the POEditor Terms files.");
-				File outputDirectory = tools.getOutputDirectoryInteractive();
+				System.out.println("Please choose a directory where you would like to store " +
+						"the POEditor Terms files.");
+				outputDirectory = tools.getOutputDirectoryInteractive();
 
 				for(File dialogueFile : allDialogues) {
 					try {
@@ -296,8 +335,8 @@ public class POEditorTools {
 						wtf.writeToFile(outputDirectory);
 					}
 				} catch(IOException e) {
-					System.out.println("An error has occurred reading from the given file '"+poEditorKeyValueFile+"'.");
-					e.printStackTrace();
+					System.out.println("An error has occurred reading from the given file '"
+							+ poEditorKeyValueFile + "'.");
 					System.exit(1);
 				}
 				break;

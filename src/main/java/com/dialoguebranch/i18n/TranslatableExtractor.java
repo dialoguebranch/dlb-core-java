@@ -40,14 +40,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class can extract all translatable segments (plain text, variables and
- * &lt;&lt;input&gt;&gt; commands) from a {@link Node} or {@link
- * NodeBody}. This includes translatables within "if" and
+ * This class can extract all translatable segments (plain text, variables and &lt;&lt;input&gt;&gt;
+ * commands) from a {@link Node} or {@link NodeBody}. This includes translatables within "if" and
  * "random" commands and replies.
  *
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
  */
 public class TranslatableExtractor {
+
 	public List<SourceTranslatable> extractFromNode(Node node) {
 		return extractFromBody(node.getHeader().getSpeaker(),
 				SourceTranslatable.USER, node.getBody());
@@ -151,6 +151,6 @@ public class TranslatableExtractor {
 	}
 
 	private boolean hasContent(VariableString string) {
-		return !string.getSegments().isEmpty() && !string.isWhitespace();
+		return !string.getSegments().isEmpty() && string.hasContents();
 	}
 }

@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 public class TranslationParserResult {
+
 	private Map<Translatable,List<ContextTranslation>> translations = null;
 	private List<ParseException> parseErrors = new ArrayList<>();
 	private List<String> warnings = new ArrayList<>();

@@ -39,6 +39,8 @@ public class DuplicateLanguageCodeException extends DialogueBranchException {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
+
+	/** The language code (e.g. 'en') that is duplicated. */
 	private final String languageCode;
 
 	// --------------------------------------------------------

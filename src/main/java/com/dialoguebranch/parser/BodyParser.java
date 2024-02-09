@@ -112,7 +112,7 @@ public class BodyParser {
 				VariableString text = parseTextSegment(tokens);
 				if (result.body.getReplies().isEmpty()) {
 					result.body.addSegment(new NodeBody.TextSegment(text));
-				} else if (!text.isWhitespace()) {
+				} else if (text.hasContents()) {
 					throw new LineNumberParseException(
 							"Found content after reply", token.getLineNumber(),
 							token.getColNumber());

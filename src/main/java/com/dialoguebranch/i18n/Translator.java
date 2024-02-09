@@ -148,11 +148,11 @@ public class Translator {
 		if (transList == null)
 			return;
 		Translatable translation = findContextTranslation(text, transList);
-		NodeBody body = text.translatable().getParent();
+		NodeBody body = text.translatable().parent();
 		List<NodeBody.Segment> bodySegments = new ArrayList<>(
 				body.getSegments());
 		List<NodeBody.Segment> textSegments = text.translatable()
-				.getSegments();
+				.segments();
 		int insertIndex = body.getSegments().indexOf(textSegments.get(0));
 		for (NodeBody.Segment segment : textSegments) {
 			bodySegments.remove(segment);
@@ -161,7 +161,7 @@ public class Translator {
 			bodySegments.add(insertIndex++, new NodeBody.TextSegment(
 					new VariableString(preWhitespace)));
 		}
-		List<NodeBody.Segment> transSegments = translation.getSegments();
+		List<NodeBody.Segment> transSegments = translation.segments();
 		for (NodeBody.Segment transSegment : transSegments) {
 			bodySegments.add(insertIndex++, transSegment);
 		}
