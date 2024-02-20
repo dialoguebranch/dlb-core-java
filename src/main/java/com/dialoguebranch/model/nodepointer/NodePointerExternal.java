@@ -37,7 +37,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A pointer to a node that is part of a different dialogue than the dialogue of which the node that is being referred from is a part. 
+ * A pointer to a node that is part of a different dialogue than the dialogue of which the node that
+ * is being referred from is a part.
  * 
  * @author Tessa Beinema
  * @see Reply

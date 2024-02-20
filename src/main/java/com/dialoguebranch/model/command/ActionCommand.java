@@ -44,40 +44,68 @@ import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.expressions.EvaluationException;
 
 /**
- * This command models the &lt;&lt;action ...&gt;&gt; command in DialogueBranch. It
- * specifies an action that should be performed along with a statement. It can
- * be part of a {@link NodeBody} (along with an agent
- * statement) or a {@link Reply} (to be performed when the user
- * chooses the reply).
+ * This command models the &lt;&lt;action ...&gt;&gt; command in Dialogue Branch. It specifies an
+ * action that should be performed along with a statement. It can be part of a {@link NodeBody}
+ * (along with an agent statement) or a {@link Reply} (to be performed when the user chooses the
+ * reply).
  *
- * Three different action commands are supported:
+ * <p>Four different action commands are supported:</p>
  * <ul>
  *     <li>image</li>
  *     <li>video</li>
  *     <li>link</li>
  *     <li>generic</li>
  * </ul>
- * 
- * @author Dennis Hofs (RRD)
+ *
+ * <p>An example of an {@link ActionCommand} is as follows:
+ *
+ * <pre>
+ *     &lt;&lt;action type="link" value="www.dialoguebranch.com/" text="website"&gt;&gt;
+ * </pre>
+ *
+ * <p>In this example, the {@code type} is "link", the {@code value} is "www.dialoguebranch.com" and
+ * the {@code parameters} is a set containing one entry for "text", with the value "website". An
+ * {@link ActionCommand} may contain any number of optional parameters like this.</p>
+ *
+ * @author Dennis Hofs (Roessingh Research and Development)
+ * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class ActionCommand extends AttributesCommand {
+
+	/** The reserved type of action for images. */
 	public static final String TYPE_IMAGE = "image";
+
+	/** The reserved type of action for video. */
 	public static final String TYPE_VIDEO = "video";
+
+	/** The reserved type of action for hyperlinks. */
 	public static final String TYPE_LINK = "link";
+
+	/** The reserved type of action for generic (user defined) actions. */
 	public static final String TYPE_GENERIC = "generic";
-	
+
+	/** The list of all valid action types. */
 	private static final List<String> VALID_TYPES = Arrays.asList(
 			TYPE_IMAGE, TYPE_VIDEO, TYPE_LINK, TYPE_GENERIC);
-	
+
+	/** The specific type of this ActionCommand. */
 	private String type;
+
+	/** The contents of the ActionCommand modelled as a {@link VariableString}. */
 	private VariableString value;
+
+	/** The set of "other" free parameters defined in this ActionCommand. */
 	private Map<String, VariableString> parameters = new LinkedHashMap<>();
 
+	// --------------------------------------------------------
+	// -------------------- Constructor(s) --------------------
+	// --------------------------------------------------------
+
 	/**
-	 * Creates an instance of a {@link ActionCommand} with given {@code type} and
-	 * {@code value}.
-	 * @param type the type of this {@link ActionCommand} as a String, which should be
-	 *                one of "image", "video", or "generic".
+	 * Creates an instance of an {@link ActionCommand} with given {@code type} and {@code value}.
+	 *
+	 * @param type the type of this {@link ActionCommand} as a String, which should be one of
+	 *             "image", "video", "link", or "generic".
 	 * @param value the value of this command
 	 */
 	public ActionCommand(String type, VariableString value) {
@@ -85,17 +113,28 @@ public class ActionCommand extends AttributesCommand {
 		this.value = value;
 	}
 
+	/**
+	 * Creates an instance of an {@link ActionCommand} based on the contents of the given {@code
+	 * other} {@link ActionCommand}.
+	 *
+	 * @param other the {@link ActionCommand} used to populate the contents of this {@link
+	 *              ActionCommand}.
+	 */
 	public ActionCommand(ActionCommand other) {
 		this.type = other.type;
 		this.value = new VariableString(other.value);
 		for (String key : other.parameters.keySet()) {
-			this.parameters.put(key, new VariableString(
-					other.parameters.get(key)));
+			this.parameters.put(key, new VariableString(other.parameters.get(key)));
 		}
 	}
 
+	// -----------------------------------------------------------
+	// -------------------- Getters & Setters --------------------
+	// -----------------------------------------------------------
+
 	/**
 	 * Returns the type of this {@link ActionCommand} as a String.
+	 *
 	 * @return the type of this {@link ActionCommand} as a String.
 	 */
 	public String getType() {
@@ -103,34 +142,67 @@ public class ActionCommand extends AttributesCommand {
 	}
 
 	/**
-	 * Sets the type of this {@link ActionCommand}, which should be one of "image",
-	 * "video", or "generic".
+	 * Sets the type of this {@link ActionCommand}, which should be one of "image", "video", "link",
+	 * or "generic".
+	 *
 	 * @param type the type of this {@link ActionCommand}.
 	 */
 	public void setType(String type) {
 		this.type = type;
 	}
 
+	/**
+	 * Return the contents of the 'value' part of the ActionCommand as a VariableString.
+	 *
+	 * @return the contents of the 'value' part of the ActionCommand as a VariableString.
+	 */
 	public VariableString getValue() {
 		return value;
 	}
 
+	/**
+	 * Sets the contents of the 'value' part of the ActionCommand as a VariableString.
+	 *
+	 * @param value the contents of the 'value' part of the ActionCommand as a VariableString.
+	 */
 	public void setValue(VariableString value) {
 		this.value = value;
 	}
 
+	/**
+	 * Returns the map of optional parameters that are part of this ActionCommand.
+	 *
+	 * @return the map of optional parameters that are part of this ActionCommand.
+	 */
 	public Map<String, VariableString> getParameters() {
 		return parameters;
 	}
 
+	/**
+	 * Sets the optional parameters that are part of this ActionCommand.
+	 *
+	 * @param parameters the optional parameters that are part of this ActionCommand.
+	 */
 	public void setParameters(Map<String, VariableString> parameters) {
 		this.parameters = parameters;
 	}
-	
+
+	// -------------------------------------------------------
+	// -------------------- Other Methods --------------------
+	// -------------------------------------------------------
+
+	/**
+	 * Adds an optional parameter with the given {@code name} and {@code value} to the map of
+	 * optional parameters for this {@link ActionCommand}.
+	 *
+	 * @param name the name of the optional parameter
+	 * @param value the value of the optional parameter, which may includes Dialogue Branch
+	 *              Variables.
+	 */
 	public void addParameter(String name, VariableString value) {
 		parameters.put(name, value);
 	}
-	
+
 	@Override
 	public Reply findReplyById(int replyId) {
 		return null;
@@ -139,8 +211,8 @@ public class ActionCommand extends AttributesCommand {
 	@Override
 	public void getReadVariableNames(Set<String> varNames) {
 		value.getReadVariableNames(varNames);
-		for (VariableString paramVals : parameters.values()) {
-			paramVals.getReadVariableNames(varNames);
+		for (VariableString parameterValues : parameters.values()) {
+			parameterValues.getReadVariableNames(varNames);
 		}
 	}
 
@@ -160,8 +232,7 @@ public class ActionCommand extends AttributesCommand {
 				processedCommand));
 	}
 
-	public ActionCommand executeReplyCommand(Map<String,Object> variables)
-			throws EvaluationException {
+	public ActionCommand executeReplyCommand(Map<String,Object> variables) {
 		ActionCommand processedCommand = new ActionCommand(type,
 				value.execute(variables));
 		for (String param : parameters.keySet()) {
@@ -178,8 +249,11 @@ public class ActionCommand extends AttributesCommand {
 				"<<action type=\"" + type +
 				"\" value=\"" + value.toString(escapes) + "\"");
 		for (String key : parameters.keySet()) {
-			result.append(" " + key + "=\"" +
-					parameters.get(key).toString(escapes) + "\"");
+			result.append(" ")
+					.append(key)
+					.append("=\"")
+					.append(parameters.get(key).toString(escapes))
+					.append("\"");
 		}
 		result.append(">>");
 		return result.toString();
@@ -188,8 +262,7 @@ public class ActionCommand extends AttributesCommand {
 	public static ActionCommand parse(BodyToken cmdStartToken,
 									  CurrentIterator<BodyToken> tokens, NodeState nodeState)
 			throws LineNumberParseException {
-		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken,
-				tokens);
+		Map<String, BodyToken> attrs = parseAttributesCommand(cmdStartToken, tokens);
 		String type = readPlainTextAttr("type", attrs, cmdStartToken, true);
 		BodyToken token = attrs.get("type");
 		if (!VALID_TYPES.contains(type)) {
@@ -198,8 +271,7 @@ public class ActionCommand extends AttributesCommand {
 					token.getLineNumber(), token.getColNumber());
 		}
 		attrs.remove("type");
-		VariableString value = readAttr("value", attrs, cmdStartToken,
-				true);
+		VariableString value = readAttr("value", attrs, cmdStartToken, true);
 		attrs.remove("value");
 		ActionCommand command = new ActionCommand(type, value);
 		for (String attr : attrs.keySet()) {
@@ -213,4 +285,5 @@ public class ActionCommand extends AttributesCommand {
 	public ActionCommand clone() {
 		return new ActionCommand(this);
 	}
+
 }

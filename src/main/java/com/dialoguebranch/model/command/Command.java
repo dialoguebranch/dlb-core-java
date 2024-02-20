@@ -36,7 +36,7 @@ import nl.rrd.utils.expressions.EvaluationException;
 import com.dialoguebranch.model.NodeBody;
 
 /**
- * Base class for commands that are specified with &lt;&lt;...&gt;&gt; in DialogueBranch statements
+ * Base class for commands that are specified with &lt;&lt;...&gt;&gt; in Dialogue Branch statements
  * and replies.
  * 
  * @author Dennis Hofs (Roessingh Research and Development)
@@ -53,24 +53,23 @@ public abstract class Command implements Cloneable {
 	public abstract Reply findReplyById(int replyId);
 	
 	/**
-	 * Retrieves all variable names that are read in this command and adds them
-	 * to the specified set.
+	 * Retrieves all variable names that are read in this command and adds them to the specified
+	 * set.
 	 * 
 	 * @param varNames the set to which the variable names are added
 	 */
 	public abstract void getReadVariableNames(Set<String> varNames);
 	
 	/**
-	 * Retrieves all variable names that are written in this command and adds
-	 * them to the specified set.
+	 * Retrieves all variable names that are written in this command and adds them to the specified
+	 * set.
 	 * 
 	 * @param varNames the set to which the variable names are added
 	 */
 	public abstract void getWriteVariableNames(Set<String> varNames);
 	
 	/**
-	 * Retrieves all node pointers that occur in this command and adds them to
-	 * the specified list.
+	 * Retrieves all node pointers that occur in this command and adds them to the specified list.
 	 * 
 	 * @param pointers the list to which the node pointers are added
 	 */
@@ -79,8 +78,8 @@ public abstract class Command implements Cloneable {
 	/**
 	 * This method is called if this command occurs in a statement body. It executes the command
 	 * with respect to the specified variable map. Any content in the body that should be sent to
-	 * the client, is added to the {@code processedBody} {@link NodeBody} object. This content
-	 * can be text or client commands, with all variables resolved.
+	 * the client, is added to the {@code processedBody} {@link NodeBody} object. This content can
+	 * be text or client commands, with all variables resolved.
 	 * 
 	 * @param variables the variable map
 	 * @param processedBody the processed body
@@ -96,4 +95,5 @@ public abstract class Command implements Cloneable {
 	 */
 	@Override
 	public abstract Command clone();
+
 }

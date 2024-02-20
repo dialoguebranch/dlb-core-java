@@ -28,13 +28,39 @@
 
 package com.dialoguebranch.exception;
 
+/**
+ * An abstract representation of an {@link Exception} specifically for the Dialogue Branch context.
+ * A {@link DialogueBranchException} does not add anything to the default {@link Exception} type,
+ * and can be used simply to distinguish a class of exceptions that can be thrown by Dialogue Branch
+ * software.
+ *
+ * @author Harm op den Akker (Fruit Tree Labs)
+ */
 public abstract class DialogueBranchException extends Exception {
 
+    // --------------------------------------------------------
+    // -------------------- Constructor(s) --------------------
+    // --------------------------------------------------------
+
+    /**
+     * Creates an instance of a {@link DialogueBranchException} with a given {@code message},
+     * explaining the cause of the exception.
+     *
+     * @param message the message explaining the cause of the exception.
+     */
     public DialogueBranchException(String message) {
         super(message);
     }
 
+    /**
+     * Creates an instance of a {@link DialogueBranchException} with a given {@code message},
+     * explaining the cause of the exception, and the nested {@code cause}.
+     *
+     * @param message the message explaining the cause of the exception.
+     * @param cause the actual nested {@link Throwable} cause of the exception.
+     */
     public DialogueBranchException(String message, Throwable cause) {
         super(message,cause);
     }
+
 }

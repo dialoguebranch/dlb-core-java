@@ -96,6 +96,10 @@ public class CommandLineRunner {
 	// -------------------- Other Methods --------------------
 	// -------------------------------------------------------
 
+	/**
+	 * Asks the user to provide a folder, then read its contents and output a summary of the loaded
+	 * Dialogue Branch project.
+	 */
 	private static void generateProjectSummaryFromFolder() {
 
 		File rootDirectory = null;
@@ -126,6 +130,10 @@ public class CommandLineRunner {
 		System.out.println(readResult.generateSummaryString());
 	}
 
+	/**
+	 * Asks the user to provide the location of a project metadata .xml file, then parse the
+	 * contents of the Dialogue Branch project and print out a summary.
+	 */
 	private static void generateProjectSummaryFromXML() {
 		File projectMetadataFile = null;
 		boolean projectMetadataFileValid = false;
@@ -229,6 +237,15 @@ public class CommandLineRunner {
 		}
 	}
 
+	/**
+	 * Creates a {@link File} object based on the provided {@link String}, which should be the path
+	 * to a valid file on the file system.
+	 *
+	 * @param fileString the path to a valid file on the file system
+	 * @return A {@link File} object, representing the given file path.
+	 * @throws InvalidInputException in case of any error, e.g. the file doesn't exist, or the given
+	 *                               input points to a folder instead of a file.
+	 */
 	private static File getFileFromString(String fileString) throws InvalidInputException {
 		File file = new File(fileString);
 		if (!file.exists()) {

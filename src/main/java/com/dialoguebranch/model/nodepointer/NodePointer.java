@@ -30,9 +30,9 @@ package com.dialoguebranch.model.nodepointer;
 import com.dialoguebranch.model.Node;
 
 /**
- * An abstract representation of a pointer to a next node, that can either be an
- * {@link NodePointerInternal} that links to a node withing the same dialogue, or a
- * {@link NodePointerExternal} linking to a node in another dialogue branch script.
+ * An abstract representation of a pointer to a next node, that can either be a {@link
+ * NodePointerInternal} that links to a node withing the same dialogue, or a {@link
+ * NodePointerExternal} linking to a node in another Dialogue Branch script.
  * 
  * @author Tessa Beinema (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -50,6 +50,7 @@ public abstract class NodePointer implements Cloneable {
 	
 	/**
 	 * Creates an instance of a {@link NodePointer} with given {@code nodeId}.
+	 *
 	 * @param nodeId the unique identifier of the {@link Node} that this NodePointer refers to.
 	 */
 	public NodePointer(String nodeId) {
@@ -57,8 +58,9 @@ public abstract class NodePointer implements Cloneable {
 	}
 
 	/**
-	 * Creates an instance of a {@link NodePointer}, instantiated with the information of the
-	 * {@code other} {@link NodePointer}.
+	 * Creates an instance of a {@link NodePointer}, instantiated with the information of the {@code
+	 * other} {@link NodePointer}.
+	 *
 	 * @param other the other {@link NodePointer} from which to instantiate this.
 	 */
 	public NodePointer(NodePointer other) {
@@ -71,6 +73,7 @@ public abstract class NodePointer implements Cloneable {
 
 	/**
 	 * Returns the identifier of the {@link Node} that this pointer refers to.
+	 *
 	 * @return the identifier of the {@link Node} that this pointer refers to.
 	 */
 	public String getNodeId() {
@@ -79,6 +82,7 @@ public abstract class NodePointer implements Cloneable {
 	
 	/**
 	 * Sets the identifier of the {@link Node} that this pointer refers to.
+	 *
 	 * @param nodeId the identifier of the {@link Node} that this pointer refers to.
 	 */
 	public void setNodeId(String nodeId) {
@@ -110,4 +114,5 @@ public abstract class NodePointer implements Cloneable {
 
 	@Override
 	public abstract NodePointer clone();
+
 }

@@ -70,4 +70,5 @@ public class UnknownLanguageCodeException extends DialogueBranchException {
 	public String getLanguageCode() {
 		return languageCode;
 	}
+
 }

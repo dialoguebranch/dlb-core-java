@@ -97,4 +97,5 @@ public class ExecutionException extends DialogueBranchException {
 	public Type getType() {
 		return type;
 	}
+
 }

@@ -47,6 +47,7 @@ public class VariableException extends RuntimeException {
 
 	/**
 	 * Creates an instance of a {@link VariableException} with given {@code message}.
+	 *
 	 * @param message the error message
 	 */
 	public VariableException(String message) {
@@ -55,6 +56,7 @@ public class VariableException extends RuntimeException {
 
 	/**
 	 * Creates an instance of a {@link VariableException} with given {@code cause}.
+	 *
 	 * @param cause the cause of the exception
 	 */
 	public VariableException(Throwable cause) {
@@ -62,11 +64,14 @@ public class VariableException extends RuntimeException {
 	}
 
 	/**
-	 * Creates an instance of a {@link VariableException} with given {@code message} and {@code cause}.
+	 * Creates an instance of a {@link VariableException} with given {@code message} and {@code
+	 * cause}.
+	 *
 	 * @param message the error message
 	 * @param cause the cause of the exception
 	 */
 	public VariableException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

@@ -33,7 +33,7 @@ import nl.rrd.utils.exception.ParseException;
 import java.io.Serial;
 
 /**
- * This exception indicates a parse error within a node.
+ * This exception indicates a parse error within a Dialogue Branch node.
  * 
  * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -85,4 +85,5 @@ public class NodeParseException extends ParseException {
 	public LineNumberParseException getLineNumberParseException() {
 		return (LineNumberParseException)getCause();
 	}
+
 }
