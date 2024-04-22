@@ -36,17 +36,25 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 /**
- * A Variable models a DialogueBranch variable at any specific moment in time, e.g. as part of
- * a VariableStore, using easily serializable parameters (i.e. avoiding Time-related objects).
+ * A {@link Variable} models a Dialogue Branch variable at any specific moment in time, e.g. as part
+ * of a {@link VariableStore}, using easily serializable parameters (i.e. avoiding Time-related
+ * objects).
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Variable {
 
+	/** The name or 'identifier' of the variable */
 	private final String name;
+
+	/** The value of the variable */
 	private final Object value;
+
+	/** The last time this variable was updated (epoch time in milliseconds). */
 	private final Long updatedTime;
+
+	/** The time zone in which this variable was last updated (as IANA string). */
 	private final String updatedTimeZone;
 
 	// --------------------------------------------------------
@@ -57,6 +65,7 @@ public class Variable {
 	 * Creates an instance of a Variable with a given {@code name}, and {@code value}, as well as
 	 * the time at which it was last updated in epoch time ({@code updatedTime}), and the timeZone
 	 * in which this update took place as IANA code (e.g. "Europe/Lisbon").
+	 *
 	 * @param name the name (or 'identifier') of the variable.
 	 * @param value the value of the variable.
 	 * @param updatedTime the timestamp of when this {@link Variable} was last updated (as epoch
@@ -81,8 +90,9 @@ public class Variable {
 
 	/**
 	 * Creates an instance of a Variable with a given {@code name}, and {@code value}, as well as
-	 * the time at which it was last updated as a {@link ZonedDateTime} object. From this
-	 * {@code lastUpdated} time, the time in epoch milliseconds and timezone will be extracted.
+	 * the time at which it was last updated as a {@link ZonedDateTime} object. From this {@code
+	 * lastUpdated} time, the time in epoch milliseconds and timezone will be extracted.
+	 *
 	 * @param name the name (or 'identifier') of the variable
 	 * @param value the value of the variable.
 	 * @param lastUpdated the last updated time for this variable in the timezone of the user.
@@ -101,6 +111,7 @@ public class Variable {
 
 	/**
 	 * Returns the name of this {@link Variable} as a String.
+	 *
 	 * @return the name of this {@link Variable} as a String.
 	 */
 	public String getName() {
@@ -109,6 +120,7 @@ public class Variable {
 
 	/**
 	 * Returns the value of this {@link Variable} as an {@link Object}.
+	 *
 	 * @return the value of this {@link Variable} as an {@link Object}.
 	 */
 	public Object getValue() {
@@ -118,8 +130,9 @@ public class Variable {
 	/**
 	 * Returns the timestamp of when this {@link Variable} was last updated (as epoch time in
 	 * milliseconds).
+	 *
 	 * @return the UTC timestamp of when this {@link Variable} was last updated (as epoch time
-	 * in milliseconds).
+	 *         in milliseconds).
 	 */
 	public Long getUpdatedTime() {
 		return updatedTime;
@@ -128,8 +141,9 @@ public class Variable {
 	/**
 	 * Returns the time zone in which this {@link Variable} was last updated (as IANA Code
 	 * {@code String}, e.g. "Europe/Lisbon").
-	 * @return the time zone in which this {@link Variable} was last updated (as IANA Code
-	 *         {@code String}, e.g. "Europe/Lisbon").
+	 *
+	 * @return the time zone in which this {@link Variable} was last updated (as IANA Code String,
+	 *         e.g. "Europe/Lisbon").
 	 */
 	public String getUpdatedTimeZone() {
 		return updatedTimeZone;
@@ -140,8 +154,10 @@ public class Variable {
 	// -------------------------------------------------------
 
 	/**
-	 * Returns a {@link ZonedDateTime} object representing the date/time that this {@link Variable} was last updated
-	 * in the timezone of the user.
+	 * Returns a {@link ZonedDateTime} object representing the date/time that this {@link Variable}
+	 * was last updated in the timezone of the user, or in the current system default time zone if
+	 * no specific time zone is known.
+	 *
 	 * @return the last updated time for this variable in the timezone of the user.
 	 */
 	@JsonIgnore
@@ -170,4 +186,5 @@ public class Variable {
 				", lastUpdatedTimeZone='" + updatedTimeZone + '\'' +
 				'}';
 	}
+
 }

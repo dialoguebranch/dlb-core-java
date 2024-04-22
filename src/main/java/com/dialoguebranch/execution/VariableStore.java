@@ -32,19 +32,19 @@ import java.util.*;
 
 /**
  * A {@link VariableStore} is an object that stores all Dialogue Branch variable values for a given
- * user.
+ * {@link User}.
  * 
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class VariableStore {
 
-	// Contains the list of all Variables in this store
+	/** Contains the list of all Variables in this store. */
 	private final Map<String, Variable> variables = new HashMap<>();
 
-	// The DialogueBranch user associated with this VariableStore
+	/** The Dialogue Branch user associated with this VariableStore. */
 	private User user;
 
-	// Contains the list of all VariableStoreOnChangeListeners that need to be notified for updates
+	/** Contains the list of all listeners that need to be notified for updates. */
 	private final List<VariableStoreOnChangeListener> onChangeListeners = new ArrayList<>();
 
 	// --------------------------------------------------------
@@ -52,7 +52,7 @@ public class VariableStore {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a new {@link VariableStore} for a given {@code user}.
+	 * Creates an instance of a new {@link VariableStore} for a given {@link User}.
 	 *
 	 * @param user the {@link User} associated with this {@link VariableStore}.
 	 */
@@ -94,14 +94,13 @@ public class VariableStore {
 	}
 
 	/**
-	 * Removes the given {@link VariableStoreOnChangeListener} from the list of listeners
-	 * for this {@link VariableStore}.
+	 * Removes the given {@link VariableStoreOnChangeListener} from the list of listeners for this
+	 * {@link VariableStore}.
 	 *
 	 * @param listener a {@link VariableStoreOnChangeListener} that was previously registered
 	 *                 to listen for changes.
 	 * @return {@code true} if the given {@link VariableStoreOnChangeListener} was removed, or
-	 *         {@code false} otherwise.
-	 * if it was not registered as a listener to begin with.
+	 *         {@code false} otherwise (e.g. if it was not registered as a listener to begin with).
 	 */
 	public boolean removeOnChangeListener(VariableStoreOnChangeListener listener) {
 		synchronized (onChangeListeners) {
@@ -111,8 +110,8 @@ public class VariableStore {
 
 	/**
 	 * Notifies all {@link VariableStoreOnChangeListener} that are listening for changes to this
-	 * {@link VariableStore} of one or more changes as represented by the list of
-	 * {@link VariableStoreChange} {@code changes}.
+	 * {@link VariableStore} of one or more changes as represented by the list of {@link
+	 * VariableStoreChange} {@code changes}.
 	 *
 	 * @param changes one or multiple {@link VariableStoreChange}s representing a modification
 	 *                to this {@link VariableStore}.
@@ -146,6 +145,7 @@ public class VariableStore {
 
 	/**
 	 * Returns the contents of this {@link VariableStore} as an array of {@link Variable}s.
+	 *
 	 * @return the contents of this {@link VariableStore} as an array of {@link Variable}s.
 	 */
 	public Variable[] getVariables() {
@@ -178,6 +178,7 @@ public class VariableStore {
 
 	/**
 	 * Returns the {@link User} associated with this {@link VariableStore}.
+	 *
 	 * @return the {@link User} associated with this {@link VariableStore}.
 	 */
 	public User getUser() {
@@ -186,6 +187,7 @@ public class VariableStore {
 
 	/**
 	 * Returns a set of all the names of {@link Variable}s contained in this {@link VariableStore}.
+	 *
 	 * @return a set of all the names of {@link Variable}s contained in this {@link VariableStore}.
 	 */
 	public Set<String> getVariableNames() {
@@ -194,6 +196,7 @@ public class VariableStore {
 
 	/**
 	 * Get a sorted list of all variable names in this {@link VariableStore}.
+	 *
 	 * @return a sorted list of all variable names in this {@link VariableStore}.
 	 */
 	public List<String> getSortedVariableNames() {
@@ -538,5 +541,5 @@ public class VariableStore {
 			return resultSet;
 		}
 	}
-}
 
+}

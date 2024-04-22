@@ -29,16 +29,18 @@ package com.dialoguebranch.execution;
 import java.time.ZoneId;
 
 /**
- * A {@link User} represents the person that is interacting with a DialogueBranch dialogue.
- * The {@link User} has an identifier and a timezone in which he currently resides that
- * can be used to log events (dialogue history and the stored update times for DialogueBranch
- * variables).
+ * A {@link User} represents the person that is interacting with a DialogueBranch dialogue. The
+ * {@link User} has an identifier and a timezone in which he currently resides that can be used to
+ * log events (dialogue history and the stored update times for Dialogue Branch variables).
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class User {
 
+	/** The identifier or 'username' of this User */
 	private String id;
+
+	/** The time zone in which this user currently resides - for logging timestamps */
 	private ZoneId timeZone;
 
 	// --------------------------------------------------------
@@ -47,6 +49,7 @@ public class User {
 
 	/**
 	 * Creates an instance of a {@link User} in the system's default time zone.
+	 *
 	 * @param id the username or identifier of the {@link User}.
 	 */
 	public User(String id) {
@@ -56,6 +59,7 @@ public class User {
 
 	/**
 	 * Creates an instance of a {@link User} with a given {@code id} and {@code timeZone}.
+	 *
 	 * @param id the username or identifier of the {@link User}
 	 * @param timeZone the timezone (as {@link ZoneId}) in which the user currently resides.
 	 */
@@ -70,6 +74,7 @@ public class User {
 
 	/**
 	 * Returns the identifier of this {@link User} as a {@link String}.
+	 *
 	 * @return the identifier of this {@link User} as a {@link String}.
 	 */
 	public String getId() {
@@ -78,6 +83,7 @@ public class User {
 
 	/**
 	 * Sets the identifier of this {@link User} as a {@link String}.
+	 *
 	 * @param id the identifier of this {@link User} as a {@link String}.
 	 */
 	public void setId(String id) {
@@ -85,8 +91,9 @@ public class User {
 	}
 
 	/**
-	 * Returns the latest known time zone for this user as one of the IANA Codes defined in
-	 * {@link java.util.TimeZone#getAvailableIDs()}.
+	 * Returns the latest known time zone for this user as one of the IANA Codes defined in {@link
+	 * java.util.TimeZone#getAvailableIDs()}.
+	 *
 	 * @return the latest known time zone for this user as one of the IANA Codes defined in
 	 *         {@link java.util.TimeZone#getAvailableIDs()}.
 	 */
@@ -95,12 +102,14 @@ public class User {
 	}
 
 	/**
-	 * Sets the latest known time zone for this user as one of the IANA Codes defined in
-	 * {@link java.util.TimeZone#getAvailableIDs()}.
+	 * Sets the latest known time zone for this user as one of the IANA Codes defined in {@link
+	 * java.util.TimeZone#getAvailableIDs()}.
+	 *
 	 * @param timeZone the latest known time zone for this user as one of the IANA Codes defined in
 	 *        {@link java.util.TimeZone#getAvailableIDs()}.
 	 */
 	public void setTimeZone(ZoneId timeZone) {
 		this.timeZone = timeZone;
 	}
+
 }

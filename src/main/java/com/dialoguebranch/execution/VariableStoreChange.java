@@ -324,4 +324,5 @@ public abstract class VariableStoreChange {
 		}
 
 	}
+
 }

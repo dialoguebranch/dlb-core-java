@@ -46,8 +46,7 @@ public class DialogueMessageFactory {
 	 * @param executedNode the executed node
 	 * @return the DialogueMessage
 	 */
-	public static DialogueMessage generateDialogueMessage(
-			ExecuteNodeResult executedNode) {
+	public static DialogueMessage generateDialogueMessage(ExecuteNodeResult executedNode) {
 		DialogueMessage dialogueMessage = new DialogueMessage();
 		Node node = executedNode.node();
 		NodeBody body = node.getBody();
