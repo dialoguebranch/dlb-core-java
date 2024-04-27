@@ -29,7 +29,14 @@ package com.dialoguebranch.model;
 
 public class Constants {
 
+    public static final String DLB_NODE_SEPARATOR = "===";
+    public static final String DLB_HEADER_SEPARATOR = "---";
     public static final String DLB_NODE_END_ID = "end";
     public static final String DLB_NODE_START_ID = "start";
     public static final String DLB_REPLY_STATEMENT_AUTOFORWARD = "AUTOFORWARD";
+    public static final String DLB_DEFAULT_DIALOGUE_NAME = "undefined";
+    public static final String DLB_DEFAULT_LANGUAGE_CODE = "en";
+    public static final String DLB_SCRIPT_FILE_EXTENSION = ".dlb";
+    public static final String DLB_TRANSLATION_FILE_EXTENSION = ".json";
+
 }

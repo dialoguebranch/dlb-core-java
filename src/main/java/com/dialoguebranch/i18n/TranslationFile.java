@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
+import com.dialoguebranch.model.Constants;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -100,14 +101,16 @@ public class TranslationFile {
 	 *                     error occurs.
 	 */
 	public void writeToFile(File directory) throws IOException {
-		if(!directory.isDirectory()) throw new IOException("The given directory parameter is not a directory.");
+		if(!directory.isDirectory())
+			throw new IOException("The given directory parameter is not a directory.");
 
 		// create object mapper instance
 		ObjectMapper mapper = new ObjectMapper();
 
 		// Create the json file object based on the given directory and this
 		// object's fileName definition
-		File jsonFile = new File(directory.getAbsolutePath() + File.separator + fileName + ".json");
+		File jsonFile = new File(directory.getAbsolutePath() + File.separator + fileName
+				+ Constants.DLB_TRANSLATION_FILE_EXTENSION);
 
 		// Create an ObjectWriter with pretty printing
 		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());

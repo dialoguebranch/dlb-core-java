@@ -29,7 +29,11 @@
 package com.dialoguebranch.cli;
 
 import com.dialoguebranch.exception.InvalidInputException;
+import com.dialoguebranch.exception.ScriptParseException;
 import com.dialoguebranch.parser.*;
+import com.dialoguebranch.script.model.DialogueBranchScript;
+import com.dialoguebranch.script.model.ScriptNode;
+import com.dialoguebranch.script.parser.DialogueBranchScriptParser;
 import nl.rrd.utils.exception.ParseException;
 
 import java.io.File;
@@ -75,6 +79,7 @@ public class CommandLineRunner {
 			The following scenarios are currently supported:
 			  1. Open a DialogueBranch Folder and generate a summary.
 			  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.
+			  3. Open a .dlb script file and parse it with the ScriptParser.
 		""");
 
 		Scanner userInputScanner = new Scanner(System.in);
@@ -84,6 +89,7 @@ public class CommandLineRunner {
 		switch (scenario) {
 			case "1" -> generateProjectSummaryFromFolder();
 			case "2" -> generateProjectSummaryFromXML();
+			case "3" -> parseScriptFile();
 			default -> {
 				System.out.println("Unknown scenario '" + scenario + "', please provide a valid " +
 						"number from the list provided above.");
@@ -169,6 +175,35 @@ public class CommandLineRunner {
 		System.out.println(readResult.generateSummaryString());
 	}
 
+	private static void parseScriptFile() {
+		File scriptFile = null;
+		boolean scriptFileValid = false;
+
+		while(!scriptFileValid) {
+			System.out.println("Please provide location of a .dlb file:");
+			try {
+				scriptFile = askUserInputDialogueBranchFile();
+				scriptFileValid = true;
+			} catch (InvalidInputException e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+
+        try {
+            DialogueBranchScript dialogueBranchScript
+					= DialogueBranchScriptParser.read(scriptFile, null);
+			System.out.println("Finished reading DialogueBranchScript with the following result:");
+			System.out.println(dialogueBranchScript);
+			System.out.println("Contains the following nodes: ");
+			for(ScriptNode node : dialogueBranchScript.getScriptNodes()) {
+				System.out.println(node);
+			}
+        } catch (IOException | ScriptParseException e) {
+			System.err.println("Error parsing DialogueBranchScript: "+e.getMessage());
+			System.exit(0);
+        }
+    }
+
 	/**
 	 * Open the command line for user input and check whether the given value is a valid directory.
 	 * If so, return this directory as a {@link File}, otherwise throws a
@@ -234,6 +269,27 @@ public class CommandLineRunner {
 			else throw new InvalidInputException("The given input is not an .xml file.");
 		} catch(IndexOutOfBoundsException e) {
 			throw new InvalidInputException("The given input is not an .xml file.");
+		}
+	}
+
+	public static File askUserInputDialogueBranchFile() throws InvalidInputException {
+		Scanner userInputScanner = new Scanner(System.in);
+		String fileString = userInputScanner.nextLine();
+
+		// Check if the input is not null
+		if(fileString == null)
+			throw new InvalidInputException("Provided input is null.");
+
+		// Check if the given input path exists
+		File file = getFileFromString(fileString);
+
+		// Check if the given input is an .xml file
+		try {
+			String extension = fileString.substring(fileString.lastIndexOf(".") + 1);
+			if(extension.equals("dlb")) return file;
+			else throw new InvalidInputException("The given input is not a .dlb file.");
+		} catch(IndexOutOfBoundsException e) {
+			throw new InvalidInputException("The given input is not a .dlb file.");
 		}
 	}
 

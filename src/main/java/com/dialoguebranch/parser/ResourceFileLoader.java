@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileDescriptor;
 import com.dialoguebranch.model.FileType;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -169,12 +170,14 @@ public class ResourceFileLoader implements FileLoader {
 	private void parseFileValue(String language, String prefix, String entry,
 			List<FileDescriptor> files) throws ParseException {
 		String path = prefix + entry;
-		if (!entry.endsWith(".dlb") && !entry.endsWith(".json")) {
+		if (!entry.endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION) &&
+				!entry.endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
 			throw new ParseException(
-					"File does not have extension .dlb or .json: " + path);
+					"File does not have extension " + Constants.DLB_SCRIPT_FILE_EXTENSION
+							+ " or " + Constants.DLB_TRANSLATION_FILE_EXTENSION + ": " + path);
 		}
-		FileType fileType = null;
-		if(entry.endsWith(".dlb")) {
+		FileType fileType;
+		if(entry.endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION)) {
 			fileType = FileType.SCRIPT;
 		} else {
 			fileType = FileType.TRANSLATION;

@@ -38,8 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.dialoguebranch.model.FileType;
-import com.dialoguebranch.model.FileDescriptor;
+import com.dialoguebranch.model.*;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.i18n.I18nLanguageFinder;
 import com.dialoguebranch.i18n.ContextTranslation;
@@ -48,14 +47,14 @@ import com.dialoguebranch.i18n.TranslationContext;
 import com.dialoguebranch.i18n.TranslationParser;
 import com.dialoguebranch.i18n.TranslationParserResult;
 import com.dialoguebranch.i18n.Translator;
-import com.dialoguebranch.model.Dialogue;
-import com.dialoguebranch.model.Project;
 
 /**
- * This class can read an entire DialogueBranch project consisting of ".dlb" dialogue files and
- * ".json" translation files as provided through the given {@link FileLoader} implementation.
+ * This class can read an entire DialogueBranch project consisting of dialogue script files (files
+ * with an extension of {@link Constants#DLB_SCRIPT_FILE_EXTENSION}) and translation files (with an
+ * extension of {@link Constants#DLB_TRANSLATION_FILE_EXTENSION} as provided through the given
+ * {@link FileLoader} implementation.
  *
- * @author Dennis Hofs (RRD)
+ * @author Dennis Hofs (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class ProjectParser {
@@ -71,8 +70,10 @@ public class ProjectParser {
 	// --------------------------------------------------------
 
 	/**
-	 * Creates an instance of a {@link ProjectParser} with a given {@link FileLoader} that is
-	 * used to retrieve a complete set of files (".dlb" and ".json") to use in this parser.
+	 * Creates an instance of a {@link ProjectParser} with a given {@link FileLoader} that is used
+	 * to retrieve a complete set of files (both script and translation files) to use in this
+	 * parser.
+	 *
 	 * @param fileLoader the {@link FileLoader} implementation.
 	 */
 	public ProjectParser(FileLoader fileLoader) {

@@ -156,10 +156,10 @@ public class FileDescriptor {
 	 * @return the uniquely identifying dialogue name.
 	 */
 	public String getDialogueName() {
-		if (filePath.endsWith(".dlb")) {
-			return filePath.substring(0,filePath.length() - 4);
-		} else if(filePath.endsWith(".json")) {
-			return filePath.substring(0, filePath.length() - 5);
+		if (filePath.endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION)) {
+			return filePath.substring(0,filePath.length() - Constants.DLB_SCRIPT_FILE_EXTENSION.length());
+		} else if(filePath.endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
+			return filePath.substring(0, filePath.length() - Constants.DLB_TRANSLATION_FILE_EXTENSION.length());
 		}
 		else
 			return filePath;

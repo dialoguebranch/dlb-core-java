@@ -28,6 +28,7 @@
 
 package com.dialoguebranch.parser;
 
+import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileDescriptor;
 import com.dialoguebranch.model.FileType;
 import com.dialoguebranch.model.ProjectMetaData;
@@ -155,12 +156,12 @@ public class ProjectFileLoader implements FileLoader {
 					result.addAll(listDir(language, pathName +
 							child.getName() + "/", child));
 				} else if (child.isFile()) {
-					if (child.getName().endsWith(".dlb")) {
+					if (child.getName().endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION)) {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),
 								FileType.SCRIPT));
-					} else if (child.getName().endsWith(".json")) {
+					} else if (child.getName().endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),

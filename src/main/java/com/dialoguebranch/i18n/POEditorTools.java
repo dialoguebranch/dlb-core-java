@@ -27,6 +27,7 @@
 
 package com.dialoguebranch.i18n;
 
+import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.Dialogue;
 import com.dialoguebranch.model.Node;
 import com.dialoguebranch.parser.DialogueBranchParser;
@@ -164,13 +165,13 @@ public class POEditorTools {
 		Set<String> referencedDialogues = dialogue.getDialoguesReferenced();
 		for(String referencedDialogue : referencedDialogues) {
 			File referencedDialogueFile = new File(dlbScriptFile.getParent()
-					+ File.separator + referencedDialogue + ".dlb");
+					+ File.separator + referencedDialogue + Constants.DLB_SCRIPT_FILE_EXTENSION);
 			if(!allDialogueFiles.contains(referencedDialogueFile)) {
 				allDialogueFiles.add(referencedDialogueFile);
 				Set<File> additionalDialogueFiles = getCompleteReferencedDialoguesSet(
 						allDialogueFiles,
 						new File(dlbScriptFile.getParent() + File.separator
-								+ referencedDialogue + ".dlb"));
+								+ referencedDialogue + Constants.DLB_SCRIPT_FILE_EXTENSION));
 				allDialogueFiles.addAll(additionalDialogueFiles);
 			}
 		}
