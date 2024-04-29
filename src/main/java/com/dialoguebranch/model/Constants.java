@@ -38,5 +38,7 @@ public class Constants {
     public static final String DLB_DEFAULT_LANGUAGE_CODE = "en";
     public static final String DLB_SCRIPT_FILE_EXTENSION = ".dlb";
     public static final String DLB_TRANSLATION_FILE_EXTENSION = ".json";
+    public static final String[] DLB_RESERVED_HEADER_TAGS
+            = {"title","speaker","position","colorId"};
 
 }

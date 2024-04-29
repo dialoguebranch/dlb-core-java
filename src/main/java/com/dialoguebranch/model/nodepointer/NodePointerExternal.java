@@ -47,11 +47,10 @@ public class NodePointerExternal extends NodePointer {
 	
 	private String dialogueId;
 	
-	public NodePointerExternal(String containerDialogueId,
-							   String relNextDialogueId, String nodeId) throws ParseException {
-		super(nodeId);
-		this.dialogueId = getAbsoluteDialogueId(containerDialogueId,
-				relNextDialogueId);
+	public NodePointerExternal(String sourceDialogueName, String targetDialogueName,
+							   String targetNodeId) throws ParseException {
+		super(targetNodeId);
+		this.dialogueId = getAbsoluteDialogueId(sourceDialogueName, targetDialogueName);
 	}
 
 	public NodePointerExternal(NodePointerExternal other) {
@@ -63,20 +62,21 @@ public class NodePointerExternal extends NodePointer {
 
 	/**
 	 * Returns the identifier of the {@link Dialogue} that this pointer refers to.
+	 *
 	 * @return the identifier of the {@link Dialogue} that this pointer refers to.
 	 */
 	public String getDialogueId() {
 		return this.dialogueId;
 	}
 
-	private static String getAbsoluteDialogueId(String containerDialogueId,
-			String relNextDialogueId) throws ParseException {
-		if (relNextDialogueId.startsWith("/"))
-			return relNextDialogueId.substring(1);
-		List<String> relPath = Arrays.asList(relNextDialogueId.split("/"));
+	private static String getAbsoluteDialogueId(String sourceDialogueName,
+												String targetDialogueName) throws ParseException {
+		if (targetDialogueName.startsWith("/"))
+			return targetDialogueName.substring(1);
+
+		List<String> relPath = Arrays.asList(targetDialogueName.split("/"));
 		String relPathStr = joinString("/", relPath);
-		List<String> absPath = new ArrayList<>(Arrays.asList(
-				containerDialogueId.split("/")));
+		List<String> absPath = new ArrayList<>(Arrays.asList(sourceDialogueName.split("/")));
 		absPath.remove(absPath.size() - 1);
 		String containerPathStr = joinString("/", absPath);
 		for (String relPathElem : relPath) {
@@ -134,4 +134,5 @@ public class NodePointerExternal extends NodePointer {
 	public NodePointerExternal clone() {
 		return new NodePointerExternal(this);
 	}
+
 }

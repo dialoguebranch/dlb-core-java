@@ -73,8 +73,7 @@ public class Reply {
 	 * @param statement the statement or null (auto-forward reply)
 	 * @param nodePointer the next node when the reply is chosen
 	 */
-	public Reply(int replyId, NodeBody statement,
-				 NodePointer nodePointer) {
+	public Reply(int replyId, NodeBody statement, NodePointer nodePointer) {
 		this.replyId = replyId;
 		this.statement = statement;
 		this.nodePointer = nodePointer;

@@ -27,6 +27,7 @@
  */
 package com.dialoguebranch.script.model;
 
+import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.script.parser.EditableHeaderParser;
 
 import java.beans.PropertyChangeSupport;
@@ -206,6 +207,11 @@ public class EditableHeader extends Editable {
         setTag("speaker",speaker);
     }
 
+    public String getSpeaker() {
+        if(tags.get("speaker") == null) return "";
+        else return tags.get("speaker");
+    }
+
     /**
      * Convenience function that sets a tag with key "title" to the provided value. Also ensures
      * that the {@code script} representation of this header reflects the change.
@@ -270,6 +276,21 @@ public class EditableHeader extends Editable {
                 }
             }
         }
+    }
+
+    /**
+     * Convenience method for returning all present tags that do not have a defined meaning (e.g.
+     * "title", "speaker", "colorID", and "position"
+     * @return
+     */
+    public Map<String,String> getOptionalTags() {
+        Map<String,String> optionalTags = new HashMap<>();
+        for (Map.Entry<String, String> set : tags.entrySet()) {
+            if(!Arrays.asList(Constants.DLB_RESERVED_HEADER_TAGS).contains(set.getKey())) {
+                optionalTags.put(set.getKey(), set.getValue());
+            }
+        }
+        return optionalTags;
     }
 
     /**
