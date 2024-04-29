@@ -32,6 +32,9 @@ public class EditableHeaderParser {
         // Before starting a new parse, clear all existing warnings in this header
         header.clearWarnings();
 
+        // Also clear all the existing elements in the tags map
+        header.getTags().clear();
+
         // Step 1: Populate the 'tags' of this header from the script
         Scanner scanner = new Scanner(header.getScript());
         int lineNumber = 0;

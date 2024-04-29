@@ -138,7 +138,8 @@ public class EditableHeader extends Editable {
 
     /**
      * Sets the String representing the contents of this {@link EditableHeader}. If the
-     * provided String is {@code null}, the contents will be set to an empty String.
+     * provided String is {@code null}, the contents will be set to an empty String. The provided
+     * script will immediately be parsed to populate the tags-map for this header.
      *
      * @param script the String representing the contents of this {@link EditableHeader}.
      */
@@ -149,20 +150,24 @@ public class EditableHeader extends Editable {
     }
 
     /**
-     * Returns the key-value mapping of the tags that were parsed from this header's script.
-     * @return the key-value mapping of the tags that were parsed from this header's script.
+     * Returns the key-value mapping of all known tags in this header.
+     *
+     * @return the key-value mapping of all known tags in this header.
      */
     public Map<String,String> getTags() {
         return this.tags;
     }
 
     /**
-     * Sets the key-value mapping of the tags that were parsed from this header's script.
-     * @param tags the key-value mapping of the tags that were parsed from this header's script.
+     * Sets the key-value mapping of all known tags in this header. Note: using this method will
+     * also cause this {@link EditableHeader}'s {@code script} representation to be updated to
+     * reflect this newly set tags-map.
+     *
+     * @param tags the key-value mapping of all known tags in this header.
      */
     public void setTags(Map<String,String> tags) {
         this.tags = tags;
-        // TODO: If the tags are set, the script model should be updated
+        updateScriptFromTags();
     }
 
     /**
@@ -185,6 +190,102 @@ public class EditableHeader extends Editable {
         this.isModified = isModified;
         this.getPropertyChangeSupport()
                 .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
+    }
+
+    // ------------------------------------------------------- //
+    // -------------------- Other Methods -------------------- //
+    // ------------------------------------------------------- //
+
+    /**
+     * Convenience function that sets a tag with key "speaker" to the provided value. Also ensures
+     * that the {@code script} representation of this header reflects the change.
+     *
+     * @param speaker the name of the speaker of this node.
+     */
+    public void setSpeaker(String speaker) {
+        setTag("speaker",speaker);
+    }
+
+    /**
+     * Convenience function that sets a tag with key "title" to the provided value. Also ensures
+     * that the {@code script} representation of this header reflects the change.
+     *
+     * @param title the title of this node.
+     */
+    public void setTitle(String title) {
+        setTag("title",title);
+    }
+
+    public String getTitle() {
+        if(tags.get("title") == null) return "";
+        else return tags.get("title");
+    }
+
+    /**
+     * Convenience function that sets a tag with key "position" and the given x,y-coordinates pair
+     * as its value. Also ensures that the {@code script} representation of this header reflects the
+     * change.
+     *
+     * @param x the x-coordinate of the "position" of this node.
+     * @param y the y-coordinate of the "position" of this node.
+     */
+    public void setPosition(int x, int y) {
+        setTag("position",x+","+y);
+    }
+
+    private void setTag(String key, String value) {
+        this.tags.put(key,value);
+        updateScriptFromTags();
+    }
+
+    public int getX() {
+        String position = this.tags.get("position");
+        if(position == null) return 0;
+        else {
+            String[] coordinates = position.split(",");
+            if(coordinates.length != 2) return 0;
+            else {
+                String coordinateX = coordinates[0];
+                try {
+                    return Integer.parseInt(coordinateX);
+                } catch(NumberFormatException e) {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    public int getY() {
+        String position = this.tags.get("position");
+        if(position == null) return 0;
+        else {
+            String[] coordinates = position.split(",");
+            if(coordinates.length != 2) return 0;
+            else {
+                String coordinateY = coordinates[1];
+                try {
+                    return Integer.parseInt(coordinateY);
+                } catch(NumberFormatException e) {
+                    return 0;
+                }
+            }
+        }
+    }
+
+    /**
+     * (Re-)constructs {@code this.script} from the values in {@code this.tags}.
+     */
+    private void updateScriptFromTags() {
+        StringBuilder updatedScript = new StringBuilder();
+        int tagNumber = 1;
+        for (Map.Entry<String, String> set : tags.entrySet()) {
+            updatedScript.append(set.getKey()).append(": ").append(set.getValue());
+            if(tagNumber < tags.size()) {
+                updatedScript.append(System.lineSeparator());
+            }
+            tagNumber++;
+        }
+        this.script = updatedScript.toString();
     }
 
 }
