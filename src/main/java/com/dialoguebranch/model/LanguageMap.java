@@ -27,13 +27,6 @@
 
 package com.dialoguebranch.model;
 
-import nl.rrd.utils.exception.ParseException;
-import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
-import nl.rrd.utils.xml.SimpleSAXHandler;
-import nl.rrd.utils.xml.XMLWriter;
-import org.xml.sax.Attributes;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,61 +102,4 @@ public class LanguageMap {
 		return result.toString();
 	}
 
-	// ------------------------------------------------------
-	// -------------------- XML Handling --------------------
-	// ------------------------------------------------------
-
-	public void writeXML(XMLWriter writer) throws IOException {
-		writer.writeStartElement("language-map");
-
-		for(LanguageSet languageSet : languageSets) {
-			languageSet.writeXML(writer);
-		}
-
-		writer.writeEndElement(); // language-map
-	}
-
-	public static SimpleSAXHandler<LanguageMap> getXMLHandler() {
-		return new XMLHandler();
-	}
-
-	private static class XMLHandler extends AbstractSimpleSAXHandler<LanguageMap> {
-
-		private LanguageMap result = null;
-		private SimpleSAXHandler<LanguageSet> languageSetHandler = null;
-
-		@Override
-		public void startElement(String name, Attributes attributes, List<String> parents)
-				throws ParseException {
-			if(name.equals("language-map")) {
-				result = new LanguageMap();
-			} else if(name.equals("language-set")) {
-				languageSetHandler = LanguageSet.getXMLHandler();
-				languageSetHandler.startElement(name,attributes,parents);
-			} else {
-				if(languageSetHandler != null)
-					languageSetHandler.startElement(name,attributes,parents);
-			}
-		}
-
-		@Override
-		public void endElement(String name, List<String> parents) throws ParseException {
-			if(languageSetHandler != null) languageSetHandler.endElement(name,parents);
-			if(name.equals("language-set") && languageSetHandler != null) {
-				LanguageSet languageSet = languageSetHandler.getObject();
-				result.addLanguageSet(languageSet);
-				languageSetHandler = null;
-			}
-		}
-
-		@Override
-		public void characters(String ch, List<String> parents) throws ParseException {
-
-		}
-
-		@Override
-		public LanguageMap getObject() {
-			return result;
-		}
-	}
 }

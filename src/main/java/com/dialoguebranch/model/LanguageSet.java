@@ -27,13 +27,6 @@
 
 package com.dialoguebranch.model;
 
-import nl.rrd.utils.exception.ParseException;
-import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
-import nl.rrd.utils.xml.SimpleSAXHandler;
-import nl.rrd.utils.xml.XMLWriter;
-import org.xml.sax.Attributes;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,72 +134,4 @@ public class LanguageSet {
 		return result.toString();
 	}
 
-	// ------------------------------------------------------
-	// -------------------- XML Handling --------------------
-	// ------------------------------------------------------
-
-	public void writeXML(XMLWriter writer) throws IOException {
-		writer.writeStartElement("language-set");
-
-		writer.writeStartElement("source-language");
-		writer.writeAttribute("name",sourceLanguage.getName());
-		writer.writeAttribute("code",sourceLanguage.getCode());
-		writer.writeEndElement(); // source-language
-
-		for(Language language : translationLanguages) {
-			writer.writeStartElement("translation-language");
-			writer.writeAttribute("name",language.getName());
-			writer.writeAttribute("code",language.getCode());
-			writer.writeEndElement();
-		}
-
-		writer.writeEndElement(); // language-set
-	}
-
-	public static SimpleSAXHandler<LanguageSet> getXMLHandler() {
-		return new XMLHandler();
-	}
-
-	private static class XMLHandler extends AbstractSimpleSAXHandler<LanguageSet> {
-
-		private LanguageSet result;
-		private SimpleSAXHandler<Language> languageHandler = null;
-
-		@Override
-		public void startElement(String name, Attributes attributes, List<String> parents)
-				throws ParseException {
-			if(name.equals("language-set")) {
-				result = new LanguageSet();
-			} else if(name.equals("source-language") || name.equals("translation-language")) {
-				languageHandler = Language.getXMLHandler();
-				languageHandler.startElement(name,attributes,parents);
-			} else {
-				if(languageHandler != null) languageHandler.startElement(name,attributes,parents);
-			}
-		}
-
-		@Override
-		public void endElement(String name, List<String> parents) throws ParseException {
-			if(languageHandler != null) languageHandler.endElement(name,parents);
-			if(name.equals("source-language") && languageHandler != null) {
-				Language sourceLanguage = languageHandler.getObject();
-				result.setSourceLanguage(sourceLanguage);
-				languageHandler = null;
-			} else if(name.equals("translation-language") && languageHandler != null) {
-				Language translationLanguage = languageHandler.getObject();
-				result.addTranslationLanguage(translationLanguage);
-				languageHandler = null;
-			}
-		}
-
-		@Override
-		public void characters(String ch, List<String> parents) throws ParseException {
-
-		}
-
-		@Override
-		public LanguageSet getObject() {
-			return result;
-		}
-	}
 }

@@ -31,9 +31,9 @@ package com.dialoguebranch.cli;
 import com.dialoguebranch.exception.InvalidInputException;
 import com.dialoguebranch.exception.ScriptParseException;
 import com.dialoguebranch.parser.*;
-import com.dialoguebranch.script.model.DialogueBranchScript;
-import com.dialoguebranch.script.model.ScriptNode;
-import com.dialoguebranch.script.parser.DialogueBranchScriptParser;
+import com.dialoguebranch.script.model.EditableScript;
+import com.dialoguebranch.script.model.EditableNode;
+import com.dialoguebranch.script.parser.EditableScriptParser;
 import nl.rrd.utils.exception.ParseException;
 
 import java.io.File;
@@ -190,16 +190,16 @@ public class CommandLineRunner {
 		}
 
         try {
-            DialogueBranchScript dialogueBranchScript
-					= DialogueBranchScriptParser.read(scriptFile, null);
-			System.out.println("Finished reading DialogueBranchScript with the following result:");
-			System.out.println(dialogueBranchScript);
+            EditableScript editableScript
+					= EditableScriptParser.read(scriptFile, null);
+			System.out.println("Finished reading EditableScript with the following result:");
+			System.out.println(editableScript);
 			System.out.println("Contains the following nodes: ");
-			for(ScriptNode node : dialogueBranchScript.getScriptNodes()) {
+			for(EditableNode node : editableScript.getNodes()) {
 				System.out.println(node);
 			}
         } catch (IOException | ScriptParseException e) {
-			System.err.println("Error parsing DialogueBranchScript: "+e.getMessage());
+			System.err.println("Error parsing EditableScript: "+e.getMessage());
 			System.exit(0);
         }
     }

@@ -33,8 +33,6 @@ import com.dialoguebranch.model.FileDescriptor;
 import com.dialoguebranch.model.FileType;
 import com.dialoguebranch.model.ProjectMetaData;
 import nl.rrd.utils.exception.ParseException;
-import nl.rrd.utils.xml.SimpleSAXHandler;
-import nl.rrd.utils.xml.SimpleSAXParser;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -53,6 +51,7 @@ public class ProjectFileLoader implements FileLoader {
 	/**
 	 * Creates an instance of a {@link ProjectFileLoader} with a given pointer to a project metadata
 	 * xml file, which is immediately parsed into a {@link ProjectMetaData} object.
+	 *
 	 * @param projectMetadataFile the Dialogue Branch project metadata .xml file
 	 * @throws IOException in case of a read error when parsing the project metadata file.
 	 * @throws ParseException in case of a parse error when parsing the project metadata file.
@@ -125,11 +124,7 @@ public class ProjectFileLoader implements FileLoader {
 
 	public static ProjectMetaData loadProjectMetaDataFile(File metaDataFile)
 			throws IOException, ParseException {
-		SimpleSAXHandler<ProjectMetaData> xmlHandler = ProjectMetaData.getXMLHandler();
-		SimpleSAXParser<ProjectMetaData> parser = new SimpleSAXParser<>(xmlHandler);
-		ProjectMetaData result = parser.parse(metaDataFile);
-		result.setBasePath(metaDataFile.getParent());
-		return result;
+		return ProjectMetaDataParser.parse(metaDataFile);
 	}
 
 	/**
@@ -146,8 +141,7 @@ public class ProjectFileLoader implements FileLoader {
 	 * @return a list of all encountered .dlb and .json files as
 	 *         {@code FileDescriptor}s.
 	 */
-	private List<FileDescriptor> listDir(String language, String pathName,
-										 File directory) {
+	private List<FileDescriptor> listDir(String language, String pathName, File directory) {
 		List<FileDescriptor> result = new ArrayList<>();
 		File[] children = directory.listFiles();
 		if(children != null) {
@@ -172,4 +166,5 @@ public class ProjectFileLoader implements FileLoader {
 		}
 		return result;
 	}
+
 }

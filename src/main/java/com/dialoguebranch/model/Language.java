@@ -27,12 +27,6 @@
 
 package com.dialoguebranch.model;
 
-import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
-import nl.rrd.utils.xml.SimpleSAXHandler;
-import org.xml.sax.Attributes;
-
-import java.util.List;
-
 /**
  * A {@link Language} defines a language used in a DialogueBranch project with a given name and
  * language code. The 'code' is preferably a specific ISO3 code, an ISO1 code, or for languages that
@@ -113,40 +107,4 @@ public class Language {
 		return "Language [name:"+name+"] [code:"+code+"]";
 	}
 
-	// ------------------------------------------------------
-	// -------------------- XML Handling --------------------
-	// ------------------------------------------------------
-
-	public static SimpleSAXHandler<Language> getXMLHandler() {
-		return new XMLHandler();
-	}
-
-	private static class XMLHandler extends AbstractSimpleSAXHandler<Language> {
-
-		private Language result;
-
-		@Override
-		public void startElement(String name, Attributes attributes, List<String> parents) {
-			if(name.equals("source-language") || name.equals("translation-language")) {
-				result = new Language();
-				result.setCode(attributes.getValue("code"));
-				result.setName(attributes.getValue("name"));
-			}
-		}
-
-		@Override
-		public void endElement(String name, List<String> parents) {
-
-		}
-
-		@Override
-		public void characters(String ch, List<String> parents) {
-
-		}
-
-		@Override
-		public Language getObject() {
-			return result;
-		}
-	}
 }

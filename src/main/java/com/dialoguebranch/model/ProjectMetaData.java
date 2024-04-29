@@ -27,15 +27,11 @@
 
 package com.dialoguebranch.model;
 
-import nl.rrd.utils.exception.ParseException;
-import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
 import nl.rrd.utils.xml.SimpleSAXHandler;
 import nl.rrd.utils.xml.XMLWriter;
 import com.dialoguebranch.exception.DuplicateLanguageCodeException;
 import com.dialoguebranch.exception.UnknownLanguageCodeException;
-import org.xml.sax.Attributes;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -324,109 +320,4 @@ public class ProjectMetaData {
 		return result;
 	}
 
-	// ------------------------------------------------------
-	// -------------------- XML Handling --------------------
-	// ------------------------------------------------------
-
-	/**
-	 * Writes this {@link ProjectMetaData} to file using the given {@link XMLWriter}.
-	 *
-	 * @param writer the XML writer
-	 * @throws IOException if a writing error occurs
-	 */
-	public void writeXML(XMLWriter writer) throws IOException {
-		writer.writeStartElement("dlb-project");
-		writer.writeAttribute("name",name);
-		writer.writeAttribute("version",version);
-
-		writer.writeStartElement("description");
-		writer.writeCharacters(description);
-		writer.writeEndElement(); // description
-
-		languageMap.writeXML(writer);
-
-		writer.writeEndElement(); // dlb-project
-		writer.close();
-	}
-
-	/**
-	 * Returns a {@link SimpleSAXHandler} that is able to parse the contents of an .xml file
-	 * to a {@link ProjectMetaData} object.
-	 *
-	 * @return the XMl handler
-	 */
-	public static SimpleSAXHandler<ProjectMetaData> getXMLHandler() {
-		return new XMLHandler();
-	}
-
-	/**
-	 * TODO: Test error handling.
-	 * TODO: Check for duplicate languages.
-	 */
-	private static class XMLHandler extends AbstractSimpleSAXHandler<ProjectMetaData> {
-
-		private ProjectMetaData result;
-		private int rootLevel = 0;
-		private boolean inDescription = false;
-		private SimpleSAXHandler<LanguageMap> languageMapHandler = null;
-
-		@Override
-		public void startElement(String name, Attributes attributes, List<String> parents) throws ParseException {
-
-			if(rootLevel == 0) {
-				if(!name.equals("dlb-project")) {
-					throw new ParseException("Expected element 'dlb-project' while parsing DialogueBranch project metadata, found '"+name+"'.");
-				} else {
-					result = new ProjectMetaData();
-					if(attributes.getValue("name") == null) {
-						throw new ParseException("Missing attribute 'name' in element 'dlb-project' while parsing DialogueBranch project metadata.");
-					} else {
-						result.setName(attributes.getValue("name"));
-					}
-					if(attributes.getValue("version") != null) {
-						result.setVersion(attributes.getValue("version"));
-					} else {
-						result.setVersion("");
-					}
-					rootLevel++;
-				}
-			} else if(rootLevel == 1) {
-				if(name.equals("description")) {
-					inDescription = true;
-				} else if(name.equals("language-map")) {
-					languageMapHandler = LanguageMap.getXMLHandler();
-					languageMapHandler.startElement(name,attributes,parents);
-				} else {
-					if(languageMapHandler != null) {
-						languageMapHandler.startElement(name,attributes,parents);
-					} else {
-						throw new ParseException("Unexpected element while parsing DialogueBranch project metadata: '"+name+"'");
-					}
-				}
-			}
-		}
-
-		@Override
-		public void endElement(String name, List<String> parents) throws ParseException {
-			if(languageMapHandler != null) {
-				languageMapHandler.endElement(name,parents);
-			} else if (name.equals("description")) inDescription = false;
-
-			if(name.equals("language-map") && languageMapHandler != null) {
-				result.setLanguageMap(languageMapHandler.getObject());
-			}
-		}
-
-		@Override
-		public void characters(String ch, List<String> parents) throws ParseException {
-			if(inDescription) {
-				result.setDescription(ch);
-			}
-		}
-
-		@Override
-		public ProjectMetaData getObject() {
-			return result;
-		}
-	}
 }
