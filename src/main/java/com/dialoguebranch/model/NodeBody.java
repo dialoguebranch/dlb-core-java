@@ -30,8 +30,8 @@ package com.dialoguebranch.model;
 import com.dialoguebranch.model.command.*;
 import com.dialoguebranch.model.nodepointer.NodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
-import com.dialoguebranch.model.nodepointer.NodePointerExternal;
-import com.dialoguebranch.model.nodepointer.NodePointerInternal;
+import com.dialoguebranch.model.nodepointer.ExternalNodePointer;
+import com.dialoguebranch.model.nodepointer.InternalNodePointer;
 
 import java.util.*;
 
@@ -233,21 +233,21 @@ public class NodeBody {
 	}
 	
 	private int compareNodePointers(NodePointer o1, NodePointer o2) {
-		if (o1 instanceof NodePointerInternal) {
-			if (o2 instanceof NodePointerExternal)
+		if (o1 instanceof InternalNodePointer) {
+			if (o2 instanceof ExternalNodePointer)
 				return -1;
-			NodePointerInternal p1 = (NodePointerInternal)o1;
-			NodePointerInternal p2 = (NodePointerInternal)o2;
-			return p1.getNodeId().compareTo(p2.getNodeId());
+			InternalNodePointer p1 = (InternalNodePointer)o1;
+			InternalNodePointer p2 = (InternalNodePointer)o2;
+			return p1.getTargetNodeId().compareTo(p2.getTargetNodeId());
 		} else {
-			if (o2 instanceof NodePointerInternal)
+			if (o2 instanceof InternalNodePointer)
 				return -1;
-			NodePointerExternal p1 = (NodePointerExternal)o1;
-			NodePointerExternal p2 = (NodePointerExternal)o2;
-			int result = p1.getDialogueId().compareTo(p2.getDialogueId());
+			ExternalNodePointer p1 = (ExternalNodePointer)o1;
+			ExternalNodePointer p2 = (ExternalNodePointer)o2;
+			int result = p1.getAbsoluteTargetDialogue().compareTo(p2.getAbsoluteTargetDialogue());
 			if (result != 0)
 				return result;
-			return p1.getNodeId().compareTo(p2.getNodeId());
+			return p1.getTargetNodeId().compareTo(p2.getTargetNodeId());
 		}
 	}
 	

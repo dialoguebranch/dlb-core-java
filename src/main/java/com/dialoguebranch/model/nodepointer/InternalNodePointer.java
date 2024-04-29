@@ -27,33 +27,29 @@
 
 package com.dialoguebranch.model.nodepointer;
 
-import com.dialoguebranch.model.Reply;
-
 /**
- * A pointer to a node that is part of the same dialogue as the node that is being referred from. 
+ * An {@link InternalNodePointer} represents a pointer from an originNode to a targetNode within
+ * the same Dialogue Branch script.
  * 
- * @author Tessa Beinema
- * @see Reply
+ * @author Tessa Beinema (University of Twente)
+ * @author Harm op den Akker (Fruit Tree Labs)
+ *
+ * @see NodePointer
  */
-public class NodePointerInternal extends NodePointer {
+public class InternalNodePointer extends NodePointer {
 	
-	public NodePointerInternal(String nodeId) {
-		super(nodeId);
+	public InternalNodePointer(String originNodeId, String targetNodeId) {
+		super(originNodeId, targetNodeId);
 	}
 
-	public NodePointerInternal(NodePointerInternal other) {
+	public InternalNodePointer(InternalNodePointer other) {
 		super(other);
 	}
 	
 	// ---------- Functions:
-	
-	@Override
-	public String toString() {
-		return this.nodeId;
-	}
 
 	@Override
-	public NodePointerInternal clone() {
-		return new NodePointerInternal(this);
+	public InternalNodePointer clone() {
+		return new InternalNodePointer(this);
 	}
 }

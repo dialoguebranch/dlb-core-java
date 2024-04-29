@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dialoguebranch.model.nodepointer.NodePointer;
-import com.dialoguebranch.model.nodepointer.NodePointerExternal;
+import com.dialoguebranch.model.nodepointer.ExternalNodePointer;
 
 /**
  * Object representation of a DialogueBranch Dialogue definition. A {@link Dialogue} has a name
@@ -117,7 +117,6 @@ public class Dialogue {
 		return Collections.unmodifiableList(new ArrayList<>(nodes.values()));
 	}
 
-
 	public void addNode(Node node) {
 		nodes.put(node.getTitle().toLowerCase(), node);
 		if (node.getHeader().getSpeaker() != null)
@@ -127,10 +126,10 @@ public class Dialogue {
 		Set<NodePointer> nodePointers = new HashSet<>();
 		node.getBody().getNodePointers(nodePointers);
 		for (NodePointer nodePointer : nodePointers) {
-			if (!(nodePointer instanceof NodePointerExternal))
+			if (!(nodePointer instanceof ExternalNodePointer))
 				continue;
-			NodePointerExternal extPointer = (NodePointerExternal)nodePointer;
-			dialoguesReferenced.add(extPointer.getDialogueId());
+			ExternalNodePointer extPointer = (ExternalNodePointer)nodePointer;
+			dialoguesReferenced.add(extPointer.getAbsoluteTargetDialogue());
 		}
 	}
 	

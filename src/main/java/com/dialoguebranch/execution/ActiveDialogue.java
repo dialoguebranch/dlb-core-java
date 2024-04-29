@@ -33,7 +33,7 @@ import com.dialoguebranch.model.command.Command;
 import com.dialoguebranch.model.command.InputCommand;
 import com.dialoguebranch.model.command.SetCommand;
 import com.dialoguebranch.model.nodepointer.NodePointer;
-import com.dialoguebranch.model.nodepointer.NodePointerInternal;
+import com.dialoguebranch.model.nodepointer.InternalNodePointer;
 import nl.rrd.utils.expressions.EvaluationException;
 
 import java.time.ZonedDateTime;
@@ -224,11 +224,11 @@ public class ActiveDialogue {
 	 * @return the next {@link Node} that follows on the selected reply or {@code null}
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public Node progressDialogue(NodePointerInternal nodePointer, ZonedDateTime eventTime)
+	public Node progressDialogue(InternalNodePointer nodePointer, ZonedDateTime eventTime)
 			throws EvaluationException {
 		Node nextNode = null;
-		if (!nodePointer.getNodeId().equalsIgnoreCase(Constants.DLB_NODE_END_ID))
-			nextNode = dialogueDefinition.getNodeById(nodePointer.getNodeId());
+		if (!nodePointer.getTargetNodeId().equalsIgnoreCase(Constants.DLB_NODE_END_ID))
+			nextNode = dialogueDefinition.getNodeById(nodePointer.getTargetNodeId());
 		this.currentNode = nextNode;
 		if (nextNode != null) this.currentNode = executeNode(nextNode, eventTime);
 		return this.currentNode;

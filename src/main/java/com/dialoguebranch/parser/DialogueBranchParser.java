@@ -29,7 +29,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.exception.NodeParseException;
 import com.dialoguebranch.model.*;
-import com.dialoguebranch.model.nodepointer.NodePointerInternal;
+import com.dialoguebranch.model.nodepointer.InternalNodePointer;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.io.LineColumnNumberReader;
@@ -135,14 +135,14 @@ public class DialogueBranchParser implements AutoCloseable {
 					reader.getLineNum(), reader.getColNum()));
 		}
 		for (NodeState.NodePointerToken pointerToken : nodePointerTokens) {
-			if (!(pointerToken.pointer() instanceof NodePointerInternal pointer))
+			if (!(pointerToken.pointer() instanceof InternalNodePointer pointer))
 				continue;
-			if (dialogue.nodeExists(pointer.getNodeId()))
+			if (dialogue.nodeExists(pointer.getTargetNodeId()))
 				continue;
 			BodyToken token = pointerToken.token();
 			LineNumberParseException parseEx = new LineNumberParseException(
 					"Found reply with pointer to non-existing node: " +
-					pointer.getNodeId(), token.getLineNumber(), token.getColNumber());
+					pointer.getTargetNodeId(), token.getLineNumber(), token.getColNumber());
 			result.getParseErrors().add(createNodeParseException(
 					pointerToken.nodeTitle(), parseEx));
 		}

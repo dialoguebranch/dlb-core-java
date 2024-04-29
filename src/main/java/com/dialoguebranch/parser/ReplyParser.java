@@ -34,8 +34,8 @@ import java.util.List;
 import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.nodepointer.NodePointer;
-import com.dialoguebranch.model.nodepointer.NodePointerExternal;
-import com.dialoguebranch.model.nodepointer.NodePointerInternal;
+import com.dialoguebranch.model.nodepointer.ExternalNodePointer;
+import com.dialoguebranch.model.nodepointer.InternalNodePointer;
 import nl.rrd.utils.CurrentIterator;
 import nl.rrd.utils.exception.LineNumberParseException;
 import nl.rrd.utils.exception.ParseException;
@@ -146,13 +146,14 @@ public class ReplyParser {
 		String nodePointerStr = (String)nodePointerToken.getValue();
 		NodePointer result;
 		if (nodePointerStr.matches(DialogueBranchParser.NODE_NAME_REGEX)) {
-			result = new NodePointerInternal(nodePointerStr);
+			result = new InternalNodePointer(nodeState.getTitle(),nodePointerStr);
 		} else if (nodePointerStr.matches(
 				DialogueBranchParser.EXTERNAL_NODE_POINTER_REGEX)) {
 			int sep = nodePointerStr.lastIndexOf('.');
 			try {
-				result = new NodePointerExternal(
+				result = new ExternalNodePointer(
 						nodeState.getDialogueName(),
+						nodeState.getTitle(),
 						nodePointerStr.substring(0, sep),
 						nodePointerStr.substring(sep + 1));
 			} catch (ParseException ex) {

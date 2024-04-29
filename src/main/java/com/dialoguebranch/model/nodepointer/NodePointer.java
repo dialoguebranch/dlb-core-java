@@ -30,31 +30,37 @@ package com.dialoguebranch.model.nodepointer;
 import com.dialoguebranch.model.Node;
 
 /**
- * An abstract representation of a pointer to a next node, that can either be a {@link
- * NodePointerInternal} that links to a node withing the same dialogue, or a {@link
- * NodePointerExternal} linking to a node in another Dialogue Branch script.
+ * An abstract representation of a pointer to another Node, that can either be an {@link
+ * InternalNodePointer} that links to a node withing the same dialogue, or an {@link
+ * ExternalNodePointer} linking to a node in another Dialogue Branch script.
  * 
  * @author Tessa Beinema (Roessingh Research and Development)
  * @author Harm op den Akker (Fruit Tree Labs)
  *
- * @see NodePointerInternal
- * @see NodePointerExternal
+ * @see InternalNodePointer
+ * @see ExternalNodePointer
  */
 public abstract class NodePointer implements Cloneable {
-	
-	protected String nodeId;
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	/** The identifier of the Node from which this NodePointer is originating */
+	private String originNodeId;
+
+	/** The identifier of the Node to which this NodePointer is pointing */
+	private String targetNodeId;
+
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 	
 	/**
-	 * Creates an instance of a {@link NodePointer} with given {@code nodeId}.
+	 * Creates an instance of a {@link NodePointer} with given {@code targetNodeId}.
 	 *
-	 * @param nodeId the unique identifier of the {@link Node} that this NodePointer refers to.
+	 * @param targetNodeId the unique identifier of the {@link Node} that this NodePointer refers
+	 *                     to.
 	 */
-	public NodePointer(String nodeId) {
-		this.nodeId = nodeId;
+	public NodePointer(String originNodeId, String targetNodeId) {
+		this.originNodeId = originNodeId;
+		this.targetNodeId = targetNodeId;
 	}
 
 	/**
@@ -64,29 +70,48 @@ public abstract class NodePointer implements Cloneable {
 	 * @param other the other {@link NodePointer} from which to instantiate this.
 	 */
 	public NodePointer(NodePointer other) {
-		this.nodeId = other.nodeId;
+		this.originNodeId = other.getOriginNodeId();
+		this.targetNodeId = other.getTargetNodeId();
 	}
 
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
+	// ----------------------------------------------------------- //
+	// -------------------- Getters & Setters -------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
-	 * Returns the identifier of the {@link Node} that this pointer refers to.
+	 * Returns the identifier of the Node from which this pointer is originating.
 	 *
-	 * @return the identifier of the {@link Node} that this pointer refers to.
+	 * @return the identifier of the Node from which this pointer is originating.
 	 */
-	public String getNodeId() {
-		return this.nodeId;
+	public String getOriginNodeId() {
+		return this.originNodeId;
+	}
+
+	/**
+	 * Sets the identifier of the Node from which this pointer is originating.
+	 *
+	 * @param originNodeId the identifier of the Node from which this pointer is originating.
+	 */
+	public void setOriginNodeId(String originNodeId) {
+		this.originNodeId = originNodeId;
+	}
+
+	/**
+	 * Returns the identifier of the {@link Node} that this pointer is pointing to.
+	 *
+	 * @return the identifier of the {@link Node} that this pointer is pointing to.
+	 */
+	public String getTargetNodeId() {
+		return this.targetNodeId;
 	}
 	
 	/**
-	 * Sets the identifier of the {@link Node} that this pointer refers to.
+	 * Sets the identifier of the {@link Node} that this pointer is pointing to.
 	 *
-	 * @param nodeId the identifier of the {@link Node} that this pointer refers to.
+	 * @param targetNodeId the identifier of the {@link Node} that this pointer is pointing to.
 	 */
-	public void setNodeId(String nodeId) {
-		this.nodeId = nodeId;
+	public void setTargetNodeId(String targetNodeId) {
+		this.targetNodeId = targetNodeId;
 	}
 
 	// -------------------------------------------------------
@@ -95,7 +120,7 @@ public abstract class NodePointer implements Cloneable {
 
 	@Override
 	public int hashCode() {
-		return nodeId.hashCode();
+		return originNodeId.hashCode() * targetNodeId.hashCode();
 	}
 
 	@Override
@@ -107,10 +132,9 @@ public abstract class NodePointer implements Cloneable {
 		if (getClass() != obj.getClass())
 			return false;
 		NodePointer other = (NodePointer)obj;
-		if (!nodeId.equals(other.nodeId))
-			return false;
-		return true;
-	}
+        return this.originNodeId.equals(other.getOriginNodeId())
+				&& this.targetNodeId.equals(other.getTargetNodeId());
+    }
 
 	@Override
 	public abstract NodePointer clone();

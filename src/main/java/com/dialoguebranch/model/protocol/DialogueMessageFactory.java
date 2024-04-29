@@ -34,7 +34,7 @@ import com.dialoguebranch.model.NodeBody;
 import com.dialoguebranch.model.Reply;
 import com.dialoguebranch.model.command.ActionCommand;
 import com.dialoguebranch.model.command.InputCommand;
-import com.dialoguebranch.model.nodepointer.NodePointerInternal;
+import com.dialoguebranch.model.nodepointer.InternalNodePointer;
 
 public class DialogueMessageFactory {
 	
@@ -97,10 +97,10 @@ public class DialogueMessageFactory {
 			replyMsg.setStatement(generateDialogueStatement(
 					reply.getStatement()));
 		}
-		if (reply.getNodePointer() instanceof NodePointerInternal) {
-			NodePointerInternal pointer =
-					(NodePointerInternal)reply.getNodePointer();
-			if (pointer.getNodeId().equalsIgnoreCase("end"))
+		if (reply.getNodePointer() instanceof InternalNodePointer) {
+			InternalNodePointer pointer =
+					(InternalNodePointer)reply.getNodePointer();
+			if (pointer.getTargetNodeId().equalsIgnoreCase("end"))
 				replyMsg.setEndsDialogue(true);
 		}
 		for (Command cmd : reply.getCommands()) {
