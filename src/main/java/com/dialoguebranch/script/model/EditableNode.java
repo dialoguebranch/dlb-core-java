@@ -32,7 +32,6 @@ import com.dialoguebranch.model.Constants;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.Objects;
 
 /**
  * An {@link EditableNode} represents a node in Dialogue Branch script that may or may not be
@@ -47,7 +46,10 @@ import java.util.Objects;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableNode extends Editable implements PropertyChangeListener{
+public class EditableNode extends Editable implements PropertyChangeListener {
+
+    /** The EditableScript that this EditableNode belongs to */
+    private final EditableScript editableScript;
 
     /** The header part of this node */
     private EditableHeader header;
@@ -63,11 +65,15 @@ public class EditableNode extends Editable implements PropertyChangeListener{
     // -------------------------------------------------------- //
 
     /**
-     * Creates an instance of an empty {@link EditableNode}.
+     * Creates an instance of an empty {@link EditableNode} that belongs to the given {@link
+     * EditableScript}.
+     *
+     * @param editableScript the EditableScript that this EditableNode belongs to.
      */
-    public EditableNode() {
-        this.header = new EditableHeader();
-        this.body = new EditableBody();
+    public EditableNode(EditableScript editableScript) {
+        this.editableScript = editableScript;
+        this.header = new EditableHeader(this);
+        this.body = new EditableBody(this);
         this.isModified = false;
 
         this.header.addPropertyChangeListener(this);
@@ -75,14 +81,25 @@ public class EditableNode extends Editable implements PropertyChangeListener{
     }
 
     /**
-     * Creates an instance of a {@link EditableNode} with a given {@code header} and {@code body}.
+     * Creates an instance of a {@link EditableNode} that belongs to the given {@link
+     * EditableScript} with a given {@code header} and {@code body}.
      *
+     * @param editableScript the EditableScript that this EditableNode belongs to.
      * @param header the {@link EditableHeader} representing the header of this {@link EditableNode}.
      * @param body the {@link EditableBody} representing the body of this {@link EditableNode}.
      */
-    public EditableNode(EditableHeader header, EditableBody body) {
-        this.header = Objects.requireNonNullElseGet(header, EditableHeader::new);
-        this.body = Objects.requireNonNullElseGet(body, EditableBody::new);
+    public EditableNode(EditableScript editableScript, EditableHeader header, EditableBody body) {
+        this.editableScript = editableScript;
+        if(header == null) {
+            header = new EditableHeader(this);
+        }
+        this.header = header;
+
+        if(body == null) {
+            body = new EditableBody(this);
+        }
+        this.body = body;
+
         this.isModified = false;
 
         this.header.addPropertyChangeListener(this);
@@ -92,6 +109,14 @@ public class EditableNode extends Editable implements PropertyChangeListener{
     // ----------------------------------------------------------- //
     // -------------------- Getters & Setters -------------------- //
     // ----------------------------------------------------------- //
+
+    /**
+     * Returns the EditableScript that this EditableNode belongs to.
+     * @return the EditableScript that this EditableNode belongs to.
+     */
+    public EditableScript getEditableScript() {
+        return this.editableScript;
+    }
 
     /**
      * Returns the {@link EditableHeader} associated with this {@link EditableNode}.
@@ -109,7 +134,10 @@ public class EditableNode extends Editable implements PropertyChangeListener{
      */
     public void setHeader(EditableHeader header) {
         this.header.removePropertyChangeListener(this);
-        this.header = Objects.requireNonNullElseGet(header, EditableHeader::new);
+        if(header == null) {
+            header = new EditableHeader(this);
+        }
+        this.header = header;
         this.header.addPropertyChangeListener(this);
     }
 
@@ -129,7 +157,10 @@ public class EditableNode extends Editable implements PropertyChangeListener{
      */
     public void setBody(EditableBody body) {
         this.body.removePropertyChangeListener(this);
-        this.body = Objects.requireNonNullElseGet(body, EditableBody::new);
+        if(body == null) {
+            body = new EditableBody(this);
+        }
+        this.body = body;
         this.body.addPropertyChangeListener(this);
     }
 
@@ -166,6 +197,16 @@ public class EditableNode extends Editable implements PropertyChangeListener{
     // -------------------- Other Methods -------------------- //
     // ------------------------------------------------------- //
 
+    /**
+     * Returns the title of this Node if its header has been parsed, and the 'title' tag exists,
+     * otherwise it will return the empty string.
+     * @return the title of this Node, or the empty String.
+     */
+    public String getTitle() {
+        String title = header.getTags().get("title");
+        if(title == null) return "";
+        else return title;
+    }
 
     /**
      * Returns a human-readable String representation of this {@link EditableNode}.
@@ -181,6 +222,16 @@ public class EditableNode extends Editable implements PropertyChangeListener{
                 System.lineSeparator() +
                 Constants.DLB_NODE_SEPARATOR +
                 System.lineSeparator();
+    }
+
+    /**
+     * Returns a human-readable String summary of this {@link EditableNode}.
+     * @return a human-readable String summary of this {@link EditableNode}.
+     */
+    public String toStringSummary() {
+        return "EditableNode [title: '" + this.getTitle() + "']"
+                + " with " + this.getBody().getScript().lines().count() + " lines of body"
+                + " and " + this.getHeader().getTags().size() + " header tags.";
     }
 
     // ------------------------------------------------------------------- //

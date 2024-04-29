@@ -79,7 +79,7 @@ public class EditableScriptParser {
 
                 // When we encounter the NODE_SEPARATOR, we take what we have and create a new node
                 if(line.equals(Constants.DLB_NODE_SEPARATOR)) {
-                    editableScript.addNode(createNode(linesBuffer));
+                    editableScript.addNode(createNode(editableScript, linesBuffer));
                     linesBuffer = new ArrayList<>();
                 } else {
                     // Otherwise, we add the line to our line buffer
@@ -91,7 +91,7 @@ public class EditableScriptParser {
                 // If we have some leftover stuff, try to make a node out of it
                 // This can happen if the last node is not ended with a node separator
                 // But we don't want to discard this data
-                editableScript.addNode(createNode(linesBuffer));
+                editableScript.addNode(createNode(editableScript, linesBuffer));
             }
         }
         return editableScript;
@@ -101,10 +101,14 @@ public class EditableScriptParser {
      * Create a {@link EditableNode} from a list of lines. If there is a header separator, it will
      * create a node with a separate header and body.
      *
+     * @param editableScript the {@link EditableScript} that should be the parent of the created
+     *                       nodes.
      * @param lines the list of lines to convert into a {@link EditableNode}.
      * @return a {@link EditableNode}, or {@code null} if the given list of Strings is empty.
      */
-    private static EditableNode createNode(List<String> lines) {
+    private static EditableNode createNode(EditableScript editableScript, List<String> lines) {
+
+        EditableNode createdNode = new EditableNode(editableScript);
 
         // If there is no lines to work with, return null
         if(lines.isEmpty()) {
@@ -118,23 +122,28 @@ public class EditableScriptParser {
 
         // If there is no header separator, everything is considered body
         else if(!lines.contains(Constants.DLB_HEADER_SEPARATOR)) {
-            EditableBody body = new EditableBody(lines);
-            return new EditableNode(null, body);
+            EditableBody body = new EditableBody(createdNode,lines);
+            createdNode.setBody(body);
+            return createdNode;
         }
 
         // If the header separator is the last element of the list, everything is header
         else if(lines.indexOf(Constants.DLB_HEADER_SEPARATOR) == lines.size()-1) {
-            EditableHeader header = new EditableHeader(lines);
-            return new EditableNode(header, null);
+            EditableHeader header = new EditableHeader(createdNode,lines);
+            createdNode.setHeader(header);
+            return createdNode;
         }
 
         // Else, split the lines into header and body
         else {
-            EditableHeader header = new EditableHeader(
+            EditableHeader header = new EditableHeader(createdNode,
                     lines.subList(0, lines.indexOf(Constants.DLB_HEADER_SEPARATOR)));
-            EditableBody body = new EditableBody(
+            EditableBody body = new EditableBody(createdNode,
                     lines.subList(lines.indexOf(Constants.DLB_HEADER_SEPARATOR)+1, lines.size()));
-            return new EditableNode(header, body);
+
+            createdNode.setBody(body);
+            createdNode.setHeader(header);
+            return createdNode;
         }
 
     }

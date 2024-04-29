@@ -27,16 +27,45 @@
  */
 package com.dialoguebranch.script.model;
 
+import com.dialoguebranch.script.warning.ParserWarning;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Any class extending the {@link Editable} object will be able to report changes in its data model
  * through the {@link PropertyChangeSupport} mechanism, using a shared set of {@code propertyNames}.
  *
+ * <p>In addition, an editable object must define a way for it to be parsed, and stores potential
+ * warnings that resulted from the latest parse.</p>
+ *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public abstract class Editable {
+
+    public Editable() {
+        parserWarnings = new ArrayList<>();
+    }
+
+    // ------------------------------------------------------------ //
+    // -------------------- Parsing & Warnings -------------------- //
+    // ------------------------------------------------------------ //
+
+    private List<ParserWarning> parserWarnings;
+
+    public void addParserWarning(ParserWarning parserWarning) {
+        parserWarnings.add(parserWarning);
+    }
+
+    public void clearWarnings() {
+        this.parserWarnings = new ArrayList<>();
+    }
+
+    // ----------------------------------------------------------------- //
+    // -------------------- Property Change Support -------------------- //
+    // ----------------------------------------------------------------- //
 
     public static final String PROPERTY_IS_MODIFIED = "isModified";
     public static final String PROPERTY_DIALOGUE_NAME = "dialogueName";
@@ -46,9 +75,6 @@ public abstract class Editable {
     /** The PropertyChangeSupport object used for informing listeners of changes */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    // ----------------------------------------------------------- //
-    // -------------------- Getters & Setters -------------------- //
-    // ----------------------------------------------------------- //
 
     /**
      * Returns the {@link PropertyChangeSupport} object associated with this {@link Editable}.
@@ -57,10 +83,6 @@ public abstract class Editable {
     public PropertyChangeSupport getPropertyChangeSupport() {
         return pcs;
     }
-
-    // ------------------------------------------------------- //
-    // -------------------- Other Methods -------------------- //
-    // ------------------------------------------------------- //
 
     /**
      * Adds a {@link PropertyChangeListener} to the list of listeners for this object.

@@ -41,6 +41,9 @@ import java.util.Objects;
  */
 public class EditableBody extends Editable {
 
+    /** An EditableBody is part of this EditableNode */
+    private final EditableNode editableNode;
+
     /** The String representing the contents of this {@link EditableBody}. */
     private String script;
 
@@ -52,31 +55,39 @@ public class EditableBody extends Editable {
     // -------------------------------------------------------- //
 
     /**
-     * Creates an instance of an empty {@link EditableBody}.
+     * Creates an instance of an empty {@link EditableBody} that belongs to the given {@link
+     * EditableNode}.
+     *
+     * @param editableNode the {@link EditableNode} to which this body belongs.
      */
-    public EditableBody() {
+    public EditableBody(EditableNode editableNode) {
+        this.editableNode = editableNode;
         this.script = "";
         this.isModified = false;
     }
 
     /**
-     * Creates an instance of an {@link EditableBody} with a given {@link String} representing the
-     * contents of this {@link EditableBody}.
+     * Creates an instance of an {@link EditableBody} that belongs to the given {@link EditableNode}
+     * with a given {@link String} representing the contents of this {@link EditableBody}.
      *
+     * @param editableNode the {@link EditableNode} to which this body belongs.
      * @param script the String representing the contents of this {@link EditableBody}.
      */
-    public EditableBody(String script) {
+    public EditableBody(EditableNode editableNode, String script) {
+        this.editableNode = editableNode;
         this.script = Objects.requireNonNullElseGet(script, String::new);
         this.isModified = false;
     }
 
     /**
-     * Creates an instance of an {@link EditableBody} with a given {@link List} of Strings
-     * representing the contents of this {@link EditableBody}.
+     * Creates an instance of an {@link EditableBody} that belongs to the given {@link EditableNode}
+     * with a given {@link List} of Strings representing the contents of this {@link EditableBody}.
      *
+     * @param editableNode the {@link EditableNode} to which this body belongs.
      * @param lines the list of Strings representing the contents of this {@link EditableBody}.
      */
-    public EditableBody(List<String> lines) {
+    public EditableBody(EditableNode editableNode, List<String> lines) {
+        this.editableNode = editableNode;
         if(lines == null || lines.isEmpty()) {
             this.script = "";
         } else {
@@ -93,6 +104,15 @@ public class EditableBody extends Editable {
     // ----------------------------------------------------------- //
     // -------------------- Getters & Setters -------------------- //
     // ----------------------------------------------------------- //
+
+    /**
+     * Returns the {@link EditableNode} to which this {@link EditableBody} belongs.
+     *
+     * @return the {@link EditableNode} to which this {@link EditableBody} belongs.
+     */
+    public EditableNode getEditableNode() {
+        return editableNode;
+    }
 
     /**
      * Returns the String representing the contents of this {@link EditableBody}.

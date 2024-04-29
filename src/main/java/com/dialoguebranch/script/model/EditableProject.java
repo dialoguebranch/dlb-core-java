@@ -57,6 +57,12 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     // -------------------- Constructor(s) -------------------- //
     // -------------------------------------------------------- //
 
+    /**
+     * Creates an instance of a new empty {@link EditableProject} from the given {@link
+     * ProjectMetaData}.
+     *
+     * @param projectMetaData the project meta data object.
+     */
     public EditableProject(ProjectMetaData projectMetaData) {
         this.projectMetaData = projectMetaData;
         this.activeScripts = new HashMap<>();
@@ -67,10 +73,18 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     // -------------------- Getters & Setters --------------------- //
     // ------------------------------------------------------------ //
 
+    /**
+     * Returns the project metadata object for this {@link EditableProject}.
+     * @return the project metadata object for this {@link EditableProject}.
+     */
     public ProjectMetaData getProjectMetaData() {
         return projectMetaData;
     }
 
+    /**
+     * Sets the project metadata object for this {@link EditableProject}.
+     * @param projectMetaData the project metadata object for this {@link EditableProject}.
+     */
     public void setProjectMetaData(ProjectMetaData projectMetaData) {
         this.projectMetaData = projectMetaData;
     }

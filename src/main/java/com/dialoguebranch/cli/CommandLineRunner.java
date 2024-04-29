@@ -196,7 +196,7 @@ public class CommandLineRunner {
 			System.out.println(editableScript);
 			System.out.println("Contains the following nodes: ");
 			for(EditableNode node : editableScript.getNodes()) {
-				System.out.println(node);
+				System.out.println(node.toStringSummary());
 			}
         } catch (IOException | ScriptParseException e) {
 			System.err.println("Error parsing EditableScript: "+e.getMessage());

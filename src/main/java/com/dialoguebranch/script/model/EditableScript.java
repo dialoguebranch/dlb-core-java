@@ -244,6 +244,16 @@ public class EditableScript extends Editable {
     // -------------------- Other Methods -------------------- //
     // ------------------------------------------------------- //
 
+    public List<EditableNode> getNodesByTitle(String title) {
+        List<EditableNode> foundNodes = new ArrayList<>();
+        for(EditableNode node : nodes) {
+            if(node.getTitle().equals(title)) {
+                foundNodes.add(node);
+            }
+        }
+        return foundNodes;
+    }
+
     /**
      * Adds the given {@link EditableNode} to the list of {@link EditableNode}s for this {@link
      * EditableScript} if a non-{@code null} value is provided.

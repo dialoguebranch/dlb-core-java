@@ -27,9 +27,10 @@
  */
 package com.dialoguebranch.script.model;
 
+import com.dialoguebranch.script.parser.EditableHeaderParser;
+
 import java.beans.PropertyChangeSupport;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * An {@link EditableHeader} represents a (partial) header of a DialogueBranch Script Node,
@@ -41,8 +42,14 @@ import java.util.Objects;
  */
 public class EditableHeader extends Editable {
 
+    /** An EditableHeader is part of this EditableNode */
+    private final EditableNode editableNode;
+
     /** The script that makes up the content of this {@link EditableHeader}. */
     private String script;
+
+    /** The results of successfully parsed tags in the header */
+    private Map<String,String> tags;
 
     /** Stores whether any changes have been made to this header */
     private boolean isModified;
@@ -52,31 +59,45 @@ public class EditableHeader extends Editable {
     // -------------------------------------------------------- //
 
     /**
-     * Creates an instance of an empty {@link EditableHeader}.
+     * Creates an instance of an empty {@link EditableHeader} that belongs to the given {@link
+     * EditableNode}.
+     *
+     * @param editableNode the {@link EditableNode} to which this header belongs.
      */
-    public EditableHeader() {
+    public EditableHeader(EditableNode editableNode) {
+        this.editableNode = editableNode;
         this.script = "";
+        this.tags = new HashMap<>();
         this.isModified = false;
     }
 
     /**
-     * Creates an instance of an {@link EditableHeader} with a given {@code script} String
-     * representing the contents of this {@link EditableHeader}.
+     * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
+     * EditableNode} with a given {@code script} String representing the contents of this
+     * {@link EditableHeader}.
      *
+     * @param editableNode the {@link EditableNode} to which this header belongs.
      * @param script the script representing the contents of this {@link EditableHeader}.
      */
-    public EditableHeader(String script) {
+    public EditableHeader(EditableNode editableNode, String script) {
+        this.editableNode = editableNode;
         this.script = Objects.requireNonNullElseGet(script, String::new);
+        this.tags = new HashMap<>();
         this.isModified = false;
+
+        EditableHeaderParser.parseHeader(this);
     }
 
     /**
-     * Creates an instance of an {@link EditableHeader} with a given {@link List} of Strings
-     * representing the contents of this {@link EditableHeader}.
+     * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
+     * EditableNode} with a given {@link List} of Strings representing the contents of this {@link
+     * EditableHeader}.
      *
+     * @param editableNode the {@link EditableNode} to which this header belongs.
      * @param lines the list of Strings representing the contents of this {@link EditableHeader}.
      */
-    public EditableHeader(List<String> lines) {
+    public EditableHeader(EditableNode editableNode, List<String> lines) {
+        this.editableNode = editableNode;
         if(lines == null || lines.isEmpty()) {
             this.script = "";
         } else {
@@ -87,12 +108,24 @@ public class EditableHeader extends Editable {
             }
             this.script = headerScriptBuilder.toString();
         }
+        this.tags = new HashMap<>();
         this.isModified = false;
+
+        EditableHeaderParser.parseHeader(this);
     }
 
     // ----------------------------------------------------------- //
     // -------------------- Getters & Setters -------------------- //
     // ----------------------------------------------------------- //
+
+    /**
+     * Returns the {@link EditableNode} to which this {@link EditableHeader} belongs.
+     *
+     * @return the {@link EditableNode} to which this {@link EditableHeader} belongs.
+     */
+    public EditableNode getEditableNode() {
+        return editableNode;
+    }
 
     /**
      * Returns the String representing the contents of this {@link EditableHeader}.
@@ -112,6 +145,24 @@ public class EditableHeader extends Editable {
     public void setScript(String script) {
         this.script = Objects.requireNonNullElseGet(script, String::new);
         this.setModified(true);
+        EditableHeaderParser.parseHeader(this);
+    }
+
+    /**
+     * Returns the key-value mapping of the tags that were parsed from this header's script.
+     * @return the key-value mapping of the tags that were parsed from this header's script.
+     */
+    public Map<String,String> getTags() {
+        return this.tags;
+    }
+
+    /**
+     * Sets the key-value mapping of the tags that were parsed from this header's script.
+     * @param tags the key-value mapping of the tags that were parsed from this header's script.
+     */
+    public void setTags(Map<String,String> tags) {
+        this.tags = tags;
+        // TODO: If the tags are set, the script model should be updated
     }
 
     /**
