@@ -27,7 +27,6 @@
  */
 package com.dialoguebranch.script.model;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +39,7 @@ import java.util.Objects;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableBody {
+public class EditableBody extends Editable {
 
     /** The String representing the contents of this {@link EditableBody}. */
     private String script;
@@ -132,49 +131,8 @@ public class EditableBody {
     public void setModified(boolean isModified) {
         boolean oldValue = this.isModified;
         this.isModified = isModified;
-        this.pcs.firePropertyChange(EditableProject.PROPERTY_IS_MODIFIED,oldValue,isModified);
-    }
-
-    // ------------------------------------------------------- //
-    // -------------------- Other Methods -------------------- //
-    // ------------------------------------------------------- //
-
-    // ...
-
-    // ------------------------------------------------------------------- //
-    // -------------------- Property Change Listeners -------------------- //
-    // ------------------------------------------------------------------- //
-
-    /** The PropertyChangeSupport object used for informing listeners of changes */
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object that only
-     * listens to the given {@code propertyName}.
-     *
-     * @param propertyName the name of the property for which changes to listen.
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(propertyName, listener);
-    }
-
-    /**
-     * Removes the given {@link PropertyChangeListener} from the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to remove.
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
     }
 
 }

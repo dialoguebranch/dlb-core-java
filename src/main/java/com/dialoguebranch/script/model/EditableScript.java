@@ -29,7 +29,6 @@ package com.dialoguebranch.script.model;
 
 import com.dialoguebranch.model.Constants;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ import java.util.Objects;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableScript {
+public class EditableScript extends Editable {
 
     /** The name of this dialogue (that should be unique within a project) */
     private String dialogueName;
@@ -157,7 +156,8 @@ public class EditableScript {
         }
         String oldValue = this.dialogueName;
         this.dialogueName = dialogueName;
-        this.pcs.firePropertyChange(PROPERTY_DIALOGUE_NAME, oldValue, dialogueName);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_DIALOGUE_NAME, oldValue, dialogueName);
     }
 
     /**
@@ -182,7 +182,8 @@ public class EditableScript {
         }
         String oldValue = this.languageCode;
         this.languageCode = languageCode;
-        this.pcs.firePropertyChange(PROPERTY_LANGUAGE_CODE, oldValue, languageCode);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_LANGUAGE_CODE, oldValue, languageCode);
     }
 
     /**
@@ -204,7 +205,8 @@ public class EditableScript {
     public void setNodes(List<EditableNode> editableNodes) {
         List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
         this.nodes = Objects.requireNonNullElseGet(editableNodes, ArrayList::new);
-        this.pcs.firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
     }
 
     /**
@@ -234,7 +236,8 @@ public class EditableScript {
                 editableNode.setModified(false);
             }
         }
-        this.pcs.firePropertyChange(EditableProject.PROPERTY_IS_MODIFIED,oldValue,isModified);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
     }
 
     // ------------------------------------------------------- //
@@ -251,7 +254,8 @@ public class EditableScript {
         if(node != null) {
             List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
             this.nodes.add(node);
-            this.pcs.firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+            this.getPropertyChangeSupport()
+                    .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
         }
     }
 
@@ -263,46 +267,6 @@ public class EditableScript {
     public String toString() {
         return "EditableScript with name '" + dialogueName
                 + "' in language '" + languageCode + "' and " + nodes.size() + " nodes.";
-    }
-
-    // ------------------------------------------------------------------- //
-    // -------------------- Property Change Listeners -------------------- //
-    // ------------------------------------------------------------------- //
-
-    public static final String PROPERTY_DIALOGUE_NAME = "dialogueName";
-    public static final String PROPERTY_LANGUAGE_CODE = "languageCode";
-    public static final String PROPERTY_NODES = "nodes";
-
-    /** The PropertyChangeSupport object used for informing listeners of changes */
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object that only
-     * listens to the given {@code propertyName}.
-     *
-     * @param propertyName the name of the property for which changes to listen.
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(propertyName, listener);
-    }
-
-    /**
-     * Removes the given {@link PropertyChangeListener} from the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to remove.
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
     }
 
 }

@@ -31,7 +31,6 @@ import com.dialoguebranch.model.ProjectMetaData;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +42,7 @@ import java.util.Map;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableProject implements PropertyChangeListener {
+public class EditableProject extends Editable implements PropertyChangeListener {
 
     /** The project metadata information */
     private ProjectMetaData projectMetaData;
@@ -104,46 +103,13 @@ public class EditableProject implements PropertyChangeListener {
                 editableScript.setModified(false);
             }
         }
-        this.pcs.firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
     }
 
     // ------------------------------------------------------------------- //
     // -------------------- Property Change Listeners -------------------- //
     // ------------------------------------------------------------------- //
-
-    public static final String PROPERTY_IS_MODIFIED = "isModified";
-
-    /** The PropertyChangeSupport object used for informing listeners of changes */
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object that only
-     * listens to the given {@code propertyName}.
-     *
-     * @param propertyName the name of the property for which changes to listen.
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(propertyName, listener);
-    }
-
-    /**
-     * Removes the given {@link PropertyChangeListener} from the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to remove.
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
-    }
 
     /**
      * This method gets called when a bound property is changed.
@@ -153,7 +119,7 @@ public class EditableProject implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        if(event.getPropertyName().equals(EditableProject.PROPERTY_IS_MODIFIED)) {
+        if(event.getPropertyName().equals(PROPERTY_IS_MODIFIED)) {
             boolean modified = (Boolean) event.getNewValue();
             // If any of its active scripts are modified, this project is modified
             if(modified) {

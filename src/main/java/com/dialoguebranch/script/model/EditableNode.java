@@ -42,12 +42,12 @@ import java.util.Objects;
  * <p>A {@link EditableNode} is a simple container class that contains an {@link EditableHeader} and
  * an {@link EditableBody}, both of which can be empty, but never {@code null}.</p>
  *
- * <p>his class informs registered property change listeners of changes in its content using the
+ * <p>This class informs registered property change listeners of changes in its content using the
  * {@link PropertyChangeSupport} mechanism.</p>
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableNode implements PropertyChangeListener{
+public class EditableNode extends Editable implements PropertyChangeListener{
 
     /** The header part of this node */
     private EditableHeader header;
@@ -158,7 +158,8 @@ public class EditableNode implements PropertyChangeListener{
             this.header.setModified(false);
             this.body.setModified(false);
         }
-        this.pcs.firePropertyChange(EditableProject.PROPERTY_IS_MODIFIED,oldValue,isModified);
+        this.getPropertyChangeSupport()
+                .firePropertyChange(EditableProject.PROPERTY_IS_MODIFIED,oldValue,isModified);
     }
 
     // ------------------------------------------------------- //
@@ -186,38 +187,6 @@ public class EditableNode implements PropertyChangeListener{
     // -------------------- Property Change Listeners -------------------- //
     // ------------------------------------------------------------------- //
 
-    /** The PropertyChangeSupport object used for informing listeners of changes */
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
-    /**
-     * Adds a {@link PropertyChangeListener} to the list of listeners for this object that only
-     * listens to the given {@code propertyName}.
-     *
-     * @param propertyName the name of the property for which changes to listen.
-     * @param listener the {@link PropertyChangeListener} to add.
-     */
-    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(propertyName, listener);
-    }
-
-    /**
-     * Removes the given {@link PropertyChangeListener} from the list of listeners for this object.
-     *
-     * @param listener the {@link PropertyChangeListener} to remove.
-     */
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.removePropertyChangeListener(listener);
-    }
-
     /**
      * An {@link EditableNode} listens to changes in its {@link EditableBody} and {@link
      * EditableHeader}. If either of these trigger an event stating that they have been modified
@@ -229,7 +198,7 @@ public class EditableNode implements PropertyChangeListener{
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        if(event.getPropertyName().equals(EditableProject.PROPERTY_IS_MODIFIED)) {
+        if(event.getPropertyName().equals(PROPERTY_IS_MODIFIED)) {
             boolean modified = (Boolean) event.getNewValue();
             if(modified) {
                 this.setModified(true);
