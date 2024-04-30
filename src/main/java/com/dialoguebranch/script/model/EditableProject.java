@@ -31,7 +31,9 @@ import com.dialoguebranch.model.ProjectMetaData;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,7 +88,9 @@ public class EditableProject extends Editable implements PropertyChangeListener 
      * @param projectMetaData the project metadata object for this {@link EditableProject}.
      */
     public void setProjectMetaData(ProjectMetaData projectMetaData) {
+        ProjectMetaData oldValue = this.projectMetaData;
         this.projectMetaData = projectMetaData;
+        this.getPropertyChangeSupport().firePropertyChange(PROPERTY_METADATA,oldValue,projectMetaData);
     }
 
     // -------------------------------------------------------- //
@@ -119,6 +123,16 @@ public class EditableProject extends Editable implements PropertyChangeListener 
         }
         this.getPropertyChangeSupport()
                 .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
+    }
+
+    public List<EditableScript> getModifiedScripts() {
+        List<EditableScript> result = new ArrayList<>();
+        for(EditableScript script : activeScripts.values()) {
+            if(script.isModified()) {
+                result.add(script);
+            }
+        }
+        return result;
     }
 
     // ------------------------------------------------------------------- //

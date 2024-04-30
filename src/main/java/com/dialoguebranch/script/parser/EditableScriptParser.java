@@ -29,10 +29,7 @@ package com.dialoguebranch.script.parser;
 
 import com.dialoguebranch.exception.ScriptParseException;
 import com.dialoguebranch.model.Constants;
-import com.dialoguebranch.script.model.EditableScript;
-import com.dialoguebranch.script.model.EditableNode;
-import com.dialoguebranch.script.model.EditableBody;
-import com.dialoguebranch.script.model.EditableHeader;
+import com.dialoguebranch.script.model.*;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -76,25 +73,39 @@ public class EditableScriptParser {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-
-                // When we encounter the NODE_SEPARATOR, we take what we have and create a new node
-                if(line.equals(Constants.DLB_NODE_SEPARATOR)) {
-                    editableScript.addNode(createNode(editableScript, linesBuffer));
-                    linesBuffer = new ArrayList<>();
-                } else {
-                    // Otherwise, we add the line to our line buffer
-                    linesBuffer.add(line);
-                }
-
-            }
-            if(!linesBuffer.isEmpty()) {
-                // If we have some leftover stuff, try to make a node out of it
-                // This can happen if the last node is not ended with a node separator
-                // But we don't want to discard this data
-                editableScript.addNode(createNode(editableScript, linesBuffer));
+                linesBuffer.add(line);
             }
         }
+
+        if(!linesBuffer.isEmpty()) {
+            setContents(linesBuffer, editableScript);
+        }
+
         return editableScript;
+    }
+
+    public static void setContents(List<String> lines, EditableScript editableScript) {
+        List<String> linesBuffer = new ArrayList<>();
+
+        for(String line : lines) {
+
+            // When we encounter the NODE_SEPARATOR, we take what we have and create a new node
+            if(line.equals(Constants.DLB_NODE_SEPARATOR)) {
+                editableScript.addNode(createNode(editableScript, linesBuffer));
+                linesBuffer = new ArrayList<>();
+            } else {
+                // Otherwise, we add the line to our line buffer
+                linesBuffer.add(line);
+            }
+
+        }
+
+        if(!linesBuffer.isEmpty()) {
+            // If we have some leftover stuff, try to make a node out of it
+            // This can happen if the last node is not ended with a node separator
+            // But we don't want to discard this data
+            editableScript.addNode(createNode(editableScript, linesBuffer));
+        }
     }
 
     /**
@@ -168,7 +179,7 @@ public class EditableScriptParser {
 
         // Create a new EditableScript with the file name as dialogueName
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
-        return new EditableScript(fileName, languageCode);
+        return new EditableScript(fileName, languageCode, new FileStorageSource(file));
     }
 
 }

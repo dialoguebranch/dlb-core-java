@@ -28,11 +28,15 @@
 package com.dialoguebranch.script.model;
 
 import com.dialoguebranch.model.Constants;
+import com.dialoguebranch.script.parser.EditableScriptParser;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * A {@link EditableScript} models the contents of a DialogueBranch script that may contain
@@ -58,13 +62,16 @@ import java.util.Objects;
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
-public class EditableScript extends Editable {
+public class EditableScript extends Editable implements PropertyChangeListener  {
 
     /** The name of this dialogue (that should be unique within a project) */
     private String dialogueName;
 
     /** The language code for this dialogue */
     private String languageCode;
+
+    /** An object that contains information on where/how this EditableScript is stored */
+    private final StorageSource storageSource;
 
     /** The List of ScriptNodes that make up the contents of this EditableScript */
     private List<EditableNode> nodes;
@@ -88,7 +95,7 @@ public class EditableScript extends Editable {
      * @param dialogueName the name of this {@link EditableScript}.
      * @param languageCode the language code for this {@link EditableScript}.
      */
-    public EditableScript(String dialogueName, String languageCode) {
+    public EditableScript(String dialogueName, String languageCode, StorageSource storageSource) {
         // Set the dialogue name, or use the default value
         if(dialogueName == null || dialogueName.isEmpty()) {
             this.dialogueName = Constants.DLB_DEFAULT_DIALOGUE_NAME;
@@ -102,6 +109,8 @@ public class EditableScript extends Editable {
         } else {
             this.languageCode = languageCode;
         }
+
+        this.storageSource = storageSource;
 
         this.nodes = new ArrayList<>();
         this.isModified = false;
@@ -122,11 +131,14 @@ public class EditableScript extends Editable {
      * @param languageCode the language code for this {@link EditableScript}.
      * @param nodes the {@link EditableNode}s that make up this {@link EditableScript}.
      */
-    public EditableScript(String dialogueName, String languageCode,
+    public EditableScript(String dialogueName, String languageCode, StorageSource storageSource,
                           List<EditableNode> nodes) {
-        this(dialogueName, languageCode);
+        this(dialogueName, languageCode, storageSource);
 
         this.nodes = Objects.requireNonNullElseGet(nodes, ArrayList::new);
+        for(EditableNode node : this.nodes) {
+            node.addPropertyChangeListener(PROPERTY_IS_MODIFIED,this);
+        }
         this.isModified = false;
     }
 
@@ -187,6 +199,16 @@ public class EditableScript extends Editable {
     }
 
     /**
+     * Returns the {@link StorageSource} for this {@link EditableScript}, providing a link to the
+     * medium where this script has been stored.
+     *
+     * @return the {@link StorageSource} for this {@link EditableScript}.
+     */
+    public StorageSource getStorageSource() {
+        return this.storageSource;
+    }
+
+    /**
      * Returns the List of {@link EditableNode}s that make up this {@link EditableScript}.
      *
      * @return the List of {@link EditableNode}s that make up this {@link EditableScript}.
@@ -204,7 +226,13 @@ public class EditableScript extends Editable {
      */
     public void setNodes(List<EditableNode> editableNodes) {
         List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
+        for(EditableNode oldNode : oldNodes) {
+            oldNode.removePropertyChangeListener(this);
+        }
         this.nodes = Objects.requireNonNullElseGet(editableNodes, ArrayList::new);
+        for(EditableNode node : this.nodes) {
+            node.addPropertyChangeListener(PROPERTY_IS_MODIFIED,this);
+        }
         this.getPropertyChangeSupport()
                 .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
     }
@@ -244,6 +272,44 @@ public class EditableScript extends Editable {
     // -------------------- Other Methods -------------------- //
     // ------------------------------------------------------- //
 
+    public String getCompleteCode() {
+        StringBuilder codeBuilder = new StringBuilder();
+        for(EditableNode node : nodes) {
+            codeBuilder.append(node.getHeader().getScript());
+            codeBuilder.append(System.lineSeparator());
+            codeBuilder.append(Constants.DLB_HEADER_SEPARATOR);
+            codeBuilder.append(System.lineSeparator());
+            codeBuilder.append(node.getBody().getScript());
+            codeBuilder.append(System.lineSeparator());
+            codeBuilder.append(Constants.DLB_NODE_SEPARATOR);
+            codeBuilder.append(System.lineSeparator());
+        }
+        return codeBuilder.toString();
+    }
+
+    /**
+     * Completely updates the contents of this {@link EditableScript} based on the given
+     * {@code code}.
+     *
+     * @param code a String representing the script code for this {@link EditableScript}.
+     */
+    public void setCompleteCode(String code) {
+
+        // First, remove the old list of nodes, unregistering property change listeners,
+        // and finally informing listeners of this change.
+        List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
+        for(EditableNode node : this.nodes) {
+            node.removePropertyChangeListener(this);
+        }
+        this.nodes = new ArrayList<>();
+        this.getPropertyChangeSupport().firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+
+        // Next, use the EditableScriptParser to re-generate the contents of this script
+        List<String> codeLines = code.lines().toList();
+        EditableScriptParser.setContents(codeLines,this);
+        this.setModified(true);
+    }
+
     public List<EditableNode> getNodesByTitle(String title) {
         List<EditableNode> foundNodes = new ArrayList<>();
         for(EditableNode node : nodes) {
@@ -264,6 +330,17 @@ public class EditableScript extends Editable {
         if(node != null) {
             List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
             this.nodes.add(node);
+            node.addPropertyChangeListener(PROPERTY_IS_MODIFIED,this);
+            this.getPropertyChangeSupport()
+                    .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+        }
+    }
+
+    public void removeNode(EditableNode node) {
+        if(node != null) {
+            List<EditableNode> oldNodes = new ArrayList<>(this.nodes);
+            node.removePropertyChangeListener(this);
+            this.nodes.remove(node);
             this.getPropertyChangeSupport()
                     .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
         }
@@ -277,6 +354,23 @@ public class EditableScript extends Editable {
     public String toString() {
         return "EditableScript with name '" + dialogueName
                 + "' in language '" + languageCode + "' and " + nodes.size() + " nodes.";
+    }
+
+    /**
+     * An {@link EditableScript} listens to PROPERTY_IS_MODIFIED events of all of its EditableNodes.
+     * If any of its nodes is modified, this script is also set as modified.
+     *
+     * @param event A PropertyChangeEvent object describing the event source and the property that
+     *              has changed.
+     */
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        if(event.getPropertyName().equals(PROPERTY_IS_MODIFIED)) {
+            boolean modified = (Boolean) event.getNewValue();
+            if(modified) {
+                this.setModified(true);
+            }
+        }
     }
 
 }

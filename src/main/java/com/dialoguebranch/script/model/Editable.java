@@ -71,10 +71,10 @@ public abstract class Editable {
     public static final String PROPERTY_DIALOGUE_NAME = "dialogueName";
     public static final String PROPERTY_LANGUAGE_CODE = "languageCode";
     public static final String PROPERTY_NODES = "nodes";
+    public static final String PROPERTY_METADATA = "metaData";
 
     /** The PropertyChangeSupport object used for informing listeners of changes */
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-
 
     /**
      * Returns the {@link PropertyChangeSupport} object associated with this {@link Editable}.

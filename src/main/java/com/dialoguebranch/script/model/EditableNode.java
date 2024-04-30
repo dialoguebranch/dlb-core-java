@@ -190,7 +190,7 @@ public class EditableNode extends Editable implements PropertyChangeListener {
             this.body.setModified(false);
         }
         this.getPropertyChangeSupport()
-                .firePropertyChange(EditableProject.PROPERTY_IS_MODIFIED,oldValue,isModified);
+                .firePropertyChange(PROPERTY_IS_MODIFIED,oldValue,isModified);
     }
 
     // ------------------------------------------------------- //
