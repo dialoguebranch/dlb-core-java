@@ -29,6 +29,7 @@ package com.dialoguebranch.model;
 
 import com.dialoguebranch.exception.DuplicateLanguageCodeException;
 import com.dialoguebranch.exception.UnknownLanguageCodeException;
+import com.dialoguebranch.script.model.StorageSource;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -58,6 +59,9 @@ public class ProjectMetaData {
 
 	/** The mapping object of source- and translation languages available in this project */
 	private LanguageMap languageMap;
+
+	/** An object that contains information on where/how this ProjectMetaData is stored */
+	private StorageSource storageSource;
 
 	// -------------------------------------------------------- //
 	// -------------------- Constructor(s) -------------------- //
@@ -89,6 +93,24 @@ public class ProjectMetaData {
 		this.description = description;
 		this.version = version;
 		this.languageMap = languageMap;
+	}
+
+	/**
+	 * Creates an instance of a {@link ProjectMetaData} object with the given parameters.
+	 *
+	 * @param name a descriptive name of the DialogueBranch project.
+	 * @param basePath the base path of this DialogueBranch project, always ending in a file
+	 *                 separator character.
+	 * @param description a textual description of this DialogueBranch project.
+	 * @param version free-form version information (e.g. v0.1.0).
+	 * @param languageMap contains all the languages supported by this DialogueBranch project.
+	 * @param storageSource the object that contains information on where/how this ProjectMetaData
+	 *                      is stored.
+	 */
+	public ProjectMetaData(String name, String basePath, String description, String version,
+						   LanguageMap languageMap, StorageSource storageSource) {
+		this(name,basePath,description,version,languageMap);
+		this.storageSource = storageSource;
 	}
 
 	// ----------------------------------------------------------- //
@@ -191,6 +213,25 @@ public class ProjectMetaData {
 	 */
 	public void setLanguageMap(LanguageMap languageMap) {
 		this.languageMap = languageMap;
+	}
+
+	/**
+	 * Returns the object that contains information on where/how this ProjectMetaData is stored.
+	 *
+	 * @return the object that contains information on where/how this ProjectMetaData is stored.
+	 */
+	public StorageSource getStorageSource() {
+		return this.storageSource;
+	}
+
+	/**
+	 * Sets the object that contains information on where/how this ProjectMetaData is stored.
+	 *
+	 * @param storageSource the object that contains information on where/how this ProjectMetaData
+	 *                      is stored.
+	 */
+	public void setStorageSource(StorageSource storageSource) {
+		this.storageSource = storageSource;
 	}
 
 	// ------------------------------------------------------- //

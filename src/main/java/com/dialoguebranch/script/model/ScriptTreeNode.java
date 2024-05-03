@@ -3,7 +3,10 @@ package com.dialoguebranch.script.model;
 import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileType;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class ScriptTreeNode {
@@ -68,6 +71,7 @@ public class ScriptTreeNode {
 
     public void setChildren(List<ScriptTreeNode> children) {
         this.children = children;
+        this.children.sort(new ScriptTreeNodeComparator());
     }
 
     // ------------------------------------------------------- //
@@ -80,6 +84,7 @@ public class ScriptTreeNode {
 
     public void addChild(ScriptTreeNode node) {
         this.children.add(node);
+        this.children.sort(new ScriptTreeNodeComparator());
     }
 
     public String toString() {
@@ -105,6 +110,26 @@ public class ScriptTreeNode {
         }
 
         return result;
+    }
+
+    private static class ScriptTreeNodeComparator implements Comparator<ScriptTreeNode> {
+
+        @Override
+        public int compare(ScriptTreeNode node1, ScriptTreeNode node2) {
+            if(node1.isLeaf()) {
+                if(node2.isLeaf()) {
+                    return node1.getName().compareTo(node2.getName());
+                } else {
+                    return 1;
+                }
+            } else {
+                if(node2.isLeaf()) {
+                    return -1;
+                } else {
+                    return node1.getName().compareTo(node2.getName());
+                }
+            }
+        }
     }
 
 }

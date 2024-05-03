@@ -36,7 +36,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 /**
  * A {@link EditableScript} models the contents of a DialogueBranch script that may contain
