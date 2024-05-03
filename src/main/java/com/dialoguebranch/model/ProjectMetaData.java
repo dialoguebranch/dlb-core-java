@@ -27,18 +27,16 @@
 
 package com.dialoguebranch.model;
 
-import nl.rrd.utils.xml.SimpleSAXHandler;
-import nl.rrd.utils.xml.XMLWriter;
 import com.dialoguebranch.exception.DuplicateLanguageCodeException;
 import com.dialoguebranch.exception.UnknownLanguageCodeException;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link ProjectMetaData} class is the object representation of a DialogueBranch metadata .xml
- * file. This object can be serialized into an XML file using an {@link XMLWriter} or be constructed
- * from an XML file using a {@link SimpleSAXHandler}. Additionally, contains methods for dynamically
+ * The {@link ProjectMetaData} class is the object representation of a DialogueBranch metadata
+ * instance, which may be represented as an .xml file or otherwise. Contains methods for dynamically
  * modifying the contents of a {@link ProjectMetaData} specification while maintaining certain
  * constraints.
  *
@@ -46,15 +44,24 @@ import java.util.List;
  */
 public class ProjectMetaData {
 
+	/** The name of the Dialogue Branch project */
 	private String name;
+
+	/** The base path of the Dialogue Branch project */
 	private String basePath;
+
+	/** A free-form description of the Dialogue Branch project */
 	private String description;
+
+	/** A free-form version indicator of the Dialogue Branch project */
 	private String version;
+
+	/** The mapping object of source- and translation languages available in this project */
 	private LanguageMap languageMap;
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 
 	/**
 	 * Creates an instance of an empty {@link ProjectMetaData} object.
@@ -65,7 +72,8 @@ public class ProjectMetaData {
 	 * Creates an instance of a {@link ProjectMetaData} object with the given parameters.
 	 *
 	 * @param name a descriptive name of the DialogueBranch project.
-	 * @param basePath the folder in which this DialogueBranch project is stored.
+	 * @param basePath the base path of this DialogueBranch project, always ending in a file
+	 *                 separator character.
 	 * @param description a textual description of this DialogueBranch project.
 	 * @param version free-form version information (e.g. v0.1.0).
 	 * @param languageMap contains all the languages supported by this DialogueBranch project.
@@ -73,84 +81,102 @@ public class ProjectMetaData {
 	public ProjectMetaData(String name, String basePath, String description, String version,
 						   LanguageMap languageMap) {
 		this.name = name;
-		this.basePath = basePath;
+		if(basePath != null && !basePath.endsWith(File.separator)) {
+			this.basePath = basePath + File.separator;
+		} else {
+			this.basePath = basePath;
+		}
 		this.description = description;
 		this.version = version;
 		this.languageMap = languageMap;
 	}
 
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
+	// ----------------------------------------------------------- //
+	// -------------------- Getters & Setters -------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
-	 * Returns the name of this {@link Project} as a String.
-	 * @return the name of this {@link Project} as a String.
+	 * Returns the name of the Dialogue Branch project as a String.
+	 *
+	 * @return the name of the Dialogue Branch project as a String.
 	 */
 	public String getName() {
 		return name;
 	}
 
 	/**
-	 * Sets the name of this DialogueBranch project.
-	 * @param name the name of this DialogueBranch project.
+	 * Sets the name of this Dialogue Branch project.
+	 *
+	 * @param name the name of this Dialogue Branch project.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Returns a String representation of the base path of this {@link Project}.
-	 * @return a String representation of the base path of this {@link Project}.
+	 * Returns a String representation of the base path of this Dialogue Branch project, always
+	 * ending in the File Separator character.
+	 *
+	 * @return a String representation of the base path of this Dialogue Branch project.
 	 */
 	public String getBasePath() {
 		return basePath;
 	}
 
 	/**
-	 * Sets the base path for this DialogueBranch project as a {@link String}.
-	 * @param basePath the base path for this DialogueBranch project as a {@link String}.
+	 * Sets the base path for this Dialogue Branch project as a {@link String}. If the given {@code
+	 * basePath} does not end with a File separator character, it will be added.
+	 *
+	 * @param basePath the base path for this Dialogue Branch project as a {@link String}.
 	 */
 	public void setBasePath(String basePath) {
-		this.basePath = basePath;
+		if(basePath != null && !basePath.endsWith(File.separator)) {
+			this.basePath = basePath + File.separator;
+		} else {
+			this.basePath = basePath;
+		}
 	}
 
 	/**
-	 * Returns the description of this {@link Project}.
-	 * @return the description of this {@link Project}.
+	 * Returns the free-form description of this Dialogue Branch project.
+	 *
+	 * @return the free-form description of this Dialogue Branch project.
 	 */
 	public String getDescription() {
 		return description;
 	}
 
 	/**
-	 * Sets the description text for this DialogueBranch project.
-	 * @param description the description text for this DialogueBranch project.
+	 * Sets the free-form description of this Dialogue Branch project.
+	 *
+	 * @param description the free-form description of this Dialogue Branch project.
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	/**
-	 * Returns the version of this {@link Project}.
-	 * @return the version of this {@link Project}.
+	 * Returns the free-form version indicator of this Dialogue Branch project.
+	 *
+	 * @return the free-form version indicator of this Dialogue Branch project.
 	 */
 	public String getVersion() {
 		return version;
 	}
 
 	/**
-	 * Sets the version string for this DialogueBranch project.
-	 * @param version the version string for this DialogueBranch project.
+	 * Sets the free-form version indicator of this Dialogue Branch project.
+	 *
+	 * @param version the free-form version indicator of this Dialogue Branch project.
 	 */
 	public void setVersion(String version) {
 		this.version = version;
 	}
 
 	/**
-	 * Returns the {@link LanguageMap} that contains a description of all
-	 * languages supported in this {@link Project} and their mapping from source-
-	 * to translation languages.
+	 * Returns the {@link LanguageMap} that contains a description of all languages supported in
+	 * this Dialogue Branch project and their mapping from source- to translation languages.
+	 *
 	 * @return the {@link LanguageMap} for this {@link ProjectMetaData}.
 	 */
 	public LanguageMap getLanguageMap() {
@@ -158,17 +184,18 @@ public class ProjectMetaData {
 	}
 
 	/**
-	 * Sets the {@link LanguageMap} for this DialogueBranch project, containing a mapping of all
+	 * Sets the {@link LanguageMap} for this Dialogue Branch project, containing a mapping of all
 	 * supported source- and translation languages.
-	 * @param languageMap the {@link LanguageMap} for this DialogueBranch project.
+	 *
+	 * @param languageMap the {@link LanguageMap} for this Dialogue Branch project.
 	 */
 	public void setLanguageMap(LanguageMap languageMap) {
 		this.languageMap = languageMap;
 	}
 
-	// -------------------------------------------------------
-	// -------------------- Other Methods --------------------
-	// -------------------------------------------------------
+	// ------------------------------------------------------- //
+	// -------------------- Other Methods -------------------- //
+	// ------------------------------------------------------- //
 
 	/**
 	 * Attempts to set a new language with the given {@code name} and {@code code} to the given
@@ -308,6 +335,11 @@ public class ProjectMetaData {
 		return result;
 	}
 
+	/**
+	 * Returns a human-readable String representation of this {@link ProjectMetaData}.
+	 *
+	 * @return a human-readable String representation of this {@link ProjectMetaData}.
+	 */
 	public String toString() {
 		String result = "";
 		result += "DialogueBranch Project Metadata:\n";

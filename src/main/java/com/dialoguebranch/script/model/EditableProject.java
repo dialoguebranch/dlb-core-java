@@ -27,6 +27,7 @@
  */
 package com.dialoguebranch.script.model;
 
+import com.dialoguebranch.model.Language;
 import com.dialoguebranch.model.ProjectMetaData;
 
 import java.beans.PropertyChangeEvent;
@@ -49,7 +50,10 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     /** The project metadata information */
     private ProjectMetaData projectMetaData;
 
-    /** The set of EditableScripts representing the scripts in this project */
+    /** A mapping of language to roots of trees of script contents */
+    private Map<Language,ScriptTreeNode> availableScripts;
+
+    /** The set of "active" EditableScripts representing the scripts in this project */
     private Map<String,EditableScript> activeScripts;
 
     /** Stores whether any changes have been made to this project */
@@ -67,6 +71,23 @@ public class EditableProject extends Editable implements PropertyChangeListener 
      */
     public EditableProject(ProjectMetaData projectMetaData) {
         this.projectMetaData = projectMetaData;
+        this.availableScripts = new HashMap<>();
+        this.activeScripts = new HashMap<>();
+        this.isModified = false;
+    }
+
+    /**
+     * Creates an instance of a new empty {@link EditableProject} from the given {@link
+     * ProjectMetaData} and the map of {@code availableScripts}.
+     *
+     * @param projectMetaData the project meta data object.
+     * @param availableScripts a mapping from {@link Language} to {@link ScriptTreeNode},
+     *                         representing the root of the tree of script contents.
+     */
+    public EditableProject(ProjectMetaData projectMetaData,
+                           Map<Language,ScriptTreeNode> availableScripts) {
+        this.projectMetaData = projectMetaData;
+        this.availableScripts = availableScripts;
         this.activeScripts = new HashMap<>();
         this.isModified = false;
     }
@@ -77,20 +98,47 @@ public class EditableProject extends Editable implements PropertyChangeListener 
 
     /**
      * Returns the project metadata object for this {@link EditableProject}.
+     *
      * @return the project metadata object for this {@link EditableProject}.
      */
     public ProjectMetaData getProjectMetaData() {
-        return projectMetaData;
+        return this.projectMetaData;
     }
 
     /**
      * Sets the project metadata object for this {@link EditableProject}.
+     *
      * @param projectMetaData the project metadata object for this {@link EditableProject}.
      */
     public void setProjectMetaData(ProjectMetaData projectMetaData) {
         ProjectMetaData oldValue = this.projectMetaData;
         this.projectMetaData = projectMetaData;
-        this.getPropertyChangeSupport().firePropertyChange(PROPERTY_METADATA,oldValue,projectMetaData);
+        this.getPropertyChangeSupport().firePropertyChange(
+                PROPERTY_PROJECT_METADATA,oldValue,projectMetaData);
+    }
+
+    /**
+     * Returns a mapping from {@link Language}s to {@link ScriptTreeNode}s, representing the roots
+     * of the trees of available scripts in this project.
+     *
+     * @return the map of available scripts in this project.
+     */
+    public Map<Language,ScriptTreeNode> getAvailableScripts() {
+        return this.availableScripts;
+    }
+
+    /**
+     * Sets a mapping from {@link Language} to a list of script names, indicating the full set of
+     * available scripts in this project, and informing any {@link PropertyChangeListener}s of the
+     * change
+     *
+     * @param availableScripts the map of available scripts in this project.
+     */
+    public void setAvailableScripts(Map<Language,ScriptTreeNode> availableScripts) {
+        Map<Language,ScriptTreeNode> oldValue = new HashMap<>(this.availableScripts);
+        this.availableScripts = availableScripts;
+        this.getPropertyChangeSupport().firePropertyChange(
+                PROPERTY_PROJECT_AVAILABLE_SCRIPTS,oldValue,this.availableScripts);
     }
 
     // -------------------------------------------------------- //
@@ -133,6 +181,13 @@ public class EditableProject extends Editable implements PropertyChangeListener 
             }
         }
         return result;
+    }
+
+    public ScriptTreeNode getScriptTreeForLanguage(String languageCode) {
+        for(Language language : availableScripts.keySet()) {
+            if(language.getCode().equals(languageCode)) return availableScripts.get(language);
+        }
+        return null;
     }
 
     // ------------------------------------------------------------------- //

@@ -30,14 +30,20 @@ package com.dialoguebranch.cli;
 
 import com.dialoguebranch.exception.InvalidInputException;
 import com.dialoguebranch.exception.ScriptParseException;
+import com.dialoguebranch.model.Language;
 import com.dialoguebranch.parser.*;
+import com.dialoguebranch.script.model.EditableProject;
 import com.dialoguebranch.script.model.EditableScript;
 import com.dialoguebranch.script.model.EditableNode;
+import com.dialoguebranch.script.model.ScriptTreeNode;
+import com.dialoguebranch.script.parser.EditableProjectParser;
 import com.dialoguebranch.script.parser.EditableScriptParser;
 import nl.rrd.utils.exception.ParseException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -79,7 +85,8 @@ public class CommandLineRunner {
 			The following scenarios are currently supported:
 			  1. Open a DialogueBranch Folder and generate a summary.
 			  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.
-			  3. Open a .dlb script file and parse it with the ScriptParser.
+			  3. Open a .dlb script file and parse it with the EditableScriptParser.
+			  4. Open a .xml metadata file and parse it with the EditableProjectParser.
 		""");
 
 		Scanner userInputScanner = new Scanner(System.in);
@@ -90,6 +97,7 @@ public class CommandLineRunner {
 			case "1" -> generateProjectSummaryFromFolder();
 			case "2" -> generateProjectSummaryFromXML();
 			case "3" -> parseScriptFile();
+			case "4" -> parseEditableProject();
 			default -> {
 				System.out.println("Unknown scenario '" + scenario + "', please provide a valid " +
 						"number from the list provided above.");
@@ -201,6 +209,37 @@ public class CommandLineRunner {
         } catch (IOException | ScriptParseException e) {
 			System.err.println("Error parsing EditableScript: "+e.getMessage());
 			System.exit(0);
+        }
+    }
+
+	private static void parseEditableProject() {
+		File projectMetadataFile = null;
+		boolean projectMetadataFileValid = false;
+
+		// Get a pointer to the projectMetadataFile (dlb-project.xml file)
+		while(!projectMetadataFileValid) {
+			System.out.println("Please provide the project metadata (.xml) file of the " +
+					"DialogueBranch project:");
+			try {
+				projectMetadataFile = askUserInputXMLFile();
+				projectMetadataFileValid = true;
+			} catch (InvalidInputException e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+
+        try {
+            EditableProject editableProject = EditableProjectParser.read(projectMetadataFile);
+			System.out.println("Loaded EditableProject: ");
+			System.out.println(editableProject.getProjectMetaData());
+			System.out.println("With the following available scripts:");
+			for (Map.Entry<Language, ScriptTreeNode> entry : editableProject.getAvailableScripts().entrySet()) {
+				System.out.println(entry.getKey() + " --> " + entry.getValue());
+			}
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 

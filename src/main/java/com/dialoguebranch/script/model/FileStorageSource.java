@@ -7,6 +7,7 @@ public class FileStorageSource extends StorageSource {
     File sourceFile;
 
     public FileStorageSource(File sourceFile) {
+        super();
         this.sourceFile = sourceFile;
     }
 
@@ -14,4 +15,8 @@ public class FileStorageSource extends StorageSource {
         return this.sourceFile;
     }
 
+    @Override
+    public String getDescriptor() {
+        return this.sourceFile.getAbsolutePath();
+    }
 }
