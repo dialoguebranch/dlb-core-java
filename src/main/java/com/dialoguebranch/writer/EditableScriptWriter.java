@@ -18,11 +18,11 @@ public class EditableScriptWriter {
             FileWriter fileWriter = new FileWriter(scriptFile);
             for(EditableNode node : editableScript.getNodes()) {
 
-                fileWriter.write(node.getHeader().getScript());
+                fileWriter.write(node.getHeader().getSourceCode());
                 fileWriter.write(System.lineSeparator());
                 fileWriter.write(Constants.DLB_HEADER_SEPARATOR);
                 fileWriter.write(System.lineSeparator());
-                fileWriter.write(node.getBody().getScript());
+                fileWriter.write(node.getBody().getSourceCode());
                 fileWriter.write(System.lineSeparator());
                 fileWriter.write(Constants.DLB_NODE_SEPARATOR);
                 fileWriter.write(System.lineSeparator());

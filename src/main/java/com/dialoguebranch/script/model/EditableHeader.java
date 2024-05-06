@@ -37,7 +37,9 @@ import java.util.*;
  * An {@link EditableHeader} represents a (partial) header of a DialogueBranch Script Node,
  * including convenience methods that can be used in an editor for such a header. This class informs
  * registered property change listeners of changes in its content using the {@link
- * PropertyChangeSupport} mechanism.
+ * PropertyChangeSupport} mechanism provided by its super-class {@link Editable}.
+ *
+ * @see Editable
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
@@ -46,8 +48,8 @@ public class EditableHeader extends Editable {
     /** An EditableHeader is part of this EditableNode */
     private final EditableNode editableNode;
 
-    /** The script that makes up the content of this {@link EditableHeader}. */
-    private String script;
+    /** The source code that makes up the content of this {@link EditableHeader}. */
+    private String sourceCode;
 
     /** The results of successfully parsed tags in the header */
     private Map<String,String> tags;
@@ -67,22 +69,23 @@ public class EditableHeader extends Editable {
      */
     public EditableHeader(EditableNode editableNode) {
         this.editableNode = editableNode;
-        this.script = "";
+        this.sourceCode = "";
         this.tags = new HashMap<>();
         this.isModified = false;
     }
 
     /**
      * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
-     * EditableNode} with a given {@code script} String representing the contents of this
-     * {@link EditableHeader}.
+     * EditableNode} with a given {@code sourceCode} String representing the source code of this
+     * {@link EditableHeader}. This constructor will populate the contents of {@link this#getTags()}
+     * by parsing the provided {@code sourceCode} contents using an {@link EditableHeaderParser}.
      *
      * @param editableNode the {@link EditableNode} to which this header belongs.
-     * @param script the script representing the contents of this {@link EditableHeader}.
+     * @param sourceCode the script representing the source code of this {@link EditableHeader}.
      */
-    public EditableHeader(EditableNode editableNode, String script) {
+    public EditableHeader(EditableNode editableNode, String sourceCode) {
         this.editableNode = editableNode;
-        this.script = Objects.requireNonNullElseGet(script, String::new);
+        this.sourceCode = Objects.requireNonNullElseGet(sourceCode, String::new);
         this.tags = new HashMap<>();
         this.isModified = false;
 
@@ -91,23 +94,24 @@ public class EditableHeader extends Editable {
 
     /**
      * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
-     * EditableNode} with a given {@link List} of Strings representing the contents of this {@link
-     * EditableHeader}.
+     * EditableNode} with a given {@link List} of Strings representing the source code of this
+     * {@link EditableHeader}. This constructor will populate the contents of {@link this#getTags()}
+     * by parsing the provided {@code sourceCode} contents using an {@link EditableHeaderParser}.
      *
      * @param editableNode the {@link EditableNode} to which this header belongs.
-     * @param lines the list of Strings representing the contents of this {@link EditableHeader}.
+     * @param lines the list of Strings representing the source code of this {@link EditableHeader}.
      */
     public EditableHeader(EditableNode editableNode, List<String> lines) {
         this.editableNode = editableNode;
         if(lines == null || lines.isEmpty()) {
-            this.script = "";
+            this.sourceCode = "";
         } else {
             StringBuilder headerScriptBuilder = new StringBuilder();
             for (int i = 0; i < lines.size(); i++) {
                 if (i != 0) headerScriptBuilder.append(System.lineSeparator());
                 headerScriptBuilder.append(lines.get(i));
             }
-            this.script = headerScriptBuilder.toString();
+            this.sourceCode = headerScriptBuilder.toString();
         }
         this.tags = new HashMap<>();
         this.isModified = false;
@@ -129,23 +133,23 @@ public class EditableHeader extends Editable {
     }
 
     /**
-     * Returns the String representing the contents of this {@link EditableHeader}.
+     * Returns the String representing the source code of this {@link EditableHeader}.
      *
-     * @return the String representing the contents of this {@link EditableHeader}.
+     * @return the String representing the source code of this {@link EditableHeader}.
      */
-    public String getScript() {
-        return script;
+    public String getSourceCode() {
+        return sourceCode;
     }
 
     /**
-     * Sets the String representing the contents of this {@link EditableHeader}. If the
+     * Sets the String representing the source code of this {@link EditableHeader}. If the
      * provided String is {@code null}, the contents will be set to an empty String. The provided
      * script will immediately be parsed to populate the tags-map for this header.
      *
-     * @param script the String representing the contents of this {@link EditableHeader}.
+     * @param sourceCode the String representing the contents of this {@link EditableHeader}.
      */
-    public void setScript(String script) {
-        this.script = Objects.requireNonNullElseGet(script, String::new);
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = Objects.requireNonNullElseGet(sourceCode, String::new);
         this.setModified(true);
         EditableHeaderParser.parseHeader(this);
     }
@@ -168,7 +172,8 @@ public class EditableHeader extends Editable {
      */
     public void setTags(Map<String,String> tags) {
         this.tags = tags;
-        updateScriptFromTags();
+        updateSourceCodeFromTags();
+        this.setModified(true);
     }
 
     /**
@@ -207,6 +212,12 @@ public class EditableHeader extends Editable {
         setTag("speaker",speaker);
     }
 
+    /**
+     * Returns the speaker of this node, being the value of the tag with the name "speaker", or an
+     * empty String, if no such value is defined.
+     *
+     * @return the speaker of the Dialogue Branch node.
+     */
     public String getSpeaker() {
         if(tags.get("speaker") == null) return "";
         else return tags.get("speaker");
@@ -222,6 +233,12 @@ public class EditableHeader extends Editable {
         setTag("title",title);
     }
 
+    /**
+     * Returns the title of this Dialogue Branch node, i.e. the tag with name "title", or an empty
+     * String if no such tag is defined.
+     *
+     * @return the title of the Dialogue Branch node.
+     */
     public String getTitle() {
         if(tags.get("title") == null) return "";
         else return tags.get("title");
@@ -239,11 +256,25 @@ public class EditableHeader extends Editable {
         setTag("position",x+","+y);
     }
 
+    /**
+     * Internal helper function that sets a tag with the given key, value pair, and then updates the
+     * source code representation of the tag-map in this {@link EditableHeader}.
+     *
+     * @param key the key of the tag
+     * @param value the value of the tag
+     */
     private void setTag(String key, String value) {
         this.tags.put(key,value);
-        updateScriptFromTags();
+        updateSourceCodeFromTags();
     }
 
+    /**
+     * Convenience function that returns the "X" value of a tag with the name "position", and the
+     * value of "X,Y". If a "position" tag is not set, or its value is not properly defined, this
+     * method will return 0.
+     *
+     * @return the X-position of this node.
+     */
     public int getX() {
         String position = this.tags.get("position");
         if(position == null) return 0;
@@ -261,6 +292,13 @@ public class EditableHeader extends Editable {
         }
     }
 
+    /**
+     * Convenience function that returns the "Y" value of a tag with the name "position", and the
+     * value of "X,Y". If a "position" tag is not set, or its value is not properly defined, this
+     * method will return 0.
+     *
+     * @return the Y-position of this node.
+     */
     public int getY() {
         String position = this.tags.get("position");
         if(position == null) return 0;
@@ -279,9 +317,12 @@ public class EditableHeader extends Editable {
     }
 
     /**
-     * Convenience method for returning all present tags that do not have a defined meaning (e.g.
-     * "title", "speaker", "colorID", and "position"
-     * @return
+     * Convenience method for returning all present tags that do not have a defined meaning (e.g.,
+     * "title", "speaker", "colorID", and "position" as defined in the {@link
+     * Constants#DLB_RESERVED_HEADER_TAGS} field). These are referred to in Dialogue Branch as the
+     * "optional tags".
+     *
+     * @return the map of optional tags for this Dialogue Branch node.
      */
     public Map<String,String> getOptionalTags() {
         Map<String,String> optionalTags = new HashMap<>();
@@ -296,7 +337,7 @@ public class EditableHeader extends Editable {
     /**
      * (Re-)constructs {@code this.script} from the values in {@code this.tags}.
      */
-    private void updateScriptFromTags() {
+    private void updateSourceCodeFromTags() {
         StringBuilder updatedScript = new StringBuilder();
         int tagNumber = 1;
         for (Map.Entry<String, String> set : tags.entrySet()) {
@@ -306,7 +347,7 @@ public class EditableHeader extends Editable {
             }
             tagNumber++;
         }
-        this.script = updatedScript.toString();
+        this.sourceCode = updatedScript.toString();
     }
 
 }

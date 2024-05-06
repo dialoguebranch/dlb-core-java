@@ -44,6 +44,9 @@ import java.beans.PropertyChangeSupport;
  * <p>This class informs registered property change listeners of changes in its content using the
  * {@link PropertyChangeSupport} mechanism.</p>
  *
+ * @see Editable
+ * @see PropertyChangeListener
+ *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class EditableNode extends Editable implements PropertyChangeListener {
@@ -198,14 +201,21 @@ public class EditableNode extends Editable implements PropertyChangeListener {
     // ------------------------------------------------------- //
 
     /**
-     * Returns the title of this Node if its header has been parsed, and the 'title' tag exists,
-     * otherwise it will return the empty string.
+     * Returns the title of this Node, or an empty String.
+     *
      * @return the title of this Node, or the empty String.
      */
     public String getTitle() {
-        String title = header.getTags().get("title");
-        if(title == null) return "";
-        else return title;
+        return this.header.getTitle();
+    }
+
+    /**
+     * Returns the speaker of this Node, or an empty String.
+     *
+     * @return the speaker of this Node, or an empty String.
+     */
+    public String getSpeaker() {
+        return this.header.getSpeaker();
     }
 
     /**
@@ -214,11 +224,11 @@ public class EditableNode extends Editable implements PropertyChangeListener {
      * @return a human-readable String representation of this {@link EditableNode}.
      */
     public String toString() {
-        return header.getScript() +
+        return header.getSourceCode() +
                 System.lineSeparator() +
                 Constants.DLB_HEADER_SEPARATOR +
                 System.lineSeparator() +
-                body.getScript() +
+                body.getSourceCode() +
                 System.lineSeparator() +
                 Constants.DLB_NODE_SEPARATOR +
                 System.lineSeparator();
@@ -226,11 +236,12 @@ public class EditableNode extends Editable implements PropertyChangeListener {
 
     /**
      * Returns a human-readable String summary of this {@link EditableNode}.
+     *
      * @return a human-readable String summary of this {@link EditableNode}.
      */
     public String toStringSummary() {
         return "EditableNode [title: '" + this.getTitle() + "']"
-                + " with " + this.getBody().getScript().lines().count() + " lines of body"
+                + " with " + this.getBody().getSourceCode().lines().count() + " lines of body"
                 + " and " + this.getHeader().getTags().size() + " header tags.";
     }
 

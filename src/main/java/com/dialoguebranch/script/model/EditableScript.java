@@ -168,7 +168,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
         String oldValue = this.dialogueName;
         this.dialogueName = dialogueName;
         this.getPropertyChangeSupport()
-                .firePropertyChange(PROPERTY_DIALOGUE_NAME, oldValue, dialogueName);
+                .firePropertyChange(PROPERTY_SCRIPT_DIALOGUE_NAME, oldValue, dialogueName);
     }
 
     /**
@@ -194,7 +194,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
         String oldValue = this.languageCode;
         this.languageCode = languageCode;
         this.getPropertyChangeSupport()
-                .firePropertyChange(PROPERTY_LANGUAGE_CODE, oldValue, languageCode);
+                .firePropertyChange(PROPERTY_SCRIPT_LANGUAGE_CODE, oldValue, languageCode);
     }
 
     /**
@@ -233,7 +233,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
             node.addPropertyChangeListener(PROPERTY_IS_MODIFIED,this);
         }
         this.getPropertyChangeSupport()
-                .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+                .firePropertyChange(PROPERTY_SCRIPT_NODES, oldNodes, this.nodes);
     }
 
     /**
@@ -274,11 +274,11 @@ public class EditableScript extends Editable implements PropertyChangeListener  
     public String getCompleteCode() {
         StringBuilder codeBuilder = new StringBuilder();
         for(EditableNode node : nodes) {
-            codeBuilder.append(node.getHeader().getScript());
+            codeBuilder.append(node.getHeader().getSourceCode());
             codeBuilder.append(System.lineSeparator());
             codeBuilder.append(Constants.DLB_HEADER_SEPARATOR);
             codeBuilder.append(System.lineSeparator());
-            codeBuilder.append(node.getBody().getScript());
+            codeBuilder.append(node.getBody().getSourceCode());
             codeBuilder.append(System.lineSeparator());
             codeBuilder.append(Constants.DLB_NODE_SEPARATOR);
             codeBuilder.append(System.lineSeparator());
@@ -301,7 +301,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
             node.removePropertyChangeListener(this);
         }
         this.nodes = new ArrayList<>();
-        this.getPropertyChangeSupport().firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+        this.getPropertyChangeSupport().firePropertyChange(PROPERTY_SCRIPT_NODES, oldNodes, this.nodes);
 
         // Next, use the EditableScriptParser to re-generate the contents of this script
         List<String> codeLines = code.lines().toList();
@@ -331,7 +331,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
             this.nodes.add(node);
             node.addPropertyChangeListener(PROPERTY_IS_MODIFIED,this);
             this.getPropertyChangeSupport()
-                    .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+                    .firePropertyChange(PROPERTY_SCRIPT_NODES, oldNodes, this.nodes);
         }
     }
 
@@ -341,7 +341,7 @@ public class EditableScript extends Editable implements PropertyChangeListener  
             node.removePropertyChangeListener(this);
             this.nodes.remove(node);
             this.getPropertyChangeSupport()
-                    .firePropertyChange(PROPERTY_NODES, oldNodes, this.nodes);
+                    .firePropertyChange(PROPERTY_SCRIPT_NODES, oldNodes, this.nodes);
         }
     }
 

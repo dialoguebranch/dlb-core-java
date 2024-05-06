@@ -53,25 +53,55 @@ public abstract class Editable {
     // -------------------- Parsing & Warnings -------------------- //
     // ------------------------------------------------------------ //
 
+    /** Any Editable* Object may be parsed in a fault-tolerant way, generating ParserWarnings */
     private List<ParserWarning> parserWarnings;
 
+    /**
+     * Add a {@link ParserWarning} to the list of {@link ParserWarning}s for this {@link Editable}.
+     *
+     * @param parserWarning the {@link ParserWarning} to add.
+     */
     public void addParserWarning(ParserWarning parserWarning) {
         parserWarnings.add(parserWarning);
     }
 
+    /**
+     * Clear the list of {@link ParserWarning}s for this {@link Editable} (e.g., before starting a
+     * new parse of the implementing object).
+     */
     public void clearWarnings() {
         this.parserWarnings = new ArrayList<>();
+    }
+
+    /**
+     * Returns the list of {@link ParserWarning}s for this {@link Editable}.
+     *
+     * @return the list of {@link ParserWarning}s for this {@link Editable}.
+     */
+    public List<ParserWarning> getParserWarnings() {
+        return parserWarnings;
     }
 
     // ----------------------------------------------------------------- //
     // -------------------- Property Change Support -------------------- //
     // ----------------------------------------------------------------- //
 
+    /** Generic event name indicating that the contents of the object have been modified */
     public static final String PROPERTY_IS_MODIFIED = "isModified";
-    public static final String PROPERTY_DIALOGUE_NAME = "dialogueName";
-    public static final String PROPERTY_LANGUAGE_CODE = "languageCode";
-    public static final String PROPERTY_NODES = "nodes";
+
+    /** Event name indicating that the dialogue name within a script is updated */
+    public static final String PROPERTY_SCRIPT_DIALOGUE_NAME = "dialogueName";
+
+    /** Event name indicating that the language code within a script is updated */
+    public static final String PROPERTY_SCRIPT_LANGUAGE_CODE = "languageCode";
+
+    /** Event name indicating that the list of nodes within a script is updated */
+    public static final String PROPERTY_SCRIPT_NODES = "nodes";
+
+    /** Event name indicating that the metadata within a project has been updated */
     public static final String PROPERTY_PROJECT_METADATA = "metaData";
+
+    /** Event name indicating that the list of available scripts within a project is updated */
     public static final String PROPERTY_PROJECT_AVAILABLE_SCRIPTS = "availableScripts";
 
     /** The PropertyChangeSupport object used for informing listeners of changes */
@@ -79,6 +109,7 @@ public abstract class Editable {
 
     /**
      * Returns the {@link PropertyChangeSupport} object associated with this {@link Editable}.
+     *
      * @return the {@link PropertyChangeSupport} object associated with this {@link Editable}.
      */
     public PropertyChangeSupport getPropertyChangeSupport() {

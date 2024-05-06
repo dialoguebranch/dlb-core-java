@@ -35,7 +35,9 @@ import java.util.Objects;
  * An {@link EditableBody} represents a (partial) body of a DialogueBranch Script Node, including
  * convenience methods that can be used in an editor for such a body. This class informs registered
  * property change listeners of changes in its content using the {@link PropertyChangeSupport}
- * mechanism.
+ * mechanism inherited from its super-class {@link Editable}.
+ *
+ * @see Editable
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
@@ -44,8 +46,8 @@ public class EditableBody extends Editable {
     /** An EditableBody is part of this EditableNode */
     private final EditableNode editableNode;
 
-    /** The String representing the contents of this {@link EditableBody}. */
-    private String script;
+    /** The String representing the source code of this {@link EditableBody}. */
+    private String sourceCode;
 
     /** Stores whether any changes have been made to this body */
     private boolean isModified;
@@ -62,41 +64,42 @@ public class EditableBody extends Editable {
      */
     public EditableBody(EditableNode editableNode) {
         this.editableNode = editableNode;
-        this.script = "";
+        this.sourceCode = "";
         this.isModified = false;
     }
 
     /**
      * Creates an instance of an {@link EditableBody} that belongs to the given {@link EditableNode}
-     * with a given {@link String} representing the contents of this {@link EditableBody}.
+     * with a given {@link String} representing the source code of this {@link EditableBody}.
      *
      * @param editableNode the {@link EditableNode} to which this body belongs.
-     * @param script the String representing the contents of this {@link EditableBody}.
+     * @param sourceCode the String representing the source code of this {@link EditableBody}.
      */
-    public EditableBody(EditableNode editableNode, String script) {
+    public EditableBody(EditableNode editableNode, String sourceCode) {
         this.editableNode = editableNode;
-        this.script = Objects.requireNonNullElseGet(script, String::new);
+        this.sourceCode = Objects.requireNonNullElseGet(sourceCode, String::new);
         this.isModified = false;
     }
 
     /**
      * Creates an instance of an {@link EditableBody} that belongs to the given {@link EditableNode}
-     * with a given {@link List} of Strings representing the contents of this {@link EditableBody}.
+     * with a given {@link List} of Strings representing the source code of this {@link
+     * EditableBody}, line-by-line.
      *
      * @param editableNode the {@link EditableNode} to which this body belongs.
-     * @param lines the list of Strings representing the contents of this {@link EditableBody}.
+     * @param lines the list of Strings representing the source code of this {@link EditableBody}.
      */
     public EditableBody(EditableNode editableNode, List<String> lines) {
         this.editableNode = editableNode;
         if(lines == null || lines.isEmpty()) {
-            this.script = "";
+            this.sourceCode = "";
         } else {
             StringBuilder bodyScriptBuilder = new StringBuilder();
             for (int i = 0; i < lines.size(); i++) {
                 if (i != 0) bodyScriptBuilder.append(System.lineSeparator());
                 bodyScriptBuilder.append(lines.get(i));
             }
-            this.script = bodyScriptBuilder.toString();
+            this.sourceCode = bodyScriptBuilder.toString();
         }
         this.isModified = false;
     }
@@ -115,22 +118,22 @@ public class EditableBody extends Editable {
     }
 
     /**
-     * Returns the String representing the contents of this {@link EditableBody}.
+     * Returns the String representing the source code of this {@link EditableBody}.
      *
-     * @return the String representing the contents of this {@link EditableBody}.
+     * @return the String representing the source code of this {@link EditableBody}.
      */
-    public String getScript() {
-        return script;
+    public String getSourceCode() {
+        return sourceCode;
     }
 
     /**
-     * Sets the String representing the contents of this {@link EditableBody}. If the provided
+     * Sets the String representing the source code of this {@link EditableBody}. If the provided
      * String is {@code null}, the contents will be set to an empty String.
      *
-     * @param script the String representing the contents of this {@link EditableBody}.
+     * @param sourceCode the String representing the source code of this {@link EditableBody}.
      */
-    public void setScript(String script) {
-        this.script = Objects.requireNonNullElseGet(script, String::new);
+    public void setSourceCode(String sourceCode) {
+        this.sourceCode = Objects.requireNonNullElseGet(sourceCode, String::new);
         this.setModified(true);
     }
 

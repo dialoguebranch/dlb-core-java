@@ -50,7 +50,7 @@ public class EditableBodyParser {
         // Before starting a new parse, clear all existing warnings in this body
         body.clearWarnings();
 
-        String script = body.getScript();
+        String script = body.getSourceCode();
 
         // Extract everything that looks like a reply option (i.e. [[...|...]] )
         List<String> replyOptions = new ArrayList<>();

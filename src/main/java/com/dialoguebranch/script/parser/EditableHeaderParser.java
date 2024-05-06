@@ -63,7 +63,7 @@ public class EditableHeaderParser {
         header.getTags().clear();
 
         // Step 1: Populate the 'tags' of this header from the script
-        Scanner scanner = new Scanner(header.getScript());
+        Scanner scanner = new Scanner(header.getSourceCode());
         int lineNumber = 0;
         while (scanner.hasNextLine()) {
 
