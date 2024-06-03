@@ -77,7 +77,7 @@ public class EditableHeader extends Editable {
     /**
      * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
      * EditableNode} with a given {@code sourceCode} String representing the source code of this
-     * {@link EditableHeader}. This constructor will populate the contents of {@link this#getTags()}
+     * {@link EditableHeader}. This constructor will populate the contents of {@link #getTags()}
      * by parsing the provided {@code sourceCode} contents using an {@link EditableHeaderParser}.
      *
      * @param editableNode the {@link EditableNode} to which this header belongs.
@@ -95,7 +95,7 @@ public class EditableHeader extends Editable {
     /**
      * Creates an instance of an {@link EditableHeader} that belongs to the given {@link
      * EditableNode} with a given {@link List} of Strings representing the source code of this
-     * {@link EditableHeader}. This constructor will populate the contents of {@link this#getTags()}
+     * {@link EditableHeader}. This constructor will populate the contents of {@link #getTags()}
      * by parsing the provided {@code sourceCode} contents using an {@link EditableHeaderParser}.
      *
      * @param editableNode the {@link EditableNode} to which this header belongs.
