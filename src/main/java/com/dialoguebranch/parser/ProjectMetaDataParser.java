@@ -4,6 +4,7 @@ import com.dialoguebranch.model.Language;
 import com.dialoguebranch.model.LanguageMap;
 import com.dialoguebranch.model.LanguageSet;
 import com.dialoguebranch.model.ProjectMetaData;
+import com.dialoguebranch.script.model.FileStorageSource;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.xml.AbstractSimpleSAXHandler;
 import nl.rrd.utils.xml.SimpleSAXHandler;
@@ -21,6 +22,7 @@ public class ProjectMetaDataParser {
         SimpleSAXParser<ProjectMetaData> parser = new SimpleSAXParser<>(xmlHandler);
         ProjectMetaData projectMetaData = parser.parse(metaDataFile);
         projectMetaData.setBasePath(metaDataFile.getParent());
+        projectMetaData.setStorageSource(new FileStorageSource(metaDataFile));
         return projectMetaData;
     }
 
