@@ -56,9 +56,8 @@ import java.util.*;
  *   and the value contains translatable key-value pairs.</li>
  * </ul>
  *
- * <p>This parser ignores context strings and returns a flat map of
- * translatables. This means that it does not support different translations of
- * the same string with different contexts.</p>
+ * <p>This parser ignores context strings and returns a flat map of translatables. This means that
+ * it does not support different translations of the same string with different contexts.</p>
  *
  * @author Dennis Hofs (RRD)
  */
@@ -243,4 +242,5 @@ public class TranslationParser {
 		}
 		return translatables.get(0);
 	}
+
 }

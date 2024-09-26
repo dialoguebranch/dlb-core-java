@@ -134,7 +134,8 @@ public class Node {
 	
 	@Override
 	public String toString() {
-		String newline = System.getProperty("line.separator");
-		return header + newline + Constants.DLB_HEADER_SEPARATOR + newline + body;
+		return header + System.lineSeparator() +
+				Constants.DLB_HEADER_SEPARATOR + System.lineSeparator() + body;
 	}
+
 }

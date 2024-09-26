@@ -145,7 +145,8 @@ public class ActiveDialogue {
 	 * @throws ExecutionException if the request is invalid
 	 * @throws EvaluationException if an expression cannot be evaluated
 	 */
-	public Node startDialogue(ZonedDateTime eventTime) throws ExecutionException, EvaluationException {
+	public Node startDialogue(ZonedDateTime eventTime) throws ExecutionException,
+			EvaluationException {
 		return startDialogue(null, eventTime);
 	}
 	
@@ -338,4 +339,5 @@ public class ActiveDialogue {
 		processedNode.setBody(processedBody);
 		return processedNode;
 	}
+
 }

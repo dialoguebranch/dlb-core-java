@@ -104,4 +104,5 @@ public class TranslationTerm {
 	public String toString() {
 		return "Term: '" + this.term + "' (context: '" + this.context + "').";
 	}
+
 }

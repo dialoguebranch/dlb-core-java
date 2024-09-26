@@ -63,4 +63,5 @@ public class TranslationParserResult {
 	public void setWarnings(List<String> warnings) {
 		this.warnings = warnings;
 	}
+
 }

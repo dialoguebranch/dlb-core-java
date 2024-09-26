@@ -67,8 +67,9 @@ public class FileDescriptor {
 	public FileDescriptor() {	}
 
 	/**
-	 * Creates an instance of a {@link FileDescriptor} with a given {@code language},
-	 * {@code filePath} and {@code fileType}.
+	 * Creates an instance of a {@link FileDescriptor} with a given {@code language}, {@code
+	 * filePath} and {@code fileType}.
+	 *
 	 * @param language the name of the "language directory", which is the direct subdirectory of the
 	 *                 project's root directory (e.g. "en" - for English).
 	 * @param filePath the path to the file, relative to the language directory and including the
@@ -90,6 +91,7 @@ public class FileDescriptor {
 	 * Returns the language of this {@link FileDescriptor}, which is the name of the "language
 	 * directory", which is the direct subdirectory of the project's root directory (e.g. "en" - for
 	 * English).
+	 *
 	 * @return the language of this {@link FileDescriptor}.
 	 */
 	public String getLanguage() {
@@ -100,6 +102,7 @@ public class FileDescriptor {
 	 * Sets the language of this {@link FileDescriptor}, which is the name of the "language
 	 * directory", which is the direct subdirectory of the project's root directory (e.g. "en" - for
 	 * English).
+	 *
 	 * @param language the language of this {@link FileDescriptor}.
 	 */
 	public void setLanguage(String language) {
@@ -110,6 +113,7 @@ public class FileDescriptor {
 	 * Returns the file path of this {@link FileDescriptor} which is the path to the file,
 	 * relative to the language directory and including the file extension
 	 * (e.g. "subdirectory/basic.dlb").
+	 *
 	 * @return the file path of this {@link FileDescriptor}.
 	 */
 	public String getFilePath() {
@@ -120,6 +124,7 @@ public class FileDescriptor {
 	 * Sets the file path of this {@link FileDescriptor} which is the path to the file,
 	 * relative to the language directory and including the file extension
 	 * (e.g. "subdirectory/basic.dlb").
+	 *
 	 * @param filePath the file path of this {@link FileDescriptor}.
 	 */
 	public void setFilePath(String filePath) {
@@ -129,6 +134,7 @@ public class FileDescriptor {
 	/**
 	 * Returns the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
 	 * {@link FileType#TRANSLATION}.
+	 *
 	 * @return the type of this {@link FileDescriptor}.
 	 */
 	public FileType getFileType() {
@@ -138,6 +144,7 @@ public class FileDescriptor {
 	/**
 	 * Sets the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
 	 * {@link FileType#TRANSLATION}.
+	 *
 	 * @param fileType the type of this {@link FileDescriptor}.
 	 */
 	public void setFileType(FileType fileType) {
@@ -153,13 +160,16 @@ public class FileDescriptor {
 	 * relative path of the dialogue file (relative to the language folder), including the file
 	 * name, without the extension. For example, for a .dlb script file located at /project-folder/
 	 * en/sub-folder/script.dlb, this method will return "sub-folder/script".
+	 *
 	 * @return the uniquely identifying dialogue name.
 	 */
 	public String getDialogueName() {
 		if (filePath.endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION)) {
-			return filePath.substring(0,filePath.length() - Constants.DLB_SCRIPT_FILE_EXTENSION.length());
+			return filePath.substring(0,filePath.length() -
+					Constants.DLB_SCRIPT_FILE_EXTENSION.length());
 		} else if(filePath.endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
-			return filePath.substring(0, filePath.length() - Constants.DLB_TRANSLATION_FILE_EXTENSION.length());
+			return filePath.substring(0, filePath.length() -
+					Constants.DLB_TRANSLATION_FILE_EXTENSION.length());
 		}
 		else
 			return filePath;
@@ -190,4 +200,5 @@ public class FileDescriptor {
 			+ this.getLanguage() + "' (" + this.getLanguage() + File.separator
 			+ this.getFilePath() +").";
 	}
+
 }

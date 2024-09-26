@@ -153,4 +153,5 @@ public class TranslatableExtractor {
 	private boolean hasContent(VariableString string) {
 		return !string.getSegments().isEmpty() && string.hasContents();
 	}
+
 }

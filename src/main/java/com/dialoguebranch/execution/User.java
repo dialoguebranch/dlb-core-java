@@ -29,8 +29,8 @@ package com.dialoguebranch.execution;
 import java.time.ZoneId;
 
 /**
- * A {@link User} represents the person that is interacting with a DialogueBranch dialogue. The
- * {@link User} has an identifier and a timezone in which he currently resides that can be used to
+ * A {@link User} represents the person that is interacting with a Dialogue Branch dialogue. The
+ * {@link User} has an identifier and a time zone in which he currently resides that can be used to
  * log events (dialogue history and the stored update times for Dialogue Branch variables).
  *
  * @author Harm op den Akker (Fruit Tree Labs)
@@ -43,9 +43,9 @@ public class User {
 	/** The time zone in which this user currently resides - for logging timestamps */
 	private ZoneId timeZone;
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 
 	/**
 	 * Creates an instance of a {@link User} in the system's default time zone.
@@ -68,9 +68,9 @@ public class User {
 		this.timeZone = timeZone;
 	}
 
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
+	// ----------------------------------------------------------- //
+	// -------------------- Getters & Setters -------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
 	 * Returns the identifier of this {@link User} as a {@link String}.

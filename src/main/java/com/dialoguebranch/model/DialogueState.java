@@ -30,11 +30,12 @@ package com.dialoguebranch.model;
 import com.dialoguebranch.execution.ActiveDialogue;
 
 public class DialogueState {
-	private FileDescriptor dialogueDescription;
-	private Dialogue dialogueDefinition;
-	private LoggedDialogue loggedDialogue;
-	private int loggedInteractionIndex;
-	private ActiveDialogue activeDialogue;
+
+	private final FileDescriptor dialogueDescription;
+	private final Dialogue dialogueDefinition;
+	private final LoggedDialogue loggedDialogue;
+	private final int loggedInteractionIndex;
+	private final ActiveDialogue activeDialogue;
 
 	public DialogueState(FileDescriptor dialogueDescription,
 						 Dialogue dialogueDefinition, LoggedDialogue loggedDialogue,
@@ -65,4 +66,5 @@ public class DialogueState {
 	public ActiveDialogue getActiveDialogue() {
 		return activeDialogue;
 	}
+
 }
