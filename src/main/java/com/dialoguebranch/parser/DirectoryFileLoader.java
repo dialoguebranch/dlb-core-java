@@ -29,7 +29,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileDescriptor;
-import com.dialoguebranch.model.FileType;
+import com.dialoguebranch.model.ResourceType;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -144,12 +144,12 @@ public record DirectoryFileLoader(File rootDirectory) implements FileLoader {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),
-								FileType.SCRIPT));
+								ResourceType.SCRIPT));
 					} else if (child.getName().endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),
-								FileType.TRANSLATION));
+								ResourceType.TRANSLATION));
 					}
 				}
 			}

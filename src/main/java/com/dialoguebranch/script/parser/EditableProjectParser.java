@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
@@ -82,7 +82,7 @@ public class EditableProjectParser {
 
         ScriptTreeNode availableScriptsRoot = new ScriptTreeNode(null,
                 new FileStorageSource(languageRoot),
-                FileType.FOLDER,
+                ResourceType.FOLDER,
                 language.getCode());
 
         if (!languageRoot.isDirectory()) {
@@ -111,25 +111,25 @@ public class EditableProjectParser {
 
             if(f.isDirectory()) {
                 ScriptTreeNode folderNode = new ScriptTreeNode(availableScriptsRoot,
-                        new FileStorageSource(f),FileType.FOLDER,f.getName());
+                        new FileStorageSource(f), ResourceType.FOLDER,f.getName());
                 availableScriptsRoot.addChild(folderNode);
                 processLanguageFolder(folderNode,isSourcePath);
             } else {
                 String validExtension;
-                FileType fileType;
+                ResourceType resourceType;
                 if(isSourcePath) {
                     validExtension = Constants.DLB_SCRIPT_FILE_EXTENSION;
-                    fileType = FileType.SCRIPT;
+                    resourceType = ResourceType.SCRIPT;
                 } else {
                     validExtension = Constants.DLB_TRANSLATION_FILE_EXTENSION;
-                    fileType = FileType.TRANSLATION;
+                    resourceType = ResourceType.TRANSLATION;
                 }
 
                 if(f.getAbsolutePath().endsWith(validExtension)) {
                     String scriptName = f.getName()
                             .substring(0,f.getName().length()-validExtension.length());
                     ScriptTreeNode fileNode = new ScriptTreeNode(availableScriptsRoot,
-                            new FileStorageSource(f),fileType,scriptName);
+                            new FileStorageSource(f), resourceType,scriptName);
                     availableScriptsRoot.addChild(fileNode);
                 }
             }

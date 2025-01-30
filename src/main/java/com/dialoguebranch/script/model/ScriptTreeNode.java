@@ -1,30 +1,38 @@
 package com.dialoguebranch.script.model;
 
 import com.dialoguebranch.model.Constants;
-import com.dialoguebranch.model.FileType;
+import com.dialoguebranch.model.ResourceType;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class ScriptTreeNode {
 
+    /** The parent node of this ScriptTreeNode (or null if this is the root). */
     private ScriptTreeNode parent;
+
+    /** A pointer to the location (file or database) where this script node is stored. */
     private StorageSource storageSource;
-    private FileType fileType;
+
+    /** Whether this node represents a script, translation file, or folder. */
+    private ResourceType resourceType;
+
+    /** The name of this ScriptTreeNode. */
     private String name;
+
+    /** A list of children of this ScriptTreeNode. */
     private List<ScriptTreeNode> children;
 
     // -------------------------------------------------------- //
     // -------------------- Constructor(s) -------------------- //
     // -------------------------------------------------------- //
 
-    public ScriptTreeNode(ScriptTreeNode parent, StorageSource storageSource, FileType fileType, String name) {
+    public ScriptTreeNode(ScriptTreeNode parent, StorageSource storageSource,
+                          ResourceType resourceType, String name) {
         this.parent = parent;
         this.storageSource = storageSource;
-        this.fileType = fileType;
+        this.resourceType = resourceType;
         this.name = name;
         this.children = new ArrayList<>();
     }
@@ -49,12 +57,12 @@ public class ScriptTreeNode {
         this.storageSource = storageSource;
     }
 
-    public FileType getFileType() {
-        return this.fileType;
+    public ResourceType getResourceType() {
+        return this.resourceType;
     }
 
-    public void setFileType(FileType fileType) {
-        this.fileType = fileType;
+    public void setResourceType(ResourceType resourceType) {
+        this.resourceType = resourceType;
     }
 
     public String getName() {
@@ -87,29 +95,69 @@ public class ScriptTreeNode {
         this.children.sort(new ScriptTreeNodeComparator());
     }
 
+    /**
+     * Returns the total number of actual scripts that exist under this {@link ScriptTreeNode}
+     * (recursively). E.g. if this ScriptTreeNode represents the 'root' language directory, this
+     * function will return the total number of scripts or translation files that exist in that
+     * language folder. Every leaf node that is not a folder (i.e. an empty folder) is therefore
+     * counted.
+     *
+     * @return the total number of leaf nodes under this {@link ScriptTreeNode}.
+     */
+    public int getTotalNumberOfScripts() {
+        if(this.isLeaf() && (
+                this.resourceType == ResourceType.SCRIPT
+                || this.resourceType == ResourceType.TRANSLATION)) return 1;
+        else {
+            int childLeaves = 0;
+            for(ScriptTreeNode child : children) {
+                childLeaves += child.getTotalNumberOfScripts();
+            }
+            return childLeaves;
+        }
+    }
+
+    /**
+     * Returns {@code true} if, and only if this {@link ScriptTreeNode} has a direct child with the
+     * given {@code name} and {@code resourceType}.
+     *
+     * @param name the name of the child node to look for
+     * @param resourceType the resource type of the child node to look for
+     * @return true if such a child exists
+     */
+    public boolean hasChild(String name, ResourceType resourceType) {
+        for(ScriptTreeNode child : this.children) {
+            if(child.getName().equals(this.getName()) &&
+                child.getResourceType().equals(this.getResourceType())) {
+                    return true;
+            }
+        }
+        return false;
+    }
+
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         if(parent == null) {
-            result += "ROOT: ";
+            result.append("ROOT: ");
         }
 
-        result += this.getStorageSource().getDescriptor() + " ("+ this.getName() +")";
+        result.append(this.getStorageSource().getDescriptor()).append(" (").append(this.getName()).append(")");
 
         if(!children.isEmpty()) {
-            result += Constants.DLB_PATH_SEPARATOR + " ("+children.size()+" children).";
+            result.append(Constants.DLB_PATH_SEPARATOR + " (").append(children.size()).append(" children).");
         }
 
-        if(this.fileType.equals(FileType.SCRIPT)) {
-            result += Constants.DLB_SCRIPT_FILE_EXTENSION;
-        } else if(this.fileType.equals(FileType.TRANSLATION)) {
-            result += Constants.DLB_TRANSLATION_FILE_EXTENSION;
+        if(this.resourceType.equals(ResourceType.SCRIPT)) {
+            result.append(Constants.DLB_SCRIPT_FILE_EXTENSION);
+        } else if(this.resourceType.equals(ResourceType.TRANSLATION)) {
+            result.append(Constants.DLB_TRANSLATION_FILE_EXTENSION);
         } else {
             for(ScriptTreeNode child : this.getChildren()) {
-                result += "\n\t\t"+this.getName()+Constants.DLB_PATH_SEPARATOR+child.toString();
+                result.append("\n\t\t").append(this.getName()).append(Constants.DLB_PATH_SEPARATOR).append(child.toString());
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     private static class ScriptTreeNodeComparator implements Comparator<ScriptTreeNode> {

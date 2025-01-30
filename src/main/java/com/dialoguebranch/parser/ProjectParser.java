@@ -138,9 +138,9 @@ public class ProjectParser {
 
 		// Split the given fileDescriptions into dialogueFiles and translationFiles
 		for (FileDescriptor fileDescription : fileDescriptions) {
-			if (fileDescription.getFileType() == FileType.SCRIPT)
+			if (fileDescription.getFileType() == ResourceType.SCRIPT)
 				dialogueFiles.add(fileDescription);
-			else if (fileDescription.getFileType() == FileType.TRANSLATION)
+			else if (fileDescription.getFileType() == ResourceType.TRANSLATION)
 				translationFiles.add(fileDescription);
 		}
 

@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -36,10 +36,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link ProjectMetaData} class is the object representation of a DialogueBranch metadata
- * instance, which may be represented as an .xml file or otherwise. Contains methods for dynamically
- * modifying the contents of a {@link ProjectMetaData} specification while maintaining certain
- * constraints.
+ * The {@link ProjectMetaData} class is the object representation of a Dialogue Branch metadata
+ * instance, which may be stored as an .xml file or in some other way. Contains methods for
+ * dynamically modifying the contents of a {@link ProjectMetaData} specification while maintaining
+ * certain constraints.
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
@@ -240,9 +240,9 @@ public class ProjectMetaData {
 
 	/**
 	 * Attempts to set a new language with the given {@code name} and {@code code} to the given
-	 * {@link LanguageSet} as the source language in this DialogueBranch project. This method
+	 * {@link LanguageSet} as the source language in this Dialogue Branch project. This method
 	 * will succeed and return {@code true} if and only if a language with the given {@code code}
-	 * does not exist yet in the {@link LanguageMap} of this DialogueBranch project.
+	 * does not exist yet in the {@link LanguageMap} of this Dialogue Branch project.
 	 *
 	 * @param name the name of the source language to add.
 	 * @param code the code of the source language to add.
@@ -305,8 +305,9 @@ public class ProjectMetaData {
 	}
 
 	/**
-	 * Checks whether a language with the given {@code languageCode} exists in this
-	 * {@link LanguageMap}.
+	 * Checks whether a language with the given {@code languageCode} exists in this {@link
+	 * LanguageMap}.
+	 *
 	 * @param languageCode the language code to search for
 	 * @return true if the given {@code languageCode} exists, false otherwise
 	 */
@@ -341,12 +342,13 @@ public class ProjectMetaData {
 	}
 
 	/**
-	 * Returns a list of language codes representing all the supported languages in this Dialogue
-	 * Branch project.
-	 * @return the list of all language codes in this project.
+	 * Returns a list of {@link Language} objects representing all the different languages supported
+	 * in this Dialogue Branch project.
+	 *
+	 * @return the list of {@link Language}s, supported in this project.
 	 */
-	public List<String> getSupportedLanguages() {
-		List<String> result = new ArrayList<>();
+	public List<Language> getSupportedLanguages() {
+		List<Language> result = new ArrayList<>();
 
 		if(languageMap != null) {
 			List<LanguageSet> languageSets = languageMap.getLanguageSets();
@@ -354,27 +356,70 @@ public class ProjectMetaData {
 				for(LanguageSet languageSet : languageSets) {
 					Language sourceLanguage = languageSet.getSourceLanguage();
 					if(sourceLanguage != null) {
-						String sourceLanguageCode = sourceLanguage.getCode();
-						if(sourceLanguageCode != null) {
-							if (!result.contains(sourceLanguageCode))
-								result.add(sourceLanguageCode);
-						}
+						result.add(sourceLanguage);
 					}
 					List<Language> translationLanguages = languageSet.getTranslationLanguages();
 					if(translationLanguages != null) {
-						for(Language translationLanguage : translationLanguages) {
-							String translationLanguageCode = translationLanguage.getCode();
-							if(translationLanguageCode != null) {
-								if (!result.contains(translationLanguageCode))
-									result.add(translationLanguageCode);
-							}
-						}
+                        result.addAll(translationLanguages);
 					}
 				}
 			}
 		}
 		return result;
 	}
+
+	/**
+	 * Returns a list of language codes representing all the supported languages in this Dialogue
+	 * Branch project.
+	 *
+	 * @return the list of all language codes (as Strings) in this project.
+	 */
+	public List<String> getSupportedLanguageCodes() {
+		List<String> result = new ArrayList<>();
+
+		for(Language language : getSupportedLanguages()) {
+			result.add(language.getCode());
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of all source languages defined in this {@link ProjectMetaData} as {@link
+	 * Language} objects.
+	 *
+	 * @return a list of all source languages defined in this {@link ProjectMetaData} as {@link
+	 *         Language} objects.
+	 */
+	public List<Language> getSourceLanguages() {
+		List<Language> result = new ArrayList<>();
+
+		if(languageMap != null) {
+			for(LanguageSet languageSet : languageMap.getLanguageSets()) {
+				if(languageSet.getSourceLanguage() != null) {
+					result.add(languageSet.getSourceLanguage());
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns a list of language code, representing all available "source" languages as defined in
+	 * this {@link ProjectMetaData}.
+	 *
+	 * @return a list of all source languages as language code strings.
+	 */
+	public List<String> getSourceLanguageCodes() {
+		List<String> result = new ArrayList<>();
+		for(Language language : getSourceLanguages()) {
+			result.add(language.getCode());
+		}
+		return result;
+	}
+
+
 
 	/**
 	 * Returns a human-readable String representation of this {@link ProjectMetaData}.

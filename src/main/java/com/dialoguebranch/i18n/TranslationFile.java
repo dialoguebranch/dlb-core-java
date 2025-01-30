@@ -100,7 +100,7 @@ public class TranslationFile {
 	 * @throws IOException in case the given directory is not a directory, or another file writing
 	 *                     error occurs.
 	 */
-	public void writeToFile(File directory) throws IOException {
+	public void writeToDirectory(File directory) throws IOException {
 		if(!directory.isDirectory())
 			throw new IOException("The given directory parameter is not a directory.");
 
@@ -118,4 +118,16 @@ public class TranslationFile {
 		// convert map to JSON file
 		writer.writeValue(jsonFile, contentMap);
 	}
+
+	public void writeToFile(File file) throws IOException {
+		// create object mapper instance
+		ObjectMapper mapper = new ObjectMapper();
+
+		// Create an ObjectWriter with pretty printing
+		ObjectWriter writer = mapper.writer(new DefaultPrettyPrinter());
+
+		// convert map to JSON file
+		writer.writeValue(file, contentMap);
+	}
+
 }

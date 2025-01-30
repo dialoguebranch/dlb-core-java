@@ -123,7 +123,6 @@ public class POEditorTools {
 
 		ArrayList<TranslationTerm> terms = new ArrayList<>();
 
-
 		for (Node node : dialogue.getNodes()) {
 			TranslatableExtractor extractor = new TranslatableExtractor();
 			List<SourceTranslatable> translatables = extractor.extractFromBody(
@@ -333,7 +332,7 @@ public class POEditorTools {
 					// The output directory should exist at this point...
 					for (String s : dlbTranslationFiles.keySet()) {
 						TranslationFile wtf = dlbTranslationFiles.get(s);
-						wtf.writeToFile(outputDirectory);
+						wtf.writeToDirectory(outputDirectory);
 					}
 				} catch(IOException e) {
 					System.out.println("An error has occurred reading from the given file '"

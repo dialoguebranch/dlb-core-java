@@ -30,7 +30,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileDescriptor;
-import com.dialoguebranch.model.FileType;
+import com.dialoguebranch.model.ResourceType;
 import com.dialoguebranch.model.ProjectMetaData;
 import nl.rrd.utils.exception.ParseException;
 
@@ -92,7 +92,7 @@ public class ProjectFileLoader implements FileLoader {
 		List<FileDescriptor> result = new ArrayList<>();
 
 		// Get a list of all the language folders
-		List<String> supportedLanguages = projectMetaData.getSupportedLanguages();
+		List<String> supportedLanguages = projectMetaData.getSupportedLanguageCodes();
 
 		File rootDirectory = new File(projectMetaData.getBasePath());
 
@@ -154,12 +154,12 @@ public class ProjectFileLoader implements FileLoader {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),
-								FileType.SCRIPT));
+								ResourceType.SCRIPT));
 					} else if (child.getName().endsWith(Constants.DLB_TRANSLATION_FILE_EXTENSION)) {
 						result.add(new FileDescriptor(
 								language,
 								pathName + child.getName(),
-								FileType.TRANSLATION));
+								ResourceType.TRANSLATION));
 					}
 				}
 			}

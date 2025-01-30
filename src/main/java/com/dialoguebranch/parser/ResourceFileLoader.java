@@ -29,7 +29,7 @@ package com.dialoguebranch.parser;
 
 import com.dialoguebranch.model.Constants;
 import com.dialoguebranch.model.FileDescriptor;
-import com.dialoguebranch.model.FileType;
+import com.dialoguebranch.model.ResourceType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import nl.rrd.utils.exception.ParseException;
 import nl.rrd.utils.io.FileUtils;
@@ -176,13 +176,13 @@ public class ResourceFileLoader implements FileLoader {
 					"File does not have extension " + Constants.DLB_SCRIPT_FILE_EXTENSION
 							+ " or " + Constants.DLB_TRANSLATION_FILE_EXTENSION + ": " + path);
 		}
-		FileType fileType;
+		ResourceType resourceType;
 		if(entry.endsWith(Constants.DLB_SCRIPT_FILE_EXTENSION)) {
-			fileType = FileType.SCRIPT;
+			resourceType = ResourceType.SCRIPT;
 		} else {
-			fileType = FileType.TRANSLATION;
+			resourceType = ResourceType.TRANSLATION;
 		}
-		files.add(new FileDescriptor(language, path, fileType));
+		files.add(new FileDescriptor(language, path, resourceType));
 	}
 
 	@Override

@@ -28,9 +28,13 @@
 
 package com.dialoguebranch.cli;
 
+import com.dialoguebranch.exception.DialogueBranchException;
 import com.dialoguebranch.exception.InvalidInputException;
 import com.dialoguebranch.exception.ScriptParseException;
+import com.dialoguebranch.exception.UnknownLanguageCodeException;
 import com.dialoguebranch.model.Language;
+import com.dialoguebranch.model.LanguageSet;
+import com.dialoguebranch.model.ProjectMetaData;
 import com.dialoguebranch.parser.*;
 import com.dialoguebranch.script.model.EditableProject;
 import com.dialoguebranch.script.model.EditableScript;
@@ -42,8 +46,6 @@ import nl.rrd.utils.exception.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -55,9 +57,9 @@ import java.util.Scanner;
  */
 public class CommandLineRunner {
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 
 	/**
 	 * Creates an instance of a CommandLineRunner, which serves no purpose as the CommandLineRunner
@@ -65,9 +67,9 @@ public class CommandLineRunner {
 	 */
 	public CommandLineRunner() { }
 
-	// -----------------------------------------------------
-	// -------------------- Main Method --------------------
-	// -----------------------------------------------------
+	// ----------------------------------------------------- //
+	// -------------------- Main Method -------------------- //
+	// ----------------------------------------------------- //
 
 	/**
 	 * Execute the command line runner, either without parameters ("interactive mode"), or by
@@ -87,6 +89,7 @@ public class CommandLineRunner {
 			  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.
 			  3. Open a .dlb script file and parse it with the EditableScriptParser.
 			  4. Open a .xml metadata file and parse it with the EditableProjectParser.
+			  5. Open a DialogueBranch Project and generate all its translation .json files.
 		""");
 
 		Scanner userInputScanner = new Scanner(System.in);
@@ -98,6 +101,7 @@ public class CommandLineRunner {
 			case "2" -> generateProjectSummaryFromXML();
 			case "3" -> parseScriptFile();
 			case "4" -> parseEditableProject();
+			case "5" -> generateTranslationFiles();
 			default -> {
 				System.out.println("Unknown scenario '" + scenario + "', please provide a valid " +
 						"number from the list provided above.");
@@ -228,20 +232,134 @@ public class CommandLineRunner {
 			}
 		}
 
+		System.out.println("""
+				
+				---------- Task Output: ----------
+				""");
+
         try {
             EditableProject editableProject = EditableProjectParser.read(projectMetadataFile);
+			ProjectMetaData metaData = editableProject.getProjectMetaData();
 			System.out.println("Loaded EditableProject: ");
-			System.out.println(editableProject.getProjectMetaData());
-			System.out.println("With the following available scripts:");
-			for (Map.Entry<Language, ScriptTreeNode> entry : editableProject.getAvailableScripts().entrySet()) {
-				System.out.println(entry.getKey() + " --> " + entry.getValue());
+			System.out.println("  - Name:        " + metaData.getName());
+			System.out.println("  - Version:     " + metaData.getVersion());
+			System.out.println("  - Description: " + metaData.getDescription());
+			System.out.println("  - Base Path:   " + metaData.getBasePath());
+			System.out.println("  - Supported Languages: ");
+
+			int longestLanguageName = 0;
+			for (Language l: metaData.getSupportedLanguages()) {
+				if(l.toString().length() > longestLanguageName) {
+					longestLanguageName = l.toString().length();
+				}
 			}
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
+			for(Language l : metaData.getSupportedLanguages()) {
+
+				System.out.print("      - " + l.toString());
+				for(int i=longestLanguageName+3; i>l.toString().length(); i--) {
+					System.out.print(" ");
+				}
+				System.out.println("(" + editableProject
+						.getAvailableScriptsForLanguage(l)
+						.getTotalNumberOfScripts() + " scripts)");
+			}
+        } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
+
+	/**
+	 * Collects input, interactively from the command line, to read in a Dialogue Branch Project.
+	 * Then, makes sure that for all source languages, the corresponding translation languages have
+	 * their .json files available.
+	 */
+	private static void generateTranslationFiles() {
+
+		// Get a pointer to the projectMetadataFile (dlb-project.xml file)
+		File projectMetadataFile = null;
+		boolean projectMetadataFileValid = false;
+
+		while(!projectMetadataFileValid) {
+			System.out.println("Please provide the project metadata (.xml) file of the " +
+					"Dialogue Branch project:");
+			try {
+				projectMetadataFile = askUserInputXMLFile();
+				projectMetadataFileValid = true;
+			} catch (InvalidInputException e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+
+		System.out.println("""
+				
+				---------- Task Output: ----------
+				""");
+
+		try {
+			EditableProject editableProject = EditableProjectParser.read(projectMetadataFile);
+			ProjectMetaData metaData = editableProject.getProjectMetaData();
+			System.out.println("Loaded EditableProject: ");
+			System.out.println("  - Name:        " + metaData.getName());
+			System.out.println("  - Version:     " + metaData.getVersion());
+			System.out.println("  - Description: " + metaData.getDescription());
+			System.out.println("  - Base Path:   " + metaData.getBasePath());
+			System.out.println("  - Supported Languages: ");
+
+			int longestLanguageName = 0;
+			for (Language l: metaData.getSupportedLanguages()) {
+				if(l.toString().length() > longestLanguageName) {
+					longestLanguageName = l.toString().length();
+				}
+			}
+			for(Language l : metaData.getSupportedLanguages()) {
+
+				System.out.print("      - " + l.toString());
+				for(int i=longestLanguageName+3; i>l.toString().length(); i--) {
+					System.out.print(" ");
+				}
+				System.out.println("(" + editableProject
+						.getAvailableScriptsForLanguage(l)
+						.getTotalNumberOfScripts() + " scripts)");
+			}
+
+			// For every source language, go through their corresponding translation languages
+			// and make sure that a translation file exists for every matching source script.
+
+			for(Language sourceLanguage : metaData.getSourceLanguages()) {
+				try {
+					LanguageSet languageSet = metaData.getLanguageSetForSourceLanguage(
+							sourceLanguage.getCode());
+					for(Language translationLanguage : languageSet.getTranslationLanguages()) {
+
+						System.out.println("Generating translation scripts for source language '"
+								+ sourceLanguage.getCode()+"' and translation language '" +
+								translationLanguage.getCode()+"'.");
+						editableProject.generateTranslationFiles(sourceLanguage,translationLanguage);
+
+					}
+				} catch (UnknownLanguageCodeException e) {
+                    throw new RuntimeException(e);
+                } catch (ScriptParseException e) {
+                    throw new RuntimeException(e);
+                } catch (DialogueBranchException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+
+			//for(LanguageSet languageSet : metaData.get)
+
+		} catch (IOException | ParseException e) {
+			throw new RuntimeException(e);
+		}
+
+
+
+	}
+
+	// ------------------------------------------------------------------------------------------ //
+	// -------------------- Helper Functions: Interactive Command Line Input -------------------- //
+	// ------------------------------------------------------------------------------------------ //
 
 	/**
 	 * Open the command line for user input and check whether the given value is a valid directory.

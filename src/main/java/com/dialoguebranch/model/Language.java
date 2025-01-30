@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -33,18 +33,21 @@ package com.dialoguebranch.model;
  * don't actually exist (e.g. "Klingon", "Orcish") a made up code that is not assigned to any
  * existing language.
  *
- * <p>Language codes *must* be unique within a given DialogueBranch project.</p>
+ * <p>Note: Language codes *must* be unique within a given Dialogue Branch project.</p>
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
 public class Language {
 
+	/** The name of this language (e.g. "English") */
 	private String name;
+
+	/** The language code for this language (e.g. "en") */
 	private String code;
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 
 	/**
 	 * Creates an empty instance of a {@link Language}.
@@ -62,12 +65,13 @@ public class Language {
 		this.code = code;
 	}
 
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
+	// ----------------------------------------------------------- //
+	// -------------------- Getters & Setters -------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
 	 * Returns the name of this {@link Language}.
+	 *
 	 * @return the name of this {@link Language}.
 	 */
 	public String getName() {
@@ -76,6 +80,7 @@ public class Language {
 
 	/**
 	 * Sets the name of this {@link Language}.
+	 *
 	 * @param name the name of this {@link Language}.
 	 */
 	public void setName(String name) {
@@ -84,6 +89,7 @@ public class Language {
 
 	/**
 	 * Returns the code of this {@link Language}.
+	 *
 	 * @return the code of this {@link Language}.
 	 */
 	public String getCode() {
@@ -92,19 +98,20 @@ public class Language {
 
 	/**
 	 * Sets the code of this {@link Language}.
+	 *
 	 * @param code the code of this {@link Language}.
 	 */
 	public void setCode(String code) {
 		this.code = code;
 	}
 
-	// -------------------------------------------------------
-	// -------------------- Other Methods --------------------
-	// -------------------------------------------------------
+	// ------------------------------------------------------- //
+	// -------------------- Other Methods -------------------- //
+	// ------------------------------------------------------- //
 
 	@Override
 	public String toString() {
-		return "Language [name:"+name+"] [code:"+code+"]";
+		return name+" ("+code+")";
 	}
 
 }

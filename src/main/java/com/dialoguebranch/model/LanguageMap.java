@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -29,11 +29,11 @@ package com.dialoguebranch.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * A {@link LanguageMap} is a wrapper object containing a {@link List} of
- * {@link LanguageSet}s, as well as some convenience methods for manipulating
- * {@link LanguageSet}s.
+ * A {@link LanguageMap} is a wrapper object containing a {@link List} of {@link LanguageSet}s, as
+ * well as some convenience methods for manipulating {@link LanguageSet}s.
  *
  * @author Harm op den Akker (Fruit Tree Labs)
  */
@@ -41,9 +41,9 @@ public class LanguageMap {
 
 	private List<LanguageSet> languageSets;
 
-	// -------------------------------------------------------
-	// --------------------Constructor(s) --------------------
-	// -------------------------------------------------------
+	// ------------------------------------------------------- //
+	// --------------------Constructor(s) -------------------- //
+	// ------------------------------------------------------- //
 
 	/**
 	 * Creates an instance of an empty {@link LanguageMap}.
@@ -53,19 +53,22 @@ public class LanguageMap {
 	}
 
 	/**
-	 * Creates an instance of a {@link LanguageMap} with a given list of {@link LanguageSet}s.
+	 * Creates an instance of a {@link LanguageMap} with a given list of {@link LanguageSet}s. If
+	 * the given list of language sets is {@code null}, an empty list will be set instead.
+	 *
 	 * @param languageSets a list of {@link LanguageSet}s contained in this {@link LanguageMap}.
 	 */
 	public LanguageMap(List<LanguageSet> languageSets) {
-		this.languageSets = languageSets;
+        this.languageSets = Objects.requireNonNullElseGet(languageSets, ArrayList::new);
 	}
 
-	// -----------------------------------------------------------
-	// -------------------- Getters & Setters --------------------
-	// -----------------------------------------------------------
+	// ----------------------------------------------------------- //
+	// -------------------- Getters & Setters -------------------- //
+	// ----------------------------------------------------------- //
 
 	/**
 	 * Returns the {@link List} of {@link LanguageSet}s in this {@link LanguageMap}.
+	 *
 	 * @return the {@link List} of {@link LanguageSet}s in this {@link LanguageMap}.
 	 */
 	public List<LanguageSet> getLanguageSets() {
@@ -73,24 +76,30 @@ public class LanguageMap {
 	}
 
 	/**
-	 * Sets the {@link List} of {@link LanguageSet}s for this {@link LanguageMap}.
+	 * Sets the {@link List} of {@link LanguageSet}s for this {@link LanguageMap}. If the given
+	 * {@code languageSets} is {@code null}, the current list of language sets will be set to an
+	 * empty list.
+	 *
 	 * @param languageSets the {@link List} of {@link LanguageSet}s for this
 	 *                     {@link LanguageMap}.
 	 */
 	public void setLanguageSets(List<LanguageSet> languageSets) {
-		this.languageSets = languageSets;
+		this.languageSets = Objects.requireNonNullElseGet(languageSets, ArrayList::new);
 	}
 
-	// -------------------------------------------------------
-	// -------------------- Other Methods --------------------
-	// -------------------------------------------------------
+	// ------------------------------------------------------- //
+	// -------------------- Other Methods -------------------- //
+	// ------------------------------------------------------- //
 
 	/**
-	 * Adds the given {@link LanguageSet} to this {@link LanguageMap}.
+	 * Adds the given {@link LanguageSet} to this {@link LanguageMap}, unless the given {@code
+	 * languageSet} is {@code null}, in which case, this method does nothing.
+	 *
 	 * @param languageSet the {@link LanguageSet} to add to this {@link LanguageMap}.
 	 */
 	public void addLanguageSet(LanguageSet languageSet) {
-		languageSets.add(languageSet);
+		if(languageSet != null)
+			languageSets.add(languageSet);
 	}
 
 	@Override

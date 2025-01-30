@@ -40,7 +40,7 @@ import java.util.Objects;
  *   <li>{@code filePath} - the complete path to the file, relative to the language folder,
  *   including the file extension</li>
  *
- *   <li>{@code fileType} - either {@link FileType#SCRIPT} or {@link FileType#TRANSLATION}
+ *   <li>{@code resourceType} - either {@link ResourceType#SCRIPT} or {@link ResourceType#TRANSLATION}
  *   indicating the type of the file</li>
  * </ul>
  *
@@ -55,7 +55,7 @@ public class FileDescriptor {
 	
 	private String language;
 	private String filePath;
-	private FileType fileType;
+	private ResourceType resourceType;
 
 	// --------------------------------------------------------
 	// -------------------- Constructor(s) --------------------
@@ -68,19 +68,19 @@ public class FileDescriptor {
 
 	/**
 	 * Creates an instance of a {@link FileDescriptor} with a given {@code language}, {@code
-	 * filePath} and {@code fileType}.
+	 * filePath} and {@code resourceType}.
 	 *
 	 * @param language the name of the "language directory", which is the direct subdirectory of the
 	 *                 project's root directory (e.g. "en" - for English).
 	 * @param filePath the path to the file, relative to the language directory and including the
 	 *                 file extension (e.g. "subdirectory/basic.dlb").
-	 * @param fileType the type of the file as either {@link FileType#SCRIPT} or
-	 *                 {@link FileType#TRANSLATION}.
+	 * @param resourceType the type of the file as either {@link ResourceType#SCRIPT} or
+	 *                 {@link ResourceType#TRANSLATION}.
 	 */
-	public FileDescriptor(String language, String filePath, FileType fileType) {
+	public FileDescriptor(String language, String filePath, ResourceType resourceType) {
 		this.setLanguage(language);
 		this.setFilePath(filePath);
-		this.fileType = fileType;
+		this.resourceType = resourceType;
 	}
 
 	// -----------------------------------------------------------
@@ -132,23 +132,23 @@ public class FileDescriptor {
 	}
 
 	/**
-	 * Returns the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
-	 * {@link FileType#TRANSLATION}.
+	 * Returns the type of this {@link FileDescriptor} as either {@link ResourceType#SCRIPT} or
+	 * {@link ResourceType#TRANSLATION}.
 	 *
 	 * @return the type of this {@link FileDescriptor}.
 	 */
-	public FileType getFileType() {
-		return fileType;
+	public ResourceType getFileType() {
+		return resourceType;
 	}
 
 	/**
-	 * Sets the type of this {@link FileDescriptor} as either {@link FileType#SCRIPT} or
-	 * {@link FileType#TRANSLATION}.
+	 * Sets the type of this {@link FileDescriptor} as either {@link ResourceType#SCRIPT} or
+	 * {@link ResourceType#TRANSLATION}.
 	 *
-	 * @param fileType the type of this {@link FileDescriptor}.
+	 * @param resourceType the type of this {@link FileDescriptor}.
 	 */
-	public void setFileType(FileType fileType) {
-		this.fileType = fileType;
+	public void setFileType(ResourceType resourceType) {
+		this.resourceType = resourceType;
 	}
 
 	// -------------------------------------------------------
@@ -177,7 +177,7 @@ public class FileDescriptor {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(language, filePath, fileType);
+		return Objects.hash(language, filePath, resourceType);
 	}
 
 	@Override
@@ -191,7 +191,7 @@ public class FileDescriptor {
 			return false;
 		if (!filePath.equals(other.filePath))
 			return false;
-		return fileType.equals(other.fileType);
+		return resourceType.equals(other.resourceType);
 	}
 
 	@Override

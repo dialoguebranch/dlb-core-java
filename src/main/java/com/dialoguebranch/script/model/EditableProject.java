@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
@@ -27,11 +27,21 @@
  */
 package com.dialoguebranch.script.model;
 
-import com.dialoguebranch.model.Language;
-import com.dialoguebranch.model.ProjectMetaData;
+import com.dialoguebranch.exception.DialogueBranchException;
+import com.dialoguebranch.exception.FileSystemException;
+import com.dialoguebranch.exception.ScriptParseException;
+import com.dialoguebranch.i18n.SourceTranslatable;
+import com.dialoguebranch.i18n.TranslatableExtractor;
+import com.dialoguebranch.i18n.TranslationFile;
+import com.dialoguebranch.model.*;
+import com.dialoguebranch.parser.DialogueBranchParser;
+import com.dialoguebranch.parser.ParserResult;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +64,7 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     private Map<Language,ScriptTreeNode> availableScripts;
 
     /** The set of "active" EditableScripts representing the scripts in this project */
-    private Map<String,EditableScript> activeScripts;
+    private final Map<String,EditableScript> activeScripts;
 
     /** Stores whether any changes have been made to this project */
     private boolean isModified;
@@ -128,6 +138,34 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     }
 
     /**
+     * Returns a {@link ScriptTreeNode} that is the root of a tree of {@link ScriptTreeNode}s,
+     * representing the hierarchy of script files available for the given {@code language}, or
+     * {@code null} if there are no known script files for the given language.
+     *
+     * @param language the language for which to retrieve all scripts
+     * @return all scripts for the given language, as a pointer to the node of a tree of scripts
+     */
+    public ScriptTreeNode getAvailableScriptsForLanguage(Language language) {
+        return this.availableScripts.get(language);
+    }
+
+    /**
+     * Returns a {@link ScriptTreeNode} that is the root of a tree of {@link ScriptTreeNode}s,
+     * representing the hierarchy of script files available for the language, represented by the
+     * given {@code languageCode}, or {@code null} if there are no known script files for a language
+     * defined by that given code.
+     *
+     * @param languageCode the language code for which to retrieve all scripts
+     * @return all scripts for the given language, as a pointer to the node of a tree of scripts
+     */
+    public ScriptTreeNode getAvailableScriptsForLanguage(String languageCode) {
+        for(Language language : availableScripts.keySet()) {
+            if(language.getCode().equals(languageCode)) return availableScripts.get(language);
+        }
+        return null;
+    }
+
+    /**
      * Sets a mapping from {@link Language} to a list of script names, indicating the full set of
      * available scripts in this project, and informing any {@link PropertyChangeListener}s of the
      * change
@@ -183,12 +221,119 @@ public class EditableProject extends Editable implements PropertyChangeListener 
         return result;
     }
 
-    public ScriptTreeNode getScriptTreeForLanguage(String languageCode) {
-        for(Language language : availableScripts.keySet()) {
-            if(language.getCode().equals(languageCode)) return availableScripts.get(language);
+    /**
+     * Generates the translation scripts in the given {@code translationLanguage} so that there
+     * exist a script for every script available in the given {@code sourceLanguage}. Returns the
+     * number of actually generated scripts (which may be 0 if all of them already existed).
+     *
+     * @param sourceLanguage the source language
+     * @param translationLanguage the translation language in which to generate translation scripts
+     * @return the number of actually generated scripts
+     * @throws ScriptParseException
+     * @throws IOException
+     */
+    public int generateTranslationFiles(Language sourceLanguage,
+                                         Language translationLanguage)
+            throws DialogueBranchException, IOException {
+
+        int generatedScriptCount = 0;
+
+        ScriptTreeNode sourceLanguageTree =
+                this.getAvailableScriptsForLanguage(sourceLanguage);
+        ScriptTreeNode translationLanguageTree =
+                this.getAvailableScriptsForLanguage(translationLanguage);
+
+        // Loop through all this node's children...
+        for(ScriptTreeNode child : sourceLanguageTree.getChildren()) {
+
+            // If the translation tree doesn't have a matching child...
+            if(!translationLanguageTree.hasChild(child.getName(), child.getResourceType())) {
+
+                // We must create a new node in the translation tree
+                StorageSource newStorageSource = null;
+
+                // If the source node is a File, the translation node must also be a File
+                if(child.getStorageSource() instanceof FileStorageSource) {
+
+                    // If the source child is a folder, the translation child must also be a folder
+                    if(child.getResourceType().equals(ResourceType.FOLDER)) {
+
+                        String newFolderName = translationLanguageTree.getStorageSource()
+                                .getDescriptor() + File.separator + child.getName();
+                        File newFolder = new File(newFolderName);
+
+                        if (!newFolder.mkdir()) {
+                            // The new folder couldn't be created
+                            throw new FileSystemException(
+                                    "Unable to create directory at " + newFolderName);
+                        }
+
+                        newStorageSource = new FileStorageSource(newFolder);
+
+                    } else {
+                        String newFileName = translationLanguageTree.getStorageSource()
+                                .getDescriptor() + File.separator + child.getName()
+                                + Constants.DLB_TRANSLATION_FILE_EXTENSION;
+                        File newScriptFile = new File(newFileName);
+
+                       generateTranslationFile(
+                               ((FileStorageSource)child.getStorageSource()).getSourceFile(),
+                               newScriptFile);
+
+                        newStorageSource = new FileStorageSource(newScriptFile);
+                    }
+
+                } else {
+                    // TODO: In case other storage sources are supported
+                }
+
+                // Create the new ScriptTreeNode into the translation Tree, with the newly generated
+                // storage source object, the current parent translationRoot, and the same name and
+                // type as the corresponding source node.
+                ScriptTreeNode newNode = new ScriptTreeNode(
+                        translationLanguageTree,
+                        newStorageSource,
+                        child.getResourceType(),
+                        child.getName());
+
+                translationLanguageTree.addChild(newNode);
+                generatedScriptCount++;
+            }
         }
-        return null;
+
+        return generatedScriptCount;
     }
+
+    public void generateTranslationFile(File dialogueBranchScript, File translationFile) throws IOException {
+        DialogueBranchParser dialogueBranchParser = new DialogueBranchParser(dialogueBranchScript);
+        ParserResult parserResult = dialogueBranchParser.readDialogue();
+        Dialogue sourceDialogue = parserResult.getDialogue();
+
+        String completeFileName = translationFile.getName();
+        String fileName = "";
+        int pos = completeFileName.lastIndexOf(".");
+        if (pos > 0 && pos < (completeFileName.length() - 1)) { // If '.' is not the first or last character.
+            fileName = completeFileName.substring(0, pos);
+        }
+
+        TranslationFile translationFileObject = new TranslationFile(fileName);
+
+        for (Node node : sourceDialogue.getNodes()) {
+            TranslatableExtractor extractor = new TranslatableExtractor();
+            List<SourceTranslatable> translatables = extractor.extractFromNode(node);
+
+            for(SourceTranslatable translatable : translatables) {
+                String speakerName = translatable.speaker();
+                String term = translatable.translatable().toExportFriendlyString();
+                String translation = "";
+                translationFileObject.addTerm(speakerName,term,translation);
+            }
+
+        }
+
+        translationFileObject.writeToFile(translationFile);
+    }
+
 
     // ------------------------------------------------------------------- //
     // -------------------- Property Change Listeners -------------------- //

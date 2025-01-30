@@ -28,7 +28,7 @@
 
 package com.dialoguebranch.model;
 
-public enum FileType {
+public enum ResourceType {
 	SCRIPT,
 	TRANSLATION,
 	FOLDER

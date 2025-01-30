@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -29,6 +29,7 @@ package com.dialoguebranch.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A {@link LanguageSet} is a mapping from a single source {@link Language} to a list of translation
@@ -41,9 +42,9 @@ public class LanguageSet {
 	private Language sourceLanguage;
 	private List<Language> translationLanguages;
 
-	// --------------------------------------------------------
-	// -------------------- Constructor(s) --------------------
-	// --------------------------------------------------------
+	// -------------------------------------------------------- //
+	// -------------------- Constructor(s) -------------------- //
+	// -------------------------------------------------------- //
 
 	/**
 	 * Creates an instance of an empty {@link LanguageSet}.
@@ -54,7 +55,8 @@ public class LanguageSet {
 
 	/**
 	 * Creates an instance of a {@link LanguageSet} with a given defined {@code sourceLanguage}, but
-	 * no translation language.
+	 * no translation language(s).
+	 *
 	 * @param sourceLanguage the source {@link Language} of this {@link LanguageSet}.
 	 */
 	public LanguageSet(Language sourceLanguage) {
@@ -65,13 +67,14 @@ public class LanguageSet {
 	/**
 	 * Creates an instance of a {@link LanguageSet} with a given {@code sourceLanguage} and list of
 	 * {@code translationLanguages}.
+	 *
 	 * @param sourceLanguage the source {@link Language} of this {@link LanguageSet}.
 	 * @param translationLanguages a list of translation {@link Language}s mapped to the given
 	 *                             {@code sourceLanguage}.
 	 */
 	public LanguageSet(Language sourceLanguage, List<Language> translationLanguages) {
 		this.sourceLanguage = sourceLanguage;
-		this.translationLanguages = translationLanguages;
+		this.translationLanguages = Objects.requireNonNullElseGet(translationLanguages,ArrayList::new);
 	}
 
 	// -----------------------------------------------------------
