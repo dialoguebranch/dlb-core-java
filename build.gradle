@@ -34,7 +34,7 @@ javadoc {
 	destinationDir = reporting.file("javadoc")
 	include 'com/dialoguebranch/**'
 	options.source = "17"
-	options.addStringOption('Xmaxwarns', '1')
+	options.addStringOption('Xmaxwarns', '100')
 }
 
 dependencies {
@@ -43,9 +43,6 @@ dependencies {
 	testImplementation 'junit:junit:4.13.2'
 	// SLF4J Logging Framework
 	api 'org.slf4j:slf4j-api:2.0.12'
-
-	// SLF4J JDK includes the API, but when replaced with a different logging provider, API must be included specifically
-	api 'org.slf4j:slf4j-jdk14:2.0.13'
 }
 
 jar {
