@@ -31,7 +31,6 @@ package com.dialoguebranch.cli;
 import com.dialoguebranch.exception.DialogueBranchException;
 import com.dialoguebranch.exception.InvalidInputException;
 import com.dialoguebranch.exception.ScriptParseException;
-import com.dialoguebranch.exception.UnknownLanguageCodeException;
 import com.dialoguebranch.model.Language;
 import com.dialoguebranch.model.LanguageSet;
 import com.dialoguebranch.model.ProjectMetaData;
@@ -39,7 +38,6 @@ import com.dialoguebranch.parser.*;
 import com.dialoguebranch.script.model.EditableProject;
 import com.dialoguebranch.script.model.EditableScript;
 import com.dialoguebranch.script.model.EditableNode;
-import com.dialoguebranch.script.model.ScriptTreeNode;
 import com.dialoguebranch.script.parser.EditableProjectParser;
 import com.dialoguebranch.script.parser.EditableScriptParser;
 import nl.rrd.utils.exception.ParseException;
@@ -296,8 +294,11 @@ public class CommandLineRunner {
 				""");
 
 		try {
+			// Read in the Dialogue Branch project as "Editable"
 			EditableProject editableProject = EditableProjectParser.read(projectMetadataFile);
 			ProjectMetaData metaData = editableProject.getProjectMetaData();
+
+			// Print out some project summary information
 			System.out.println("Loaded EditableProject: ");
 			System.out.println("  - Name:        " + metaData.getName());
 			System.out.println("  - Version:     " + metaData.getVersion());
@@ -312,7 +313,6 @@ public class CommandLineRunner {
 				}
 			}
 			for(Language l : metaData.getSupportedLanguages()) {
-
 				System.out.print("      - " + l.toString());
 				for(int i=longestLanguageName+3; i>l.toString().length(); i--) {
 					System.out.print(" ");
@@ -323,7 +323,7 @@ public class CommandLineRunner {
 			}
 
 			// For every source language, go through their corresponding translation languages
-			// and make sure that a translation file exists for every matching source script.
+			// and make sure that a translation file (.json) exists for every matching source script
 
 			for(Language sourceLanguage : metaData.getSourceLanguages()) {
 				try {
@@ -337,24 +337,15 @@ public class CommandLineRunner {
 						editableProject.generateTranslationFiles(sourceLanguage,translationLanguage);
 
 					}
-				} catch (UnknownLanguageCodeException e) {
-                    throw new RuntimeException(e);
-                } catch (ScriptParseException e) {
-                    throw new RuntimeException(e);
-                } catch (DialogueBranchException e) {
+				} catch (DialogueBranchException e) {
                     throw new RuntimeException(e);
                 }
             }
 
-
-			//for(LanguageSet languageSet : metaData.get)
-
 		} catch (IOException | ParseException e) {
 			throw new RuntimeException(e);
 		}
-
-
-
+		
 	}
 
 	// ------------------------------------------------------------------------------------------ //
