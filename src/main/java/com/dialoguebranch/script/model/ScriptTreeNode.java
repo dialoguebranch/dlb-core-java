@@ -119,17 +119,29 @@ public class ScriptTreeNode {
 
     /**
      * Returns {@code true} if, and only if this {@link ScriptTreeNode} has a direct child with the
-     * given {@code name} and {@code resourceType}.
+     * given {@code name} and the same type (folder / non-folder) as the given boolean {@code
+     * isFolder} indicates. E.g. If we are looking for a folder with the name "test", we call this
+     * method using "test", and "true". If we are looking for any script (translation or actual
+     * script) called "startScript", we call this method using "startScript" and "false".
      *
      * @param name the name of the child node to look for
-     * @param resourceType the resource type of the child node to look for
-     * @return true if such a child exists
+     * @param isFolder whether the resourceType should be FOLDER or not
+     * @return true if such a child exists, false otherwise
      */
-    public boolean hasChild(String name, ResourceType resourceType) {
+    public boolean hasChild(String name, boolean isFolder) {
+
         for(ScriptTreeNode child : this.children) {
-            if(child.getName().equals(this.getName()) &&
-                child.getResourceType().equals(this.getResourceType())) {
-                    return true;
+
+            if(child.getName().equals(name)) {
+                if(isFolder) {
+                    if(child.getResourceType().equals(ResourceType.FOLDER))
+                        return true;
+                } else {
+                    if(child.getResourceType().equals(ResourceType.SCRIPT) ||
+                    child.getResourceType().equals(ResourceType.TRANSLATION)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;

@@ -331,11 +331,12 @@ public class CommandLineRunner {
 							sourceLanguage.getCode());
 					for(Language translationLanguage : languageSet.getTranslationLanguages()) {
 
-						System.out.println("Generating translation scripts for source language '"
+						System.out.print("Generating translation scripts for source language '"
 								+ sourceLanguage.getCode()+"' and translation language '" +
-								translationLanguage.getCode()+"'.");
-						editableProject.generateTranslationFiles(sourceLanguage,translationLanguage);
-
+								translationLanguage.getCode()+"' - ");
+						int generatedScriptsCount = editableProject
+								.generateTranslationFiles(sourceLanguage,translationLanguage);
+						System.out.println(generatedScriptsCount +" scripts generated.");
 					}
 				} catch (DialogueBranchException e) {
                     throw new RuntimeException(e);
@@ -345,7 +346,7 @@ public class CommandLineRunner {
 		} catch (IOException | ParseException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
 
 	// ------------------------------------------------------------------------------------------ //

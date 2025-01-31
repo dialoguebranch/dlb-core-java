@@ -247,7 +247,9 @@ public class EditableProject extends Editable implements PropertyChangeListener 
         for(ScriptTreeNode child : sourceLanguageTree.getChildren()) {
 
             // If the translation tree doesn't have a matching child...
-            if(!translationLanguageTree.hasChild(child.getName(), child.getResourceType())) {
+            // (Where the type should match on the folder/non-folder level)
+            if(!translationLanguageTree.hasChild(child.getName(),
+                    child.getResourceType().equals(ResourceType.FOLDER))) {
 
                 // We must create a new node in the translation tree
                 StorageSource newStorageSource = null;
