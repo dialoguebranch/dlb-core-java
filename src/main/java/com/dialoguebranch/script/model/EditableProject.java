@@ -222,46 +222,47 @@ public class EditableProject extends Editable implements PropertyChangeListener 
     }
 
     /**
-     * Generates the translation scripts in the given {@code translationLanguage} so that there
-     * exist a script for every script available in the given {@code sourceLanguage}. Returns the
-     * number of actually generated scripts (which may be 0 if all of them already existed).
+     * Generates the translation scripts in the given {@code translationLanguageTree} so that there
+     * exist a script for every script available in the given {@code sourceLanguageTree}. Returns
+     * the number of actually generated scripts (which may be 0 if all of them already existed).
+     * This method will recursively traverse the sourceLanguageTree.
      *
-     * @param sourceLanguage the source language
-     * @param translationLanguage the translation language in which to generate translation scripts
+     * @param sourceLanguageTree the source language tree
+     * @param translationLanguageTree the translation language tree in which to generate translation
+     *                                scripts
      * @return the number of actually generated scripts
      * @throws ScriptParseException
      * @throws IOException
      */
-    public int generateTranslationFiles(Language sourceLanguage,
-                                         Language translationLanguage)
+    public int generateTranslationFiles(ScriptTreeNode sourceLanguageTree,
+                                        ScriptTreeNode translationLanguageTree)
             throws DialogueBranchException, IOException {
 
         int generatedScriptCount = 0;
 
-        ScriptTreeNode sourceLanguageTree =
-                this.getAvailableScriptsForLanguage(sourceLanguage);
-        ScriptTreeNode translationLanguageTree =
-                this.getAvailableScriptsForLanguage(translationLanguage);
-
         // Loop through all this node's children...
-        for(ScriptTreeNode child : sourceLanguageTree.getChildren()) {
+        for(ScriptTreeNode sourceChild : sourceLanguageTree.getChildren()) {
+
+            // Get a reference to the matching node in the translation language tree
+            // (Where the 'ResourceType' should match on the folder/non-folder level)
+            ScriptTreeNode matchingNode = translationLanguageTree.getMatchingChild(
+                    sourceChild.getName(),
+                    sourceChild.getResourceType().equals(ResourceType.FOLDER));
 
             // If the translation tree doesn't have a matching child...
-            // (Where the type should match on the folder/non-folder level)
-            if(!translationLanguageTree.hasChild(child.getName(),
-                    child.getResourceType().equals(ResourceType.FOLDER))) {
+            if(matchingNode == null) {
 
                 // We must create a new node in the translation tree
                 StorageSource newStorageSource = null;
 
                 // If the source node is a File, the translation node must also be a File
-                if(child.getStorageSource() instanceof FileStorageSource) {
+                if(sourceChild.getStorageSource() instanceof FileStorageSource) {
 
                     // If the source child is a folder, the translation child must also be a folder
-                    if(child.getResourceType().equals(ResourceType.FOLDER)) {
+                    if(sourceChild.getResourceType().equals(ResourceType.FOLDER)) {
 
                         String newFolderName = translationLanguageTree.getStorageSource()
-                                .getDescriptor() + File.separator + child.getName();
+                                .getDescriptor() + File.separator + sourceChild.getName();
                         File newFolder = new File(newFolderName);
 
                         if (!newFolder.mkdir()) {
@@ -274,14 +275,15 @@ public class EditableProject extends Editable implements PropertyChangeListener 
 
                     } else {
                         String newFileName = translationLanguageTree.getStorageSource()
-                                .getDescriptor() + File.separator + child.getName()
+                                .getDescriptor() + File.separator + sourceChild.getName()
                                 + Constants.DLB_TRANSLATION_FILE_EXTENSION;
                         File newScriptFile = new File(newFileName);
 
-                       generateTranslationFile(
-                               ((FileStorageSource)child.getStorageSource()).getSourceFile(),
+                        // Generate an actual translation .json file from the source .dlb file
+                        generateTranslationFile(
+                               ((FileStorageSource)sourceChild.getStorageSource()).getSourceFile(),
                                newScriptFile);
-
+                        generatedScriptCount++;
                         newStorageSource = new FileStorageSource(newScriptFile);
                     }
 
@@ -292,15 +294,21 @@ public class EditableProject extends Editable implements PropertyChangeListener 
                 // Create the new ScriptTreeNode into the translation Tree, with the newly generated
                 // storage source object, the current parent translationRoot, and the same name and
                 // type as the corresponding source node.
-                ScriptTreeNode newNode = new ScriptTreeNode(
+                matchingNode = new ScriptTreeNode(
                         translationLanguageTree,
                         newStorageSource,
-                        child.getResourceType(),
-                        child.getName());
+                        sourceChild.getResourceType(),
+                        sourceChild.getName());
 
-                translationLanguageTree.addChild(newNode);
-                generatedScriptCount++;
+                translationLanguageTree.addChild(matchingNode);
             }
+
+            // If this child node is a leaf, we are done, otherwise we must recursively
+            // Process the rest of the tree
+            if(!sourceChild.isLeaf()) {
+                generatedScriptCount += generateTranslationFiles(sourceChild,matchingNode);
+            }
+
         }
 
         return generatedScriptCount;

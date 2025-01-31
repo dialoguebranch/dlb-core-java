@@ -38,6 +38,7 @@ import com.dialoguebranch.parser.*;
 import com.dialoguebranch.script.model.EditableProject;
 import com.dialoguebranch.script.model.EditableScript;
 import com.dialoguebranch.script.model.EditableNode;
+import com.dialoguebranch.script.model.ScriptTreeNode;
 import com.dialoguebranch.script.parser.EditableProjectParser;
 import com.dialoguebranch.script.parser.EditableScriptParser;
 import nl.rrd.utils.exception.ParseException;
@@ -334,8 +335,16 @@ public class CommandLineRunner {
 						System.out.print("Generating translation scripts for source language '"
 								+ sourceLanguage.getCode()+"' and translation language '" +
 								translationLanguage.getCode()+"' - ");
-						int generatedScriptsCount = editableProject
-								.generateTranslationFiles(sourceLanguage,translationLanguage);
+
+						ScriptTreeNode sourceLanguageTree =
+								editableProject.getAvailableScriptsForLanguage(sourceLanguage);
+						ScriptTreeNode translationLanguageTree =
+								editableProject.getAvailableScriptsForLanguage(translationLanguage);
+
+						int generatedScriptsCount
+								= editableProject.generateTranslationFiles(
+										sourceLanguageTree,translationLanguageTree);
+
 						System.out.println(generatedScriptsCount +" scripts generated.");
 					}
 				} catch (DialogueBranchException e) {

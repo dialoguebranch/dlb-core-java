@@ -118,33 +118,33 @@ public class ScriptTreeNode {
     }
 
     /**
-     * Returns {@code true} if, and only if this {@link ScriptTreeNode} has a direct child with the
-     * given {@code name} and the same type (folder / non-folder) as the given boolean {@code
+     * Returns a {@link ScriptTreeNode} that is the child of the current node and that matches the
+     * given {@code name} and has the same type (folder / non-folder) as the given boolean {@code
      * isFolder} indicates. E.g. If we are looking for a folder with the name "test", we call this
      * method using "test", and "true". If we are looking for any script (translation or actual
-     * script) called "startScript", we call this method using "startScript" and "false".
+     * script) called "startScript", we call this method using "startScript" and "false". If no
+     * such node exists, this folder returns {@code null}.
      *
      * @param name the name of the child node to look for
      * @param isFolder whether the resourceType should be FOLDER or not
-     * @return true if such a child exists, false otherwise
+     * @return the child {@link ScriptTreeNode} found, or {@code null}
      */
-    public boolean hasChild(String name, boolean isFolder) {
-
+    public ScriptTreeNode getMatchingChild(String name, boolean isFolder) {
         for(ScriptTreeNode child : this.children) {
 
             if(child.getName().equals(name)) {
                 if(isFolder) {
                     if(child.getResourceType().equals(ResourceType.FOLDER))
-                        return true;
+                        return child;
                 } else {
                     if(child.getResourceType().equals(ResourceType.SCRIPT) ||
-                    child.getResourceType().equals(ResourceType.TRANSLATION)) {
-                        return true;
+                            child.getResourceType().equals(ResourceType.TRANSLATION)) {
+                        return child;
                     }
                 }
             }
         }
-        return false;
+        return null;
     }
 
     public String toString() {
