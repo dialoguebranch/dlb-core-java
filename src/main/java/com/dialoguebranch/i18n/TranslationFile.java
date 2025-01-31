@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
  *      as outlined below. Based on original source code licensed under the following terms:
@@ -32,25 +32,32 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A {@link TranslationFile} is an object representation of a JSON file that contains
- * translations for a single .dlb script. The body of a {@link TranslationFile} consists of a
- * mapping from speakerNames to a map of {term,translation}-pairs, e.g.:
+ * A {@link TranslationFile} is an object representation of a JSON file that contains translations
+ * for a single Dialogue Branch script. The body of a {@link TranslationFile} consists of a mapping
+ * from speakerNames to a map of {term,translation}-pairs, where the "speaker name" for the user
+ * is defined in {@link SourceTranslatable#USER}, e.g.:
  *
  * <pre>
  * {
  *   "speaker1" : {
- *     "term1": "translation1",
- *     "term2": "translation2"
+ *     "term1" : "translation1",
+ *     "term2" : "translation2"
  *   },
  *   "speaker2" : {
- *     "term3":"translation3",
- *     "term4":"translation4",
+ *     "term3" : "translation3",
+ *     "term4" : "translation4"
+ *   }
+ *   "_user" : {
+ *     "term5" : "translation5",
+ *     "term6" : "translation6"
  *   }
  * }</pre>
  *
@@ -60,7 +67,7 @@ import java.util.Map;
 public class TranslationFile {
 
 	private final String fileName;
-	private final Map<String, Map<String,String>> contentMap;
+	private Map<String, Map<String,String>> contentMap;
 
 	// ----- Constructors
 
@@ -128,6 +135,31 @@ public class TranslationFile {
 
 		// convert map to JSON file
 		writer.writeValue(file, contentMap);
+	}
+
+	public void writeToTSVFile(File file) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file,true))) {
+			for (Map.Entry<String, Map<String, String>> entry : contentMap.entrySet()) {
+				String speakerName = entry.getKey();
+				Map<String, String> terms = entry.getValue();
+
+				for (Map.Entry<String, String> termEntry : terms.entrySet()) {
+					String term = termEntry.getKey();
+					String translation = termEntry.getValue();
+
+					writer.write(speakerName + "\t" + term + "\t" + translation);
+					writer.newLine();
+				}
+			}
+			writer.flush();
+		} catch (IOException ex) {
+			throw ex;
+		}
+	}
+
+	public void readFromFile(File file) throws IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		this.contentMap = mapper.readValue(file, HashMap.class);
 	}
 
 }

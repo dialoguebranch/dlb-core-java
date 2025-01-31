@@ -30,18 +30,14 @@ package com.dialoguebranch.script.model;
 import com.dialoguebranch.exception.DialogueBranchException;
 import com.dialoguebranch.exception.FileSystemException;
 import com.dialoguebranch.exception.ScriptParseException;
-import com.dialoguebranch.i18n.SourceTranslatable;
-import com.dialoguebranch.i18n.TranslatableExtractor;
-import com.dialoguebranch.i18n.TranslationFile;
+import com.dialoguebranch.i18n.*;
 import com.dialoguebranch.model.*;
 import com.dialoguebranch.parser.DialogueBranchParser;
 import com.dialoguebranch.parser.ParserResult;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -342,6 +338,33 @@ public class EditableProject extends Editable implements PropertyChangeListener 
         }
 
         translationFileObject.writeToFile(translationFile);
+    }
+
+    public void generateTranslationTSVs(ScriptTreeNode translationTree) throws IOException {
+        if(translationTree.isLeaf()) {
+            StorageSource storageSource = translationTree.getStorageSource();
+            if(storageSource instanceof FileStorageSource fileStorageSource) {
+                File translationFile = fileStorageSource.getSourceFile();
+
+                String completeFileName = translationFile.getName();
+                String fileName = "";
+                int pos = completeFileName.lastIndexOf(".");
+                if (pos > 0 && pos < (completeFileName.length() - 1)) { // If '.' is not the first or last character.
+                    fileName = completeFileName.substring(0, pos);
+                }
+
+                TranslationFile tf = new TranslationFile(fileName);
+                tf.readFromFile(translationFile);
+
+                File csvFile = new File(translationFile.getParent() + File.separator + fileName + ".tsv");
+
+                tf.writeToTSVFile(csvFile);
+            }
+        } else {
+            for(ScriptTreeNode child : translationTree.getChildren()) {
+                generateTranslationTSVs(child);
+            }
+        }
     }
 
 

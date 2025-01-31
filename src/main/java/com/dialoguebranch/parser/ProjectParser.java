@@ -49,7 +49,7 @@ import com.dialoguebranch.i18n.TranslationParserResult;
 import com.dialoguebranch.i18n.Translator;
 
 /**
- * This class can read an entire DialogueBranch project consisting of dialogue script files (files
+ * This class can read an entire Dialogue Branch project consisting of dialogue script files (files
  * with an extension of {@link Constants#DLB_SCRIPT_FILE_EXTENSION}) and translation files (with an
  * extension of {@link Constants#DLB_TRANSLATION_FILE_EXTENSION} as provided through the given
  * {@link FileLoader} implementation.

@@ -78,17 +78,18 @@ public class CommandLineRunner {
 	 */
 	public static void main(String... args) {
 		System.out.println("""
-			Welcome to the DialogueBranch Command Line Runner.
+			Welcome to the Dialogue Branch Command Line Runner.
 
 			This command line tool can be used for a number of different scenarios.
 			Since you haven't provided command line arguments, we will take you through an interactive menu to determine your desired scenario and parameters.
 
 			The following scenarios are currently supported:
-			  1. Open a DialogueBranch Folder and generate a summary.
-			  2. Open a DialogueBranch Project (from metadata.xml) and generate a summary.
+			  1. Open a Dialogue Branch Folder and generate a summary.
+			  2. Open a Dialogue Branch Project (from metadata.xml) and generate a summary.
 			  3. Open a .dlb script file and parse it with the EditableScriptParser.
 			  4. Open a .xml metadata file and parse it with the EditableProjectParser.
-			  5. Open a DialogueBranch Project and generate all its translation .json files.
+			  5. Open a Dialogue Branch Project and generate all its translation .json files.
+			  6. Open a Dialogue Branch Project and generate translation CSV files.
 		""");
 
 		Scanner userInputScanner = new Scanner(System.in);
@@ -101,6 +102,7 @@ public class CommandLineRunner {
 			case "3" -> parseScriptFile();
 			case "4" -> parseEditableProject();
 			case "5" -> generateTranslationFiles();
+			case "6" -> generateTranslationCSVs();
 			default -> {
 				System.out.println("Unknown scenario '" + scenario + "', please provide a valid " +
 						"number from the list provided above.");
@@ -356,6 +358,85 @@ public class CommandLineRunner {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	private static void generateTranslationCSVs() {
+		// Get a pointer to the projectMetadataFile (dlb-project.xml file)
+		File projectMetadataFile = null;
+		boolean projectMetadataFileValid = false;
+
+		while(!projectMetadataFileValid) {
+			System.out.println("Please provide the project metadata (.xml) file of the " +
+					"Dialogue Branch project:");
+			try {
+				projectMetadataFile = askUserInputXMLFile();
+				projectMetadataFileValid = true;
+			} catch (InvalidInputException e) {
+				System.err.println("Error: " + e.getMessage());
+			}
+		}
+
+		System.out.println("""
+				
+				---------- Task Output: ----------
+				""");
+
+		try {
+			// Read in the Dialogue Branch project as "Editable"
+			EditableProject editableProject = EditableProjectParser.read(projectMetadataFile);
+			ProjectMetaData metaData = editableProject.getProjectMetaData();
+
+			// Print out some project summary information
+			System.out.println("Loaded EditableProject: ");
+			System.out.println("  - Name:        " + metaData.getName());
+			System.out.println("  - Version:     " + metaData.getVersion());
+			System.out.println("  - Description: " + metaData.getDescription());
+			System.out.println("  - Base Path:   " + metaData.getBasePath());
+			System.out.println("  - Supported Languages: ");
+
+			int longestLanguageName = 0;
+			for (Language l: metaData.getSupportedLanguages()) {
+				if(l.toString().length() > longestLanguageName) {
+					longestLanguageName = l.toString().length();
+				}
+			}
+			for(Language l : metaData.getSupportedLanguages()) {
+				System.out.print("      - " + l.toString());
+				for(int i=longestLanguageName+3; i>l.toString().length(); i--) {
+					System.out.print(" ");
+				}
+				System.out.println("(" + editableProject
+						.getAvailableScriptsForLanguage(l)
+						.getTotalNumberOfScripts() + " scripts)");
+			}
+
+			// For every source language, go through their corresponding translation languages
+			// and make sure that a translation file (.json) exists for every matching source script
+
+			for(Language sourceLanguage : metaData.getSourceLanguages()) {
+				try {
+					LanguageSet languageSet = metaData.getLanguageSetForSourceLanguage(
+							sourceLanguage.getCode());
+					for (Language translationLanguage : languageSet.getTranslationLanguages()) {
+
+						System.out.println("Generating CSV files for source language '"
+								+ sourceLanguage.getCode() + "' and translation language '" +
+								translationLanguage.getCode() + "'.");
+
+						ScriptTreeNode translationLanguageTree =
+								editableProject.getAvailableScriptsForLanguage(translationLanguage);
+
+						editableProject.generateTranslationTSVs(translationLanguageTree);
+
+					}
+				} catch (DialogueBranchException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
+		} catch (IOException | ParseException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	// ------------------------------------------------------------------------------------------ //
