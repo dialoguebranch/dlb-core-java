@@ -340,6 +340,24 @@ public class EditableProject extends Editable implements PropertyChangeListener 
         translationFileObject.writeToFile(translationFile);
     }
 
+    /**
+     * Create an EditableTranslationSet from all EditableTranslation scripts referenced in the given
+     * {@code translationTree}.
+     *
+     * @param translationTree
+     * @return
+     */
+    public EditableTranslationSet getEditableTranslationSet(ScriptTreeNode translationTree) {
+        if(translationTree.isLeaf()) {
+            StorageSource storageSource = translationTree.getStorageSource();
+            EditableTranslation editableTranslation = new EditableTranslation(
+                    translationTree.getName(),storageSource);
+        }
+
+        // TODO: Finish this.
+        return null;
+    }
+
     public void generateTranslationTSVs(ScriptTreeNode translationTree) throws IOException {
         if(translationTree.isLeaf()) {
             StorageSource storageSource = translationTree.getStorageSource();

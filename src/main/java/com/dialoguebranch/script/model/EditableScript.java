@@ -1,6 +1,6 @@
 /*
  *
- *                Copyright (c) 2023-2024 Fruit Tree Labs (www.fruittreelabs.com)
+ *                Copyright (c) 2023-2025 Fruit Tree Labs (www.fruittreelabs.com)
  *
  *
  *     This material is part of the DialogueBranch Platform, and is covered by the MIT License
@@ -38,17 +38,17 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * A {@link EditableScript} models the contents of a DialogueBranch script that may contain
+ * A {@link EditableScript} models the contents of a Dialogue Branch script that may contain
  * errors, because it is still being written. This class may be used by tools that provide editing
  * functionality.
  *
- * <p>You may ask "What makes a DialogueBranch Script a DialogueBranch Script?" When talking about
+ * <p>You may ask "What makes a Dialogue Branch Script a Dialogue Branch Script?" When talking about
  * <em>functioning</em> scripts, this answer is strictly defined through the language definition,
  * but when it comes to scripts that are being written, the answer is not so clear.</p>
  *
  * <p>The definition that we use to model this class is designed to be as fault-tolerant as possible
- * while covering the very basics of what entails a DialogueBranch script. This definition is that a
- * DialogueBranch Script has a name, a language code and a list of {@link EditableNode}s.</p>
+ * while covering the very basics of what entails a Dialogue Branch script. This definition is that
+ * a Dialogue Branch Script has a name, a language code and a list of {@link EditableNode}s.</p>
  *
  * <p>How the separation of this script into nodes is handled is irrelevant and depends on the
  * underlying storage mechanism (e.g. files, or a database).</p>

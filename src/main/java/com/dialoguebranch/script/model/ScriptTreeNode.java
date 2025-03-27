@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * The {@link ScriptTreeNode} class is used to model a hierarchy of Dialogue Branch scripts,
+ * organized in a tree-like "folder" structure. An individual {@link ScriptTreeNode} can thus
+ * represent either a Dialogue Branch script, a translation file, or a folder.
+ */
 public class ScriptTreeNode {
 
     /** The parent node of this ScriptTreeNode (or null if this is the root). */

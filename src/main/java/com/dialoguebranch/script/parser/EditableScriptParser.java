@@ -169,8 +169,7 @@ public class EditableScriptParser {
      */
     private static EditableScript getDialogueBranchScript(File file, String languageCode)
             throws ScriptParseException {
-        String extension = file.getName().substring(
-                file.getName().lastIndexOf("."));
+        String extension = file.getName().substring(file.getName().lastIndexOf("."));
 
         if(!extension.equals(Constants.DLB_SCRIPT_FILE_EXTENSION))
             throw new ScriptParseException(
