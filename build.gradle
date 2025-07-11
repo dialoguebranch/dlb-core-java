@@ -39,7 +39,7 @@ javadoc {
 
 dependencies {
 	api "nl.rrd:rrd-utils:3.0.3"
-	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.17.2'
+	api 'com.fasterxml.jackson.module:jackson-modules-java8:2.18.0-rc1'
 	testImplementation 'junit:junit:4.13.2'
 	// SLF4J Logging Framework
 	api 'org.slf4j:slf4j-api:2.0.12'
