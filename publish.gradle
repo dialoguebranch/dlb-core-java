@@ -6,12 +6,12 @@ plugins {
     id 'distribution'
     // Plugin for Publishing to the Sonatype Central Portal
     // See: https://gitlab.com/thebugmc/sonatype-central-portal-publisher
-    id 'net.thebugmc.gradle.sonatype-central-portal-publisher' version '1.1.1'
+    id 'net.thebugmc.gradle.sonatype-central-portal-publisher' version '1.2.4'
 }
 
 group = 'com.dialoguebranch'
 archivesBaseName = 'dlb-core-java'
-version = '1.2.3'
+version = '1.2.5'
 
 repositories {
     mavenCentral()
@@ -44,8 +44,9 @@ javadoc {
 
 dependencies {
     api "nl.rrd:rrd-utils:3.0.3"
-    api 'com.fasterxml.jackson.module:jackson-modules-java8:2.13.4'
+    api 'com.fasterxml.jackson.module:jackson-modules-java8:2.18.0-rc1'
     testImplementation 'junit:junit:4.13.2'
+    api 'org.slf4j:slf4j-api:2.0.16'
 }
 
 jar {
@@ -85,7 +86,7 @@ centralPortal {
                 id = 'hopdenakker'
                 name = 'Harm op den Akker'
                 email = 'hopdenakker@fruittreelabs.com'
-                organizationUrl = 'https://fruittreelabs.com/'
+                organizationUrl = 'https://dialoguebranch.com/'
             }
             developer {
                 id ='dhofs'
