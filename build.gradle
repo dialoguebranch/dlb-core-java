@@ -7,15 +7,18 @@ plugins {
 }
 
 group = 'com.dialoguebranch'
-archivesBaseName = 'dlb-core-java'
 version = '1.2.5'
+
+base {
+	archivesName = 'dlb-core-java'
+}
 
 repositories {
 	mavenCentral()
 }
 
 application {
-	mainClassName = "com.dialoguebranch.cli.CommandLineRunner"
+	mainClass = "com.dialoguebranch.cli.CommandLineRunner"
 }
 
 run {
@@ -55,7 +58,7 @@ jar {
 
 distributions {
 	main {
-		distributionBaseName = archivesBaseName
+		distributionBaseName = base.archivesName
 		contents {
 			from jar
 		}
